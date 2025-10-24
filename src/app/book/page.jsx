@@ -7,14 +7,17 @@ import Form from '../../components/Form.jsx';
 const page = () => {
   return (
     <>
-        <div className="min-h-screen flex flex-col items-center bg-linear-to-bl from-primary to-secondary">
-            <Navbar></Navbar>
-            <span className="text-black font-medium text-4xl mt-10">Schedule your visit to ACE Campus Food Pantry</span>
-            <button className="btn mt-10 text-2xl border p-2 rounded-2">Learn More</button>
-            <Form></Form>
-        </div>
+      <div className="min-h-screen flex flex-col items-center bg-gradient-to-br from-purple-50 via-purple-100 to-[#fff9c4]">
+        <Navbar />
+        <span className="text-black font-medium text-5xl mt-10 text-center">
+          Schedule your visit to<br />
+          <span className="font-bold text-purple-900">ACE Campus Food Pantry</span>
+        </span>
+        <button className="btn mt-10 text-xl border p-2 rounded-2">Learn More</button>
+        <Form />
+      </div>
     </>
   )
 }
 
-export default page
+export default page;
