@@ -1,23 +1,29 @@
-"useclient";
+"use client";
 
 import Image from "next/image";
 
 const Navbar = () => {
   return (
-    <>
-        <div className="flex flex-row items-center justify-center bg-lightprimary w-full h-15">
-            <div className="flex h-full w-full justify-start items-center p-2">
-                <Image className="ml-5"src="/boilerbasket-logo.png" alt="" width={40} height={40}></Image>
-                <span className="ml-5">BoilerBasket</span>
-            </div>
-            <div className="flex h-full w-full justify-end items-center p-2">
-                <button className="btn mr-10">About</button>
-                <button className="btn mr-10">Contact</button>
-                <button className="btn mr-5">Staff Login</button>
-            </div>
-        </div>
-    </>
-  )
-}
+    <div className="flex flex-row items-center justify-between bg-yellow-50 w-full h-15 px-4">
+      <div className="flex items-center">
+        <Image
+          className="ml-5"
+          src="/boilerbasket-logo.png"
+          alt=""
+          width={40}
+          height={40}
+        />
+        <span className="ml-5 font-bold text-lg">BoilerBasket</span>
+      </div>
+      <div className="flex items-center gap-4 mr-5">
+        <span className="text-gray-800 font-bold cursor-pointer text-sm">About</span>
+        <span className="text-gray-800 font-bold cursor-pointer text-sm">Contact</span>
+        <button className="bg-purple-900 text-white text-sm font-bold px-3 py-1 rounded">
+          Staff Login
+        </button>
+      </div>
+    </div>
+  );
+};
 
-export default Navbar
+export default Navbar;
