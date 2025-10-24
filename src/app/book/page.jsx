@@ -13,7 +13,15 @@ const page = () => {
           Schedule your visit to<br />
           <span className="font-bold text-purple-900">ACE Campus Food Pantry</span>
         </span>
-        <button className="btn mt-10 text-xl border p-2 rounded-2">Learn More</button>
+        <a
+          href="https://acefoodpantry.wixsite.com/website"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <button className="btn mt-10 text-xl border p-2 rounded-2">
+            Learn More
+          </button>
+        </a>
         <Form />
       </div>
     </>
