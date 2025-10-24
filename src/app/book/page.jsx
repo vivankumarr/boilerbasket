@@ -3,6 +3,7 @@
 import React from 'react'
 import Navbar from '../../components/Navbar.jsx';
 import Form from '../../components/Form.jsx';
+import HowItWorks from '../../components/HowItWorks.jsx';
 
 const page = () => {
   return (
@@ -12,6 +13,7 @@ const page = () => {
             <span className="text-black font-medium text-4xl mt-10">Schedule your visit to ACE Campus Food Pantry</span>
             <button className="btn mt-10 text-2xl border p-2 rounded-2">Learn More</button>
             <Form></Form>
+            <HowItWorks></HowItWorks>
         </div>
     </>
   )
