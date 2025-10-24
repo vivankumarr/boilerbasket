@@ -3,6 +3,7 @@
 import React from 'react'
 import Navbar from '../../components/Navbar.jsx';
 import Form from '../../components/Form.jsx';
+import HowItWorks from '../../components/HowItWorks.jsx';
 
 const page = () => {
   return (
@@ -23,6 +24,7 @@ const page = () => {
           </button>
         </a>
         <Form />
+        <HowItWorks />
       </div>
     </>
   )
