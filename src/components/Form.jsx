@@ -94,7 +94,7 @@ const Form = ({timeSlots = []}) => {
                 <div id="Dates" className="w-full flex flex-row mt-3">
                   <button onClick={() => {moveVisibleDates(-1)}}className="hover:cursor-pointer mr-2">p</button>
                   {visibleDates.map((dateSlot) => (
-                    <button onClick={() => {setDate(dateSlot.date), setTime('')}} key = {dateSlot.date} type = "button" className={`border mr-5 hover:cursor-pointer h-15 w-20 rounded-sm ${date === dateSlot.date ? 'bg-purple-300' : ''}`}>
+                    <button onClick={() => {date !== dateSlot.date ? setTime('') : null, setDate(dateSlot.date)}} key = {dateSlot.date} type = "button" className={`border mr-5 hover:cursor-pointer h-15 w-20 rounded-sm ${date === dateSlot.date ? 'bg-purple-300' : ''}`}>
                         <div className="text-sm font-medium">{dateSlot.day}</div>
                         <div className="text-sm font-medium">{dateSlot.date.split('-')[1] + "/" + dateSlot.date.split('-')[2]}</div>
                     </button>
