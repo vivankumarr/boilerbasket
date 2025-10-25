@@ -10,8 +10,7 @@ import { cookies } from "next/headers";
 export default async function bookingPage () {
 
   //cookies for authentication if needed later :)
-  const cookiez = await cookies();
-  const supabase = createServerComponentClient({ cookies:  () => cookiez});
+  const supabase = createServerComponentClient({cookies});
 
   const now = new Date().toISOString();
 
@@ -29,10 +28,10 @@ export default async function bookingPage () {
 
   //log the errors if applicable
   if (errorblockedtimes) {
-    console.error('Error fetching from blocked times: ', error);
+    console.error('Error fetching from blocked times: ', errorblockedtimes);
   }
   if (errorexistingappts) {
-    console.error('Error fetching existing appointments: ', error);
+    console.error('Error fetching existing appointments: ', errorexistingappts);
   }
 
   //for debugging
@@ -106,8 +105,8 @@ function makeSlots(blockedTimes, existingAppts) {
 
     //if at least one blocked date blocks, then skip
     const isBlocked = blockedTimes.some(period => {
-      const start = new Date(period.start_date);
-      const end = new Date(period.end_date);
+      const start = new Date(period.start_date).toISOString();
+      const end = new Date(period.end_date).toISOString();
 
       const startDate = start.split('T')[0];
       const endDate = end.split('T')[0];

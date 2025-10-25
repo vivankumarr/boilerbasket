@@ -109,6 +109,9 @@ const Form = ({timeSlots = []}) => {
                     {date && visibleTimes.map((time) => (
                       <button onClick={() => {setTime(time.time)}}key={time.time} type="button" className={`hover:cursor-pointer text-xs border mt-2 h-10 w-18 mr-4 ${times === time.time ? 'bg-purple-300' : ''}`}>{time.time}</button>
                     ))}
+                    {!date && (
+                      <span>Choose a date to view avaliable times.</span>
+                    )}
                 </div>
               </div>
 
