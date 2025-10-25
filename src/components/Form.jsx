@@ -3,11 +3,54 @@
 import { useState, useEffect } from 'react'
 
 
-const Form = () => {
+const Form = ({timeSlots = []}) => {
     const [name, setName] = useState('');
     const [puid, setPuid] = useState('');
     const [email, setEmail] = useState('');
     const [role, setRole] = useState('');
+
+    const [date, setDate] = useState('');
+    const [times, setTime] = useState('');
+
+    const [canSee, setSee] = useState({beg: 0, end: 4});
+
+
+    //change our time slot array into a map
+    const dateToTimesMap = timeSlots.reduce((acc, slot) => {
+      if (!acc[slot.date]) {
+        acc[slot.date] = {
+          date: slot.date,
+          day: slot.day,
+          displayDate: new Date(slot.date).toLocaleDateString('en-US', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric'
+          }),
+          times: []
+        };
+      }
+      acc[slot.date].times.push(slot);
+      return acc;
+    }, {});
+
+    // function for the sliding window
+    const moveVisibleDates = (direction) => {
+      setSee(prev => {
+        const newBeg = prev.beg + direction;
+        const newEnd = prev.end + direction;
+
+        if (newBeg < 0) return prev;
+        if (newEnd > shownDates.length) return prev;
+
+        return {beg: newBeg, end: newEnd};
+      });
+    }
+
+    const shownDates = Object.values(dateToTimesMap);
+    const visibleDates = shownDates.slice(canSee.beg, canSee.end);
+    const visibleTimes = date ? dateToTimesMap[date].times : [];
+    console.log('Visible Dates: ', visibleDates);
+    console.log('Visible times: ', visibleTimes);
 
     //debugging
     useEffect(() => {
@@ -19,7 +62,7 @@ const Form = () => {
 
   return (
     <>
-        <div className="bg-white shadow-2xl h-150 w-100 p-5 mt-10 mb-10 rounded-2xl">
+        <div className="bg-white shadow-2xl h-150 w-100 p-5 mt-10 mb-10 rounded-2xl flex flex-col">
             <span className="text-2xl">Book Your Appointment</span>
             <div className="flex flex-col items-center">
               <div className="grid grid-cols-2 grid-rows-2 gap-4 mt-4">
@@ -46,21 +89,30 @@ const Form = () => {
                   </div>
               </div>
 
-              <div className="mt-5">
+              <div className="w-full mt-5 h-30">
                 <span>Select Date</span>
-                <div id="Dates" className="w-full h-30">
-
+                <div id="Dates" className="w-full flex flex-row mt-3">
+                  <button onClick={() => {moveVisibleDates(-1)}}className="hover:cursor-pointer mr-2">p</button>
+                  {visibleDates.map((dateSlot) => (
+                    <button onClick={() => {setDate(dateSlot.date), setTime('')}} key = {dateSlot.date} type = "button" className={`border mr-5 hover:cursor-pointer h-15 w-20 rounded-sm ${date === dateSlot.date ? 'bg-purple-300' : ''}`}>
+                        <div className="text-sm font-medium">{dateSlot.day}</div>
+                        <div className="text-sm font-medium">{dateSlot.date.split('-')[1] + "/" + dateSlot.date.split('-')[2]}</div>
+                    </button>
+                  ))}
+                  <button onClick={() => {moveVisibleDates(1)}}className="hover:cursor-pointer">n</button>
                 </div>
               </div>
 
-              <div className="mt-5">
+              <div className="w-full h-55">
                 <span>Select Time</span>
-                <div id="times" className="w-full h-30">
-
+                <div id="times" className="w-full">
+                    {date && visibleTimes.map((time) => (
+                      <button onClick={() => {setTime(time.time)}}key={time.time} type="button" className={`hover:cursor-pointer text-xs border mt-2 h-10 w-18 mr-4 ${times === time.time ? 'bg-purple-300' : ''}`}>{time.time}</button>
+                    ))}
                 </div>
               </div>
 
-              <button className="btn bg-secondary pt-2 pb-2 pr-1 pl-1 rounded-sm w-50 text-white">Confirm Booking</button>
+              <button className="mt-auto btn bg-secondary pt-2 pb-2 pr-1 pl-1 rounded-sm w-50 text-white">Confirm Booking</button>
 
             </div>
         </div>
