@@ -90,21 +90,21 @@ const Form = ({timeSlots = []}) => {
                 <div id="Dates" className="w-full flex flex-row mt-3 justify-center">
                   <button
                     onClick={() => moveVisibleDates(-1)}
-                    className="hover:cursor-pointer mr-2 text-2xl"
+                    className={`hover:cursor-pointer mr-2 text-2xl ${canSee.beg === 0 ? ('invisible') : {}}`}
                   >
-                    ←
+                    ᐸ
                   </button>
                   {visibleDates.map((dateSlot) => (
-                    <button onClick={() => {date !== dateSlot.date ? setTime('') : null, setDate(dateSlot.date)}} key = {dateSlot.date} type = "button" className={`flex flex-col items-center border mr-4 p-3 hover:cursor-pointer h-15 w-17\ rounded-sm ${date === dateSlot.date ? 'bg-purple-300' : ''}`}>
+                    <button onClick={() => {date !== dateSlot.date ? setTime('') : null, setDate(dateSlot.date)}} key = {dateSlot.date} type = "button" className={`flex flex-col items-center border mr-4 ml-0.75 p-3 hover:cursor-pointer h-15 w-17\ rounded-sm ${date === dateSlot.date ? 'bg-purple-300' : ''}`}>
                         <div className="text-sm font-medium">{dateSlot.day}</div>
                         <div className="text-sm font-medium">{dateSlot.date.split('-')[1] + "/" + dateSlot.date.split('-')[2]}</div>
                     </button>
                   ))}
                   <button
                     onClick={() => moveVisibleDates(1)}
-                    className="hover:cursor-pointer text-2xl"
+                    className={`hover:cursor-pointer text-2xl ${canSee.end === shownDates.length ? ('invisible') : {}}`}
                   >
-                    →
+ ᐳ
                   </button>
                 </div>
               </div>
