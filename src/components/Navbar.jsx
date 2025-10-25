@@ -2,7 +2,16 @@
 
 import Image from "next/image";
 
+import { useRouter } from 'next/navigation'
+
 const Navbar = () => {
+
+  const router = useRouter();
+
+  const handleLogin = () => {
+    router.push('/login');
+  }
+
   return (
     <div className="flex flex-row items-center justify-between bg-yellow-50 w-full h-15 px-4">
       <div className="flex items-center">
