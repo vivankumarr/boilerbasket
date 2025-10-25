@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 
-
 const Form = ({timeSlots = []}) => {
     const [name, setName] = useState('');
     const [puid, setPuid] = useState('');
@@ -14,8 +13,6 @@ const Form = ({timeSlots = []}) => {
 
     const [canSee, setSee] = useState({beg: 0, end: 4});
 
-
-    //change our time slot array into a map
     const dateToTimesMap = timeSlots.reduce((acc, slot) => {
       if (!acc[slot.date]) {
         acc[slot.date] = {
@@ -33,7 +30,6 @@ const Form = ({timeSlots = []}) => {
       return acc;
     }, {});
 
-    // function for the sliding window
     const moveVisibleDates = (direction) => {
       setSee(prev => {
         const newBeg = prev.beg + direction;
@@ -52,7 +48,6 @@ const Form = ({timeSlots = []}) => {
     console.log('Visible Dates: ', visibleDates);
     console.log('Visible times: ', visibleTimes);
 
-    //debugging
     useEffect(() => {
       console.log(name);
       console.log(role);
@@ -91,15 +86,25 @@ const Form = ({timeSlots = []}) => {
 
               <div className="w-full mt-5 h-30">
                 <span>Select Date</span>
-                <div id="Dates" className="w-full flex flex-row mt-3">
-                  <button onClick={() => {moveVisibleDates(-1)}}className="hover:cursor-pointer mr-2">p</button>
+                <div id="Dates" className="w-full flex flex-row mt-3 justify-center">
+                  <button
+                    onClick={() => moveVisibleDates(-1)}
+                    className="hover:cursor-pointer mr-2 text-2xl"
+                  >
+                    ←
+                  </button>
                   {visibleDates.map((dateSlot) => (
                     <button onClick={() => {date !== dateSlot.date ? setTime('') : null, setDate(dateSlot.date)}} key = {dateSlot.date} type = "button" className={`border mr-5 hover:cursor-pointer h-15 w-20 rounded-sm ${date === dateSlot.date ? 'bg-purple-300' : ''}`}>
                         <div className="text-sm font-medium">{dateSlot.day}</div>
                         <div className="text-sm font-medium">{dateSlot.date.split('-')[1] + "/" + dateSlot.date.split('-')[2]}</div>
                     </button>
                   ))}
-                  <button onClick={() => {moveVisibleDates(1)}}className="hover:cursor-pointer">n</button>
+                  <button
+                    onClick={() => moveVisibleDates(1)}
+                    className="hover:cursor-pointer text-2xl"
+                  >
+                    →
+                  </button>
                 </div>
               </div>
 
