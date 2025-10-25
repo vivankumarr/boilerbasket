@@ -1,15 +1,22 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useFormStatus } from "react-dom";
 import { login, signup } from "./actions";
+import Image from 'next/image';
+import Logo from "@/../public/ace-boilerbasket-logo.svg";
 
-function SubmitButton({ children, formAction }) {
+function SubmitButton({ children, formAction, setError }) {
   const { pending } = useFormStatus();
   return (
     <button
       type="submit"
-      formAction={formAction}
+      formAction={async (fd) => {
+        const result = await formAction(fd);
+        if (result?.error) {
+          setError(result.error);
+        }
+      }}
       disabled={pending}
       className="w-full rounded-xl px-4 py-2 text-sm font-semibold tracking-wide shadow-sm
                  ring-1 ring-inset ring-purple-700/20 bg-purple-700 hover:bg-purple-600
@@ -21,12 +28,14 @@ function SubmitButton({ children, formAction }) {
 }
 
 export default function LoginPage() {
+  const [error, setError] = useState(null);
+
   return (
     <main className="min-h-screen grid place-items-center p-4 bg-gradient-to-br from-amber-100 via-purple-100 to-slate-100">
       <section className="w-full max-w-md rounded-3xl bg-white shadow-xl ring-2 ring-blue-400/90">
         <div className="px-8 pt-8 pb-4 text-center">
-          <img
-            src="/ace-boilerbasket-logo.png"
+          <Image
+            src={Logo}
             alt="ACE BoilerBasket"
             className="mx-auto h-20 w-auto"
           />
@@ -39,6 +48,7 @@ export default function LoginPage() {
         <div className="mx-6 h-px bg-slate-200" />
 
         <form className="px-8 py-6 space-y-4">
+          {error && <p className="text-sm text-red-600">{error}</p>}
           <div className="space-y-1">
             <label
               htmlFor="email"
@@ -78,8 +88,12 @@ export default function LoginPage() {
           </div>
 
           <div className="pt-2 space-y-2">
-            <SubmitButton formAction={login}>Sign In</SubmitButton>
-            <SubmitButton formAction={signup}>Sign Up</SubmitButton>
+            <SubmitButton formAction={login} setError={setError}>
+              Sign In
+            </SubmitButton>
+            <SubmitButton formAction={signup} setError={setError}>
+              Sign Up
+            </SubmitButton>
           </div>
         </form>
 

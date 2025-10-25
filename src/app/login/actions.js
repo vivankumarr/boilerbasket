@@ -8,8 +8,6 @@ import { createClient } from '@/lib/supabase/server'
 export async function login(formData) {
   const supabase = await createClient()
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
   const data = {
     email: formData.get('email'),
     password: formData.get('password')
@@ -18,19 +16,16 @@ export async function login(formData) {
   const { error } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
-    console.log(error)
-    redirect('/error')
+    return { error: error.message }
   }
 
   revalidatePath('/', 'layout')
-  redirect('/private')
+  redirect('/private') // Redirect to the private page on success
 }
 
 export async function signup(formData) {
   const supabase = await createClient()
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
   const data = {
     email: formData.get('email'),
     password: formData.get('password')
@@ -39,10 +34,9 @@ export async function signup(formData) {
   const { error } = await supabase.auth.signUp(data)
 
   if (error) {
-    console.log(error)
-    redirect('/error')
+    return { error: error.message }
   }
 
   revalidatePath('/', 'layout')
-  redirect('/')
+  redirect('/') // Redirect to the home page on success
 }
