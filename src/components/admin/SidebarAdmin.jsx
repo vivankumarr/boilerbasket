@@ -1,6 +1,6 @@
 import { CalendarDaysIcon, ChartColumn, UsersIcon, DownloadIcon, SettingsIcon } from 'lucide-react'
 
-const sidebarDiv = 'h-full font-medium ' // + 'w-50'
+const sidebarDiv = 'font-medium'
 const tabDiv = 'flex gap-2 m-4 p-2 border'
 
 // TODO: Make clickable (link), change color upon hover, indicate current tab
