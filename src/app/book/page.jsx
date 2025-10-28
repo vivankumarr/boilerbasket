@@ -1,7 +1,7 @@
 import React from 'react'
-import Navbar from '../../components/Navbar.jsx';
-import Form from '../../components/Form.jsx';
-import HowItWorks from '../../components/HowItWorks.jsx';
+import Navbar from '../../components/book/Navbar.jsx';
+import Form from '../../components/book/Form.jsx';
+import HowItWorks from '../../components/book/HowItWorks.jsx';
 
 //server imports
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -132,7 +132,7 @@ function makeSlots(blockedTimes, existingAppts) {
       ).length;
 
       if (maxPerTimeSlot - count > 0) {
-        const period = hours > 12 ? 'PM' : 'AM';
+        const period = hours >= 12 ? 'PM' : 'AM';
 
         //make sure we always have two places for minutes (although this won't be an issue with current time slots)
         const displayMinutes = minutes.toString().padStart(2, '0');

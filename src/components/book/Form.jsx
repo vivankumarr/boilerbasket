@@ -58,30 +58,30 @@ const Form = ({timeSlots = []}) => {
 
   return (
     <>
-        <div className="bg-white shadow-2xl h-150 w-100 p-5 mt-10 mb-10 rounded-2xl flex flex-col">
-            <span className="text-2xl">Book Your Appointment</span>
+        <div className="bg-white shadow-2xl h-155 w-120 p-5 mt-10 mb-10 rounded-2xl flex flex-col">
+            <span className="text-2xl font-bold">Book Your Appointment</span>
             <div className="flex flex-col items-center">
               <div className="grid grid-cols-2 grid-rows-2 gap-4 mt-4">
                   <div>
-                    <span>Full Name</span>
-                    <input onChange={(e) => {setName(e.target.value)}} className="border" type="text" />
+                    <span className="text-lg ">Full Name</span>
+                    <input placeholder="Enter your full name" onChange={(e) => {setName(e.target.value)}} className="border border-gray-600 p-1 w-52 rounded-xs" type="text" />
                   </div>
                   <div>
-                    <span>Role</span>
-                    <select onChange={(e) => {setRole(e.target.value)}} className="border h-6.5 w-45" name="roles" id="">
-                      <option value="default"></option>
+                    <span className="text-lg">Role</span>
+                    <select  onChange={(e) => {setRole(e.target.value)}} className="border border-gray-600 h-8.5 w-52 p-1 rounded-xs" name="roles" id="">
+                      <option className="text-lg"value="default" disabled selected hidden>Select your role</option>
                       <option value="student">Student</option>
                       <option value="staff">Staff</option>
                       <option value="other">Other</option>
                     </select>
                   </div>
                   <div>
-                    <span>Email Address</span>
-                    <input onChange={(e) => {setEmail(e.target.value)}} className="border"type="text" />
+                    <span className="text-lg">Email Address</span>
+                    <input placeholder="Enter your Email address"onChange={(e) => {setEmail(e.target.value)}} className="border border-gray-600 p-1 w-52 rounded-xs"type="text" />
                   </div>
                   <div>
-                    <span>PUID</span>
-                    <input onChange={(e) => {setPuid(e.target.value)}}className="border" type="text" />
+                    <span className="text-lg">PUID</span>
+                    <input placeholder="Enter your full Purdue ID"onChange={(e) => {setPuid(e.target.value)}}className="border border-gray-600 p-1 w-52 rounded-xs" type="text" />
                   </div>
               </div>
 
@@ -90,30 +90,30 @@ const Form = ({timeSlots = []}) => {
                 <div id="Dates" className="w-full flex flex-row mt-3 justify-center">
                   <button
                     onClick={() => moveVisibleDates(-1)}
-                    className={`hover:cursor-pointer mr-2 text-2xl ${canSee.beg === 0 ? ('invisible') : {}}`}
+                    className={`hover:cursor-pointer hover:text-purple-200 mr-2 text-2xl ${canSee.beg === 0 ? ('invisible') : {}}`}
                   >
                     ᐸ
                   </button>
                   {visibleDates.map((dateSlot) => (
-                    <button onClick={() => {date !== dateSlot.date ? setTime('') : null, setDate(dateSlot.date)}} key = {dateSlot.date} type = "button" className={`flex flex-col items-center border mr-4 ml-0.75 p-3 hover:cursor-pointer h-15 w-17\ rounded-sm ${date === dateSlot.date ? 'bg-purple-300' : ''}`}>
+                    <button onClick={() => {date !== dateSlot.date ? setTime('') : null, setDate(dateSlot.date)}} key = {dateSlot.date} type = "button" className={`hflex flex-col items-center border mr-4 ml-0.75 hover:cursor-pointer h-15 w-25 rounded-sm ${date === dateSlot.date ? 'bg-secondary text-white' : 'hover:border-purple-500 hover:text-purple-500'}`}>
                         <div className="text-sm font-medium">{dateSlot.day}</div>
                         <div className="text-sm font-medium">{dateSlot.date.split('-')[1] + "/" + dateSlot.date.split('-')[2]}</div>
                     </button>
                   ))}
                   <button
                     onClick={() => moveVisibleDates(1)}
-                    className={`hover:cursor-pointer text-2xl ${canSee.end === shownDates.length ? ('invisible') : {}}`}
+                    className={`hover:cursor-pointer text-2xl hover:text-purple-200 ${canSee.end === shownDates.length ? ('invisible') : {}}`}
                   >
  ᐳ
                   </button>
                 </div>
               </div>
 
-              <div className="w-full h-55">
+              <div className="w-full h-53">
                 <span>Select Time</span>
-                <div id="times" className="w-full">
+                <div id="times" className="w-full ml-2 justify-center">
                     {date && visibleTimes.map((time) => (
-                      <button onClick={() => {setTime(time.time)}}key={time.time} type="button" className={`hover:cursor-pointer text-xs border mt-2 h-10 w-18 mr-4 ${times === time.time ? 'bg-purple-300' : ''}`}>{time.time}</button>
+                      <button onClick={() => {setTime(time.time)}}key={time.time} type="button" className={`hover:cursor-pointer text-xs rounded-sm border mt-2 h-10 w-18 mr-4 ${times === time.time ? 'bg-secondary text-white' : 'hover:border-purple-500 hover:text-purple-500'}`}>{time.time}</button>
                     ))}
                     {!date && (
                       <span>Choose a date to view avaliable times.</span>
@@ -121,7 +121,7 @@ const Form = ({timeSlots = []}) => {
                 </div>
               </div>
 
-              <button className="mt-auto btn bg-secondary pt-2 pb-2 pr-1 pl-1 rounded-sm w-50 text-white">Confirm Booking</button>
+              <button className="btn bg-secondary pt-2 pb-2 pr-1 pl-1 rounded-sm w-75 text-white  hover:shadow-lg hover:bg-purple-600 hover:scale-105 transform transition-transform duration-300">Confirm Booking</button>
 
             </div>
         </div>
