@@ -27,7 +27,7 @@ const Navbar = () => {
       <div className="flex items-center gap-4 mr-5">
         <span className="text-gray-800 font-bold cursor-pointer text-sm">About</span>
         <span className="text-gray-800 font-bold cursor-pointer text-sm">Contact</span>
-        <button className="bg-purple-900 text-white text-sm font-bold px-3 py-1 rounded">
+        <button onClick={() => handleLogin()}className="bg-purple-900 text-white cursor-pointer text-sm font-bold px-3 py-1 rounded">
           Staff Login
         </button>
       </div>
