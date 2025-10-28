@@ -1,35 +1,74 @@
-import { CalendarDaysIcon, ChartColumn, UsersIcon, DownloadIcon, SettingsIcon } from 'lucide-react'
+"use client";
+import { usePathname } from "next/navigation";
 
-const sidebarDiv = 'font-medium'
-const tabDiv = 'flex gap-2 m-4 p-2 border'
+import { CalendarDaysIcon, ChartColumn, UsersIcon, DownloadIcon, SettingsIcon, HomeIcon } from "lucide-react";
+import SidebarTabAdmin from "./SidebarTabAdmin";
 
-// TODO: Make clickable (link), change color upon hover, indicate current tab
+const sidebarDiv = 'font-medium pt-1'
+const tabDiv = 'flex \
+				my-3 mx-4 pl-1 \
+				w-[calc(full)] \
+				border-2 border-amber-50 \
+				rounded-md \
+				hover:border-amber-400 hover:bg-amber-200'
+const tabVariants = {
+		true: tabDiv.concat(' bg-yellow-100 \
+							text-yellow-600 \
+							border-2 border-yellow-500 \
+							rounded-md'),
+		false: tabDiv,
+};
+const innerDiv = 'flex gap-2 \
+					py-2 px-2 \
+					w-100'
 
-const SidebarAdmin = () => {
+export default function SidebarAdmin() {
+	const pathname = usePathname();
+
 	return (
 		<div className={sidebarDiv}>
-			<div className={tabDiv}>	
-				<CalendarDaysIcon />
-				<span>Appointments</span>
-			</div>
-			<div className={tabDiv}>	
-				<ChartColumn />
-				<span>Insights</span>
-			</div>
-			<div className={tabDiv}>	
-				<UsersIcon />
-				<span>Clients</span>
-			</div>
-			<div className={tabDiv}>	
-				<DownloadIcon />
-				<span>Export Data</span>
-			</div>
-			<div className={tabDiv}>	
-				<SettingsIcon />
-				<span>Settings</span>
-			</div>
+			<SidebarTabAdmin
+				link={'/admin/test'}
+				tabDiv={tabVariants[pathname == '/admin/test']}
+				innerDiv={`${innerDiv} && text-red-500`} 
+				logo={<HomeIcon />}
+				label={'Home (Test)'} 
+			/>
+			<SidebarTabAdmin
+				link={'/admin/appointments'}
+				tabDiv={tabVariants[pathname == '/admin/appointments']}
+				innerDiv={innerDiv} 
+				logo={<CalendarDaysIcon />}
+				label={'Appointments'} 
+			/>
+			<SidebarTabAdmin
+				link={'/admin/insights'}
+				tabDiv={tabVariants[pathname == '/admin/insights']}
+				innerDiv={innerDiv} 
+				logo={<ChartColumn />}
+				label={'Insights'} 
+			/>
+			<SidebarTabAdmin
+				link={'/admin/clients'}
+				tabDiv={tabVariants[pathname == '/admin/clients']}
+				innerDiv={innerDiv} 
+				logo={<UsersIcon />}
+				label={'Clients'} 
+			/>
+			<SidebarTabAdmin
+				link={'/admin/exports'}
+				tabDiv={tabVariants[pathname == '/admin/exports']}
+				innerDiv={innerDiv} 
+				logo={<DownloadIcon />}
+				label={'Export Data'} 
+			/>
+			<SidebarTabAdmin
+				link={'/admin/settings'}
+				tabDiv={tabVariants[pathname == '/admin/settings']}
+				innerDiv={innerDiv} 
+				logo={<SettingsIcon />}
+				label={'Settings'} 
+			/>
 		</div>
 	)
 };
-
-export default SidebarAdmin;
