@@ -27,7 +27,8 @@ const logoDiv = 'bg-yellow-100 \
 const topDiv = 'bg-white \
 				z-1 shadow-md/10 \
 				flex items-center \
-				fixed top-0 left-60 h-25 w-[calc(100%-60px)]'
+				fixed top-0 left-60 h-25 w-[calc(100%-15rem)]\
+				justify-between'
 const sideDiv = 'bg-amber-50 \
 				z-2 shadow-md/20 \
 				fixed top-25 left-0 w-60 h-full'

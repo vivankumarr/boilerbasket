@@ -1,5 +1,8 @@
 "use client";
 import { usePathname } from "next/navigation";
+import { UserRoundPlus, Plus } from "lucide-react";
+
+const buttonDiv = 'flex items-center gap-2 bg-purple-700 hover:bg-purple-800 text-white font-medium py-2.5 px-5 rounded-lg shadow-md transition';
 
 const TopbarAdmin = () => {
 	const pathname = usePathname();
@@ -41,9 +44,25 @@ const TopbarAdmin = () => {
 	}
 
 	return (
-		<div className='grid ml-6 p-2 border-0'>
-			<span className='font-bold text-lg'>{titleText}</span>
-			<span>{subtitleText}</span>
+		<div className='flex items-start justify-between px-6 p-2 border-0 w-full'>
+			<div className='grid'>
+				<span className='font-bold text-lg'>{titleText}</span>
+				<span>{subtitleText}</span>
+			</div>
+
+			{pathname === pathname_admin.concat('clients') && (
+				<button className={buttonDiv}>
+					<UserRoundPlus />
+					<span>Add Client</span>
+				</button>
+			)}
+
+			{pathname === pathname_admin.concat('appointments') && (
+				<button className={buttonDiv}>
+					<Plus />
+					<span>New Appointment</span>
+				</button>
+			)}
 		</div>
 	)
 };
