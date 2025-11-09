@@ -1,9 +1,5 @@
-
-import StatCard from "../../../Components/StatCard.jsx"
+import StatCard from "@/components/StatCard.jsx"
 import { Calendar, FileInput, Clock, Sigma } from "lucide-react";
-
-import {createServerComponentClient} from "@supabase/auth-helpers-nextjs";
-import {cookies} from "next/headers";
 
 export default async function page () {
 
@@ -14,12 +10,10 @@ export default async function page () {
 //         .from{"appointments"}
 //         .select{"*"}
 
-
     return (
-
        <>
-            <div className="justify-center space-x-20 flex flex-row">
-                <StatCard title={"Appointments Today"} icon={<Calendar />} iconBg={"bg-amber-100"}
+            <div className="justify-center space-x-13 flex flex-row">
+                <StatCard title={"Today"} icon={<Calendar />} iconBg={"bg-amber-100"}
                  value={1}/>
                 <StatCard title={"Checked In"} icon={<FileInput />} iconBg={"bg-lime-200"}
                 value={2}/>
@@ -29,14 +23,11 @@ export default async function page () {
                 value={4}/>
 
             </div>
-
-
-
-
        </>
     )
-
-
-
 }
 
+export const metadata = {
+  title: 'BoilerBasket | Appointments',
+  description: 'Track and manage client appointments'
+}

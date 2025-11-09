@@ -33,7 +33,7 @@ const HowItWorks = () => {
     const repeatDelay = (steps.length - 1) * stagger;
 
     return (
-        <section aria-labelledby="how-it-works-heading" className="w-full bg-yellow-50 py-16 px-6 md:px-12 lg:px-24">
+        <section aria-labelledby="how-it-works-heading" className="w-full bg-purple-50 py-16 px-6 md:px-12 lg:px-24">
         <div className="max-w-6xl mx-auto text-center">
             <h2 id="how-it-works-heading" className="text-3xl md:text-4xl font-extrabold text-gray-900">
                 How It Works

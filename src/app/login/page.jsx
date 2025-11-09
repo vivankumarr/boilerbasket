@@ -35,7 +35,7 @@ export default function LoginPage() {
         <div className="px-8 pt-8 pb-4 text-center">
           <Image
             src="/boilerbasket-logo.png"
-            alt="ACE BoilerBasket"
+            alt="BoilerBasket Logo"
             width={120}
             height={120}
             className="mx-auto"

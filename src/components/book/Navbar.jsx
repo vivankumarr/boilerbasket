@@ -13,16 +13,16 @@ const Navbar = () => {
   }
 
   return (
-    <div className="flex flex-row items-center justify-between bg-yellow-50 w-full h-15 px-4">
+    <div className="flex flex-row items-center justify-between w-full h-15 px-4">
       <div className="flex items-center">
         <Image
           className="ml-5"
           src="/boilerbasket-logo.png"
-          alt="ACE BoilerBasket"
+          alt="BoilerBasket Logo"
           width={50}
           height={50}
         />
-        <span className="ml-5 font-bold text-xl">BoilerBasket</span>
+        <span className="ml-5 mt-2 font-bold text-xl">BoilerBasket</span>
       </div>
       <div className="flex items-center gap-8 mr-5">
         <span className="text-gray-800 font-bold cursor-pointer text-base hover:text-purple-700 transition duration-200">About</span>

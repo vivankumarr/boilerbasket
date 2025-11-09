@@ -2,9 +2,7 @@ export default function StatCard({ title, value, description, icon, iconBg = "bg
   return (
     <div className="bg-white shadow-md rounded-lg w-[270px] h-[125px] p-6 flex flex-col justify-center relative">
         {icon && (
-        <div
-          className={`absolute bottom-6 right-6 w-[50px] h-[50px] flex items-center justify-center rounded-lg ${iconBg}`}
-        >
+        <div className={`absolute bottom-9 right-6 w-[50px] h-[50px] flex items-center justify-center rounded-lg ${iconBg}`}>
           {icon}
         </div>
       )}

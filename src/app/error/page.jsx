@@ -10,7 +10,7 @@ export default function ErrorPage() {
       <section className="w-full max-w-sm rounded-3xl bg-white shadow-xl flex flex-col items-center justify-center text-center p-8 space-y-6">
         <Image
           src="/boilerbasket-logo.png"
-          alt="ACE BoilerBasket"
+          alt="BoilerBasket Logo"
           width={100}
           height={100}
           className="mx-auto"

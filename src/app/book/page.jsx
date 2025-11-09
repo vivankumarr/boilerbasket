@@ -148,3 +148,9 @@ function makeSlots(blockedTimes, existingAppts) {
   }
   return slots;
 }
+
+export const metadata = {
+  title: 'BoilerBasket | Book Appointment',
+  description: 'Book an appointment at ACE Food Pantry'
+}
+

@@ -8,7 +8,7 @@ const inter = Inter({
 
 export const metadata = {
   title: "BoilerBasket",
-  description: "ACE Food Pantry's appointment scheduling app.",
+  description: "ACE Food Pantry's appointment scheduling app",
 };
 
 export default function RootLayout({ children }) {

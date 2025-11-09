@@ -1,6 +1,6 @@
-import LogoSectionAdmin from '@/components/admin/LogoSectionAdmin'
 import TopbarAdmin from '@/components/admin/TopbarAdmin'
 import SidebarAdmin from '@/components/admin/SidebarAdmin'
+import Image from 'next/image'
 
 // TODO: Responsive design based on device screen size (but probably won't be accessed on mobile)
 // Uniform styling (set custom fonts, not default)
@@ -38,7 +38,21 @@ export default function layout({ children }) {
 	return (
 		<div className={parentDiv}>
 			<div className={logoDiv}>
-				<LogoSectionAdmin />
+				<div className='flex gap-4 m-2 p-2 border-0'>
+							<Image 
+								src='/boilerbasket-logo.png'
+								alt='BoilerBasket Logo'
+								className='object-scale-down'
+								priority={true} // Prevent image from jumping when loading pages
+								width={70}
+								height={70}
+							 />
+							<div className='sm:grid hidden'>
+								{/* Logo section text is hidden if overflow is possible */}
+								<span className='font-bold text-lg'>BoilerBasket</span>
+								<span className='text-sm'>Staff Dashboard</span>
+							</div>
+						</div>
 			</div>
 			<nav className={topDiv}>
 				{/* Title and subtitle text changes based on current page */}
