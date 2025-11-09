@@ -3,8 +3,7 @@
 import React, { useState } from "react";
 import { useFormStatus } from "react-dom";
 import { login, signup } from "./actions";
-import Image from 'next/image';
-import Logo from "@/../public/ace-boilerbasket-logo.svg";
+import Image from "next/image";
 
 function SubmitButton({ children, formAction, setError }) {
   const { pending } = useFormStatus();
@@ -18,7 +17,7 @@ function SubmitButton({ children, formAction, setError }) {
         }
       }}
       disabled={pending}
-      className="w-full rounded-xl px-4 py-2 text-sm font-semibold tracking-wide shadow-sm
+      className="w-full rounded-[6px] px-4 py-2 text-sm font-semibold tracking-wide shadow-sm
                  ring-1 ring-inset ring-purple-700/20 bg-purple-700 hover:bg-purple-600
                  active:bg-purple-700 text-white disabled:opacity-60 disabled:cursor-not-allowed"
     >
@@ -32,12 +31,14 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen grid place-items-center p-4 bg-gradient-to-br from-amber-100 via-purple-100 to-slate-100">
-      <section className="w-full max-w-md rounded-3xl bg-white shadow-xl ring-2 ring-blue-400/90">
+      <section className="w-full max-w-md rounded-3xl bg-white shadow-xl">
         <div className="px-8 pt-8 pb-4 text-center">
           <Image
-            src={Logo}
-            alt="ACE BoilerBasket"
-            className="mx-auto h-20 w-auto"
+            src="/boilerbasket-logo.png"
+            alt="BoilerBasket Logo"
+            width={120}
+            height={120}
+            className="mx-auto"
           />
           <h1 className="mt-4 text-3xl font-semibold tracking-tight">
             BoilerBasket
@@ -62,7 +63,7 @@ export default function LoginPage() {
               type="email"
               required
               placeholder="Enter your email address"
-              className="block w-full rounded-xl border-0 bg-slate-50 px-3 py-2 text-slate-900
+              className="block w-full rounded-[6px] border-0 bg-slate-50 px-3 py-2 text-slate-900
                          shadow-inner ring-1 ring-inset ring-slate-200 placeholder:text-slate-400
                          focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
@@ -81,7 +82,7 @@ export default function LoginPage() {
               type="password"
               required
               placeholder="Enter your password"
-              className="block w-full rounded-xl border-0 bg-slate-50 px-3 py-2 text-slate-900
+              className="block w-full rounded-[6px] border-0 bg-slate-50 px-3 py-2 text-slate-900
                          shadow-inner ring-1 ring-inset ring-slate-200 placeholder:text-slate-400
                          focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
@@ -90,9 +91,6 @@ export default function LoginPage() {
           <div className="pt-2 space-y-2">
             <SubmitButton formAction={login} setError={setError}>
               Sign In
-            </SubmitButton>
-            <SubmitButton formAction={signup} setError={setError}>
-              Sign Up
             </SubmitButton>
           </div>
         </form>

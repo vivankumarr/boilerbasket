@@ -19,24 +19,5 @@ export async function login(formData) {
     return { error: error.message }
   }
 
-  revalidatePath('/', 'layout')
-  redirect('/private') // Redirect to the private page on success
-}
-
-export async function signup(formData) {
-  const supabase = await createClient()
-
-  const data = {
-    email: formData.get('email'),
-    password: formData.get('password')
-  }
-
-  const { error } = await supabase.auth.signUp(data)
-
-  if (error) {
-    return { error: error.message }
-  }
-
-  revalidatePath('/', 'layout')
-  redirect('/') // Redirect to the home page on success
+  redirect('/admin/appointments')
 }

@@ -2,13 +2,11 @@
 
 import { useState, useEffect } from 'react'
 
-
 const Form = ({timeSlots = []}) => {
     const [name, setName] = useState('');
     const [puid, setPuid] = useState('');
     const [email, setEmail] = useState('');
     const [role, setRole] = useState('');
-
     const [date, setDate] = useState('');
     const [times, setTime] = useState('');
     const [selectedTimestamp, setSelectedTimestamp] = useState(null); // ISO timestamp for database
@@ -53,15 +51,6 @@ const Form = ({timeSlots = []}) => {
     const shownDates = Object.values(dateToTimesMap);
     const visibleDates = shownDates.slice(canSee.beg, canSee.end);
     const visibleTimes = date ? dateToTimesMap[date].times : [];
-    console.log('Visible Dates: ', visibleDates);
-    console.log('Visible times: ', visibleTimes);
-
-    useEffect(() => {
-      console.log(name);
-      console.log(role);
-      console.log(puid);
-      console.log(email);
-    }, [name, role, puid, email]);
 
     // booking form submission logic
     async function submitBooking(force_update = false) {
@@ -138,72 +127,79 @@ const Form = ({timeSlots = []}) => {
     await submitBooking(true); // will re-send with force_update: true
   };
   
-    return (
-      <>
-        <div className="bg-white shadow-2xl h-155 w-120 p-5 mt-10 mb-10 rounded-2xl flex flex-col">
+
+  return (
+    <>
+        <div className="bg-white shadow-xl w-120 p-6 mt-10 mb-10 rounded-xl flex flex-col">
             <span className="text-2xl font-bold">Book Your Appointment</span>
+            <span className="text-sm text-slate-500 mb-1 mt-1">Fill in your details below</span>
+
             <div className="flex flex-col items-center">
-              <div className="grid grid-cols-2 grid-rows-2 gap-4 mt-4">
+              <div className="grid grid-cols-2 grid-rows-2 gap-5 mt-4 w-full">
                   <div>
-                    <span className="text-lg ">Full Name</span>
-                    <input placeholder="Enter your full name" onChange={(e) => {setName(e.target.value)}} className="border border-gray-600 p-1 w-52 rounded-xs" type="text" />
+                    <span className="text-base font-medium text-slate-700 block mb-1.5 ">Full Name</span>
+                    <input placeholder="Enter your full name" onChange={(e) => {setName(e.target.value)}} className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
                   </div>
                   <div>
-                    <span className="text-lg">Role</span>
-                    <select  onChange={(e) => {setRole(e.target.value)}} className="border border-gray-600 h-8.5 w-52 p-1 rounded-xs" name="roles" id="">
-                      <option className="text-lg"value="default" disabled selected hidden>Select your role</option>
-                      <option value="Student">Student</option>
-                      <option value="Staff">Staff</option>
-                      <option value="other">Other</option>
+
+                    <span className="text-base font-medium text-slate-700 block mb-1.5">Role</span>
+                    <select value={role} onChange={(e) => setRole(e.target.value)} className="border border-slate-400 p-2.5 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" name="roles" id="">
+                      <option className="text-base" value="" disabled>Select your role</option>
+                      <option value="student">Student</option>
+                      <option value="staff">Faculty</option>
+                      <option value="other">Staff</option>
                     </select>
                   </div>
                   <div>
-                    <span className="text-lg">Email Address</span>
-                    <input placeholder="Enter your Email address"onChange={(e) => {setEmail(e.target.value)}} className="border border-gray-600 p-1 w-52 rounded-xs"type="text" />
+                    <span className="text-base font-medium text-slate-700 block mb-1.5">Email Address</span>
+                    <input placeholder="Enter your email address"onChange={(e) => {setEmail(e.target.value)}} className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
                   </div>
                   <div>
-                    <span className="text-lg">PUID</span>
-                    <input placeholder="Enter your full Purdue ID"onChange={(e) => {setPuid(e.target.value)}}className="border border-gray-600 p-1 w-52 rounded-xs" type="text" />
+                    <span className="text-base font-medium text-slate-700 block mb-1.5">PUID</span>
+                    <input placeholder="Enter your full Purdue ID"onChange={(e) => {setPuid(e.target.value)}}className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
                   </div>
               </div>
 
-              <div className="w-full mt-5 h-30">
-                <span>Select Date</span>
-                <div id="Dates" className="w-full flex flex-row mt-3 justify-center">
+              <div className="w-full mt-8 h-30">
+                <label className = "text-base font-medium text-slate-700 block mb-3">Select Date</label>
+                <div id="Dates" className="w-full flex flex-row justify-center items-center gap-2">
                   <button
                     onClick={() => moveVisibleDates(-1)}
-                    className={`hover:cursor-pointer hover:text-purple-200 mr-2 text-2xl ${canSee.beg === 0 ? ('invisible') : {}}`}
+                    className={`hover:bg-slate-100 p-2 rounded-lg text-xl transition-all ${canSee.beg === 0 ? 'invisible' : ''}`}
                   >
                     ᐸ
                   </button>
                   {visibleDates.map((dateSlot) => (
-                    <button onClick={() => {
-                    if (date !== dateSlot.date) {
-                      setTime("");
-                      setSelectedTimestamp(null);
-                    }
-                    setDate(dateSlot.date)}} key = {dateSlot.date} type = "button" className={`hflex flex-col items-center border mr-4 ml-0.75 hover:cursor-pointer h-15 w-25 rounded-sm ${date === dateSlot.date ? 'bg-secondary text-white' : 'hover:border-purple-500 hover:text-purple-500'}`}>
-                        <div className="text-sm font-medium">{dateSlot.day}</div>
-                        <div className="text-sm font-medium">{dateSlot.date.split('-')[1] + "/" + dateSlot.date.split('-')[2]}</div>
+                    <button 
+                      onClick={() => {date !== dateSlot.date ? setTime('') : null, setDate(dateSlot.date)}} 
+                      key = {dateSlot.date}
+                      type = "button" 
+                      className={`flex flex-col items-center border px-4 py-3 rounded-lg transition-all hover:shadow-md ${date === dateSlot.date ? 'bg-purple-600 text-white border-purple-600' : 'hover:border-purple-400 bg-white'}`}>
+                        <div className="text-xs font-medium">{dateSlot.day}</div>
+                        <div className="text-sm font-semibold mt-0.5">{dateSlot.date.split('-')[1] + "/" + dateSlot.date.split('-')[2]}</div>
                     </button>
                   ))}
                   <button
                     onClick={() => moveVisibleDates(1)}
-                    className={`hover:cursor-pointer text-2xl hover:text-purple-200 ${canSee.end === shownDates.length ? ('invisible') : {}}`}
+                    className={`hover:bg-slate-100 p-2 rounded-lg text-xl transition-all ${canSee.end === shownDates.length ? ('invisible') : {}}`}
                   >
- ᐳ
+                  ᐳ
                   </button>
                 </div>
               </div>
 
-              <div className="w-full h-53">
-                <span>Select Time</span>
-                <div id="times" className="w-full ml-2 justify-center">
+              <div className="w-full mt-2">
+                <label className = "text-base font-medium text-slate-700 block mb-3">Select Time</label>
+                <div id="times" className="w-full flex flex-wrap gap-2.5 justify-center min-h-24">
                     {date && visibleTimes.map((time) => (
-                      <button onClick={() => {setTime(time.time); setSelectedTimestamp(time.timestamp)}}key={time.time} type="button" className={`hover:cursor-pointer text-xs rounded-sm border mt-2 h-10 w-18 mr-4 ${times === time.time ? 'bg-secondary text-white' : 'hover:border-purple-500 hover:text-purple-500'}`}>{time.time}</button>
+                      <button 
+                        onClick={() => {setTime(time.time)}}
+                        key={time.time} 
+                        type="button" 
+                        className={`px-5 py-2.5 text-sm font-medium rounded-lg border transition-all hover:shadow-md ${times === time.time ? 'bg-purple-600 text-white border-purple-600' : 'hover:border-purple-400 bg-white'}`}>{time.time}</button>
                     ))}
                     {!date && (
-                      <span>Choose a date to view avaliable times.</span>
+                      <div className = "flex items-center justify-center w-full h-14 text-slate-500 text-sm">Choose a date to view avaliable times.</div>
                     )}
                 </div>
               </div>
