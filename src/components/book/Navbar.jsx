@@ -18,16 +18,16 @@ const Navbar = () => {
         <Image
           className="ml-5"
           src="/boilerbasket-logo.png"
-          alt=""
-          width={40}
-          height={40}
+          alt="ACE BoilerBasket"
+          width={50}
+          height={50}
         />
-        <span className="ml-5 font-bold text-lg">BoilerBasket</span>
+        <span className="ml-5 font-bold text-xl">BoilerBasket</span>
       </div>
-      <div className="flex items-center gap-4 mr-5">
-        <span className="text-gray-800 font-bold cursor-pointer text-sm">About</span>
-        <span className="text-gray-800 font-bold cursor-pointer text-sm">Contact</span>
-        <button onClick={() => handleLogin()}className="bg-purple-900 text-white cursor-pointer text-sm font-bold px-3 py-1 rounded">
+      <div className="flex items-center gap-8 mr-5">
+        <span className="text-gray-800 font-bold cursor-pointer text-base hover:text-purple-700 transition duration-200">About</span>
+        <span className="text-gray-800 font-bold cursor-pointer text-base hover:text-purple-700 transition duration-200">Contact</span>
+        <button onClick={() => handleLogin()}className="bg-purple-900 text-white cursor-pointer text-base font-bold px-3 py-1 rounded shadow-md hover:bg-purple-800 hover:scale-105 transition transform duration-200">
           Staff Login
         </button>
       </div>

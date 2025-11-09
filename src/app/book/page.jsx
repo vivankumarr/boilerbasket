@@ -3,15 +3,10 @@ import Navbar from '../../components/book/Navbar.jsx';
 import Form from '../../components/book/Form.jsx';
 import HowItWorks from '../../components/book/HowItWorks.jsx';
 
-//server imports
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { createClient } from '@/lib/supabase/server';
 
 export default async function bookingPage () {
-
-  //cookies for authentication if needed later :)
-  const supabase = createServerComponentClient({cookies});
-
+  const supabase = await createClient();
   const now = new Date().toISOString();
 
   //fetch blocked times data from supabase (things like holidays, days off, etc..)
@@ -34,22 +29,15 @@ export default async function bookingPage () {
     console.error('Error fetching existing appointments: ', errorexistingappts);
   }
 
-  //for debugging
-  console.log('Existing: ', existingAppts);
-
   //generate avaliable appointment times
   const avaliableSlots = makeSlots(blockedTimes || [], existingAppts || []);
 
-  //for debugging
-  console.log(avaliableSlots);
-
-
   return (
     <>
-      <div className="no-scrollbar min-h-screen flex flex-col items-center bg-gradient-to-br from-purple-50 via-purple-100 to-[#fff9c4]">
+      <div className="no-scrollbar min-h-screen flex flex-col items-center bg-gradient-to-br from-amber-100 via-purple-100 to-slate-100">
         <Navbar />
         <span className="text-black font-medium text-5xl mt-10 text-center">
-          Schedule your visit to<br />
+          Schedule Your Visit to<br />
           <span className="font-bold text-purple-900">ACE Campus Food Pantry</span>
         </span>
         <a
@@ -57,7 +45,7 @@ export default async function bookingPage () {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <button className="btn mt-10 text-xl border p-2 rounded-2">
+          <button className="btn mt-10 text-xl border px-6 py-2 rounded-md hover:scale-105 hover:bg-purple-900 hover:text-white transition transform duration-200">
             Learn More
           </button>
         </a>
@@ -160,4 +148,3 @@ function makeSlots(blockedTimes, existingAppts) {
   }
   return slots;
 }
-

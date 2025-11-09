@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 
-
 const Form = ({timeSlots = []}) => {
     const [name, setName] = useState('');
     const [puid, setPuid] = useState('');
@@ -46,15 +45,6 @@ const Form = ({timeSlots = []}) => {
     const shownDates = Object.values(dateToTimesMap);
     const visibleDates = shownDates.slice(canSee.beg, canSee.end);
     const visibleTimes = date ? dateToTimesMap[date].times : [];
-    console.log('Visible Dates: ', visibleDates);
-    console.log('Visible times: ', visibleTimes);
-
-    useEffect(() => {
-      console.log(name);
-      console.log(role);
-      console.log(puid);
-      console.log(email);
-    }, [name, role, puid, email]);
 
   return (
     <>
@@ -68,8 +58,8 @@ const Form = ({timeSlots = []}) => {
                   </div>
                   <div>
                     <span className="text-lg">Role</span>
-                    <select  onChange={(e) => {setRole(e.target.value)}} className="border border-gray-600 h-8.5 w-52 p-1 rounded-xs" name="roles" id="">
-                      <option className="text-lg"value="default" disabled selected hidden>Select your role</option>
+                    <select value={role} onChange={(e) => setRole(e.target.value)} className="border border-gray-600 h-8.5 w-52 p-1 rounded-xs" name="roles" id="">
+                      <option className="text-lg" value="" disabled>Select your role</option>
                       <option value="student">Student</option>
                       <option value="staff">Staff</option>
                       <option value="other">Other</option>
@@ -77,7 +67,7 @@ const Form = ({timeSlots = []}) => {
                   </div>
                   <div>
                     <span className="text-lg">Email Address</span>
-                    <input placeholder="Enter your Email address"onChange={(e) => {setEmail(e.target.value)}} className="border border-gray-600 p-1 w-52 rounded-xs"type="text" />
+                    <input placeholder="Enter your email address"onChange={(e) => {setEmail(e.target.value)}} className="border border-gray-600 p-1 w-52 rounded-xs"type="text" />
                   </div>
                   <div>
                     <span className="text-lg">PUID</span>
@@ -90,7 +80,7 @@ const Form = ({timeSlots = []}) => {
                 <div id="Dates" className="w-full flex flex-row mt-3 justify-center">
                   <button
                     onClick={() => moveVisibleDates(-1)}
-                    className={`hover:cursor-pointer hover:text-purple-200 mr-2 text-2xl ${canSee.beg === 0 ? ('invisible') : {}}`}
+                    className={`hover:cursor-pointer hover:text-purple-900 mr-2 text-2xl ${canSee.beg === 0 ? ('invisible') : {}}`}
                   >
                     ᐸ
                   </button>
@@ -113,7 +103,7 @@ const Form = ({timeSlots = []}) => {
                 <span>Select Time</span>
                 <div id="times" className="w-full ml-2 justify-center">
                     {date && visibleTimes.map((time) => (
-                      <button onClick={() => {setTime(time.time)}}key={time.time} type="button" className={`hover:cursor-pointer text-xs rounded-sm border mt-2 h-10 w-18 mr-4 ${times === time.time ? 'bg-secondary text-white' : 'hover:border-purple-500 hover:text-purple-500'}`}>{time.time}</button>
+                      <button onClick={() => {setTime(time.time)}}key={time.time} type="button" className={`hover:cursor-pointer text-xs rounded-sm border mt-2 h-10 w-18 mr-4 ${times === time.time ? 'bg-secondary text-white' : 'hover:border-purple-900 hover:text-purple-900'}`}>{time.time}</button>
                     ))}
                     {!date && (
                       <span>Choose a date to view avaliable times.</span>
@@ -121,7 +111,7 @@ const Form = ({timeSlots = []}) => {
                 </div>
               </div>
 
-              <button className="btn bg-secondary pt-2 pb-2 pr-1 pl-1 rounded-sm w-75 text-white  hover:shadow-lg hover:bg-purple-600 hover:scale-105 transform transition-transform duration-300">Confirm Booking</button>
+              <button className="btn bg-secondary pt-2 pb-2 pr-1 pl-1 rounded-sm w-75 text-white  hover:shadow-lg hover:bg-purple-900 hover:scale-105 transform transition-transform duration-300">Confirm Booking</button>
 
             </div>
         </div>

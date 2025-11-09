@@ -1,10 +1,14 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 
+// Middleware function to update the Supabase session and handle route access logic
+
 export async function updateSession(request) {
   let supabaseResponse = NextResponse.next({
     request,
   })
+
+  // Create a Supabase client for the current request
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -27,40 +31,30 @@ export async function updateSession(request) {
     }
   )
 
-  // Do not run code between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
-
-  // IMPORTANT: DO NOT REMOVE auth.getUser()
+  // Attempt to retrieve the currently authenticated user from Supabase; if no valid session exists,
+  // then "user" will be null
 
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth') &&
-    !request.nextUrl.pathname.startsWith('/error')
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
-    const url = request.nextUrl.clone()
-    url.pathname = '/login'
-    return NextResponse.redirect(url)
+  const isAdminRoute = request.nextUrl.pathname.startsWith('/admin')
+
+  // Redirect unauthenticated users trying to access admin routes to the login page
+
+  if (isAdminRoute && !user) {
+    const redirectUrl = request.nextUrl.clone()
+    redirectUrl.pathname = '/login'
+    return NextResponse.redirect(redirectUrl)
   }
 
-  // IMPORTANT: You *must* return the supabaseResponse object as it is.
-  // If you're creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally:
-  //    return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
+  // Redirect already authenticated users away from the login page to the appointments page
+
+  if (user && request.nextUrl.pathname === '/login') {
+    const redirectUrl = request.nextUrl.clone()
+    redirectUrl.pathname = '/admin/appointments'
+    return NextResponse.redirect(redirectUrl)
+  }
 
   return supabaseResponse
 }
