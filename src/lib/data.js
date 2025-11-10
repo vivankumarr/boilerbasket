@@ -13,6 +13,8 @@ export async function getTodaysAppointments() {
     const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
     const endOfDay = new Date(today.setHours(23, 59, 59, 999)).toISOString();
 
+    console.log(today, startOfDay, endOfDay);
+
     const { data, error } = await supabase
         .from('appointments')
         .select(`
@@ -34,6 +36,8 @@ export async function getTodaysAppointments() {
         console.error("Error fetching today's appointments:", error);
         return [];
     }
+
+
 
     return data;
 }

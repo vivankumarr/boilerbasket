@@ -128,7 +128,6 @@ export default function AppointmentsTable({ initialAppointments = [] }) {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex items-center space-x-3">
                       
-                        // Check-in button
                         {appt.status === 'Scheduled' && (
                             <button
                             onClick={() => alert('Check-in functionality not yet implemented')}
@@ -138,7 +137,6 @@ export default function AppointmentsTable({ initialAppointments = [] }) {
                             </button>
                         )}
 
-                        // Edit button
                         <button
                             onClick={() => alert('Edit functionality not yet implemented')}
                             className="text-slate-500 hover:text-blue-600 transition"
@@ -146,8 +144,7 @@ export default function AppointmentsTable({ initialAppointments = [] }) {
                         >
                             <Pencil className="h-5 w-5" />
                         </button>
-
-                        // Delete button
+                        
                         <button
                             onClick={() => alert('Delete functionality not yet implemented.')}
                             className="text-slate-500 hover:text-red-600 transition"

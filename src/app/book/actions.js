@@ -1,8 +1,7 @@
-//put form submission logic here!
+'use server'
 
 //server imports
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { supabaseService } from "@/lib/supabase/service";
 
 export async function confirmBooking(payload) {
     // fields from payload
@@ -23,8 +22,7 @@ export async function confirmBooking(payload) {
         return { success: false, error: "Appointment timestamp is required." };
     }
 
-    // cookies for authentication if needed later :)
-    const supabase = createServerComponentClient({ cookies });
+    const supabase = supabaseService;
 
     try {
         // find client by PUID

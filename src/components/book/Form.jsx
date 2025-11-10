@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { confirmBooking } from '@/app/book/actions'
 
 const Form = ({timeSlots = []}) => {
     const [name, setName] = useState('');
@@ -79,19 +80,7 @@ const Form = ({timeSlots = []}) => {
         force_update,
       };
 
-      const res = await fetch("/api/appointments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await res.json();
-
-      if (!res.ok && !result) {
-        setMessage("Server error. Please try again.");
-        setLoading(false);
-        return;
-      }
+      const result = await confirmBooking(payload);
 
       // Conflict: server found differences and returned diffs (ask user to confirm)
       if (result.conflict) {
@@ -114,6 +103,17 @@ const Form = ({timeSlots = []}) => {
       setConflict(null);
       // clear form
       setName(""); setPuid(""); setEmail(""); setRole("");
+      const name_input = document.getElementById('name_input');
+      const puid_input = document.getElementById('puid_input');
+      const email_input = document.getElementById('email_input');
+      name_input.value = "";
+      puid_input.value = "";
+      email_input.value = "";
+      setTime('');
+      setDate('');
+
+
+
     } catch (err) {
       setMessage("Unexpected error: " + (err.message || err));
     } finally {
@@ -138,25 +138,25 @@ const Form = ({timeSlots = []}) => {
               <div className="grid grid-cols-2 grid-rows-2 gap-5 mt-4 w-full">
                   <div>
                     <span className="text-base font-medium text-slate-700 block mb-1.5 ">Full Name</span>
-                    <input placeholder="Enter your full name" onChange={(e) => {setName(e.target.value)}} className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
+                    <input id= "name_input" placeholder="Enter your full name" onChange={(e) => {setName(e.target.value)}} className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
                   </div>
                   <div>
 
                     <span className="text-base font-medium text-slate-700 block mb-1.5">Role</span>
                     <select value={role} onChange={(e) => setRole(e.target.value)} className="border border-slate-400 p-2.5 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" name="roles" id="">
                       <option className="text-base" value="" disabled>Select your role</option>
-                      <option value="student">Student</option>
-                      <option value="staff">Faculty</option>
-                      <option value="other">Staff</option>
+                      <option value="Student">Student</option>
+                      <option value="Faculty">Faculty</option>
+                      <option value="Staff">Staff</option>
                     </select>
                   </div>
                   <div>
                     <span className="text-base font-medium text-slate-700 block mb-1.5">Email Address</span>
-                    <input placeholder="Enter your email address"onChange={(e) => {setEmail(e.target.value)}} className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
+                    <input id="email_input"placeholder="Enter your email address"onChange={(e) => {setEmail(e.target.value)}} className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
                   </div>
                   <div>
                     <span className="text-base font-medium text-slate-700 block mb-1.5">PUID</span>
-                    <input placeholder="Enter your full Purdue ID"onChange={(e) => {setPuid(e.target.value)}}className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
+                    <input id="puid_input" placeholder="Enter your full Purdue ID"onChange={(e) => {setPuid(e.target.value)}}className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
                   </div>
               </div>
 
@@ -193,7 +193,7 @@ const Form = ({timeSlots = []}) => {
                 <div id="times" className="w-full flex flex-wrap gap-2.5 justify-center min-h-24">
                     {date && visibleTimes.map((time) => (
                       <button 
-                        onClick={() => {setTime(time.time)}}
+                        onClick={() => {setTime(time.time), setSelectedTimestamp(time.timestamp)}}
                         key={time.time} 
                         type="button" 
                         className={`px-5 py-2.5 text-sm font-medium rounded-lg border transition-all hover:shadow-md ${times === time.time ? 'bg-purple-600 text-white border-purple-600' : 'hover:border-purple-400 bg-white'}`}>{time.time}</button>
@@ -207,11 +207,11 @@ const Form = ({timeSlots = []}) => {
               <button
                 disabled={loading}
                 onClick={() => submitBooking(false)}
-                className="btn bg-secondary pt-2 pb-2 pr-1 pl-1 rounded-sm w-75 text-white  hover:shadow-lg hover:bg-purple-600 hover:scale-105 transform transition-transform duration-300"
+                className="mt-8 bg-purple-600 hover:bg-purple-700 py-3 px-6 rounded-lg w-full text-white font-medium shadow-md hover:shadow-lg hover:scale-105 transform transition-transform duration-300"
               >
                 {loading ? "Booking..." : "Confirm Booking"}
               </button>
-              {message && <p className="mt-3 text-red-600">{message}</p>}
+              {!success && message && <p className="mt-3 text-red-600">{message}</p>}
               {success && <p className="mt-3 text-green-700">{message}</p>}
             </div>
         </div>
