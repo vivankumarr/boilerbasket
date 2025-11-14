@@ -4,7 +4,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req) {
   try {
-    const { name, email, role, date, time } = await req.json();
+    const { name, email, puid, role, date, time } = await req.json();
 
     if (!name || !email || !date || !time) {
       return new Response(JSON.stringify({ error: 'Missing required fields.' }), { status: 400 });
@@ -15,14 +15,15 @@ export async function POST(req) {
       to: email,
       subject: 'Booking Submission Received',
       html: `
+        <h2>ACE Food Pantry</h2>
         <p>Hello ${name},</p>
-        <p>We have successfully received your appointment booking submission with the following details:</p>
+        <p>You have successfully submitted the appointment form with the following details:</p>
         <ul>
           <li>Date: ${date}</li>
           <li>Time: ${time}</li>
           <li>Role: ${role}</li>
         </ul>
-        <p>Your submission for this date and time has been received.</p>
+        <p>This confirms your submission of the appointment form, not the actual appointment itself.</p>
         <p>Thank you for submitting!</p>
       `,
     });
