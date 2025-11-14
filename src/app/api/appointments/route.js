@@ -23,7 +23,7 @@ export async function POST(req) {
           <li>Time: ${time}</li>
           <li>Role: ${role}</li>
         </ul>
-        <p>This confirms your submission of the appointment form, not the actual appointment itself.</p>
+        <p>This confirms your submission of the appointment form.</p>
         <p>Thank you for submitting!</p>
       `,
     });
