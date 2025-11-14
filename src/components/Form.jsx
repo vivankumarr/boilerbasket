@@ -55,6 +55,42 @@ const Form = ({timeSlots = []}) => {
       console.log(email);
     }, [name, role, puid, email]);
 
+        const handleSubmit = async () => {
+      if (!name || !email || !date || !times) {
+        alert("Please fill out all required fields.");
+        return;
+      }
+
+      const response = await fetch('/api/appointments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          puid,
+          role,
+          date,
+          time: times
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Your booking submission has been received. Check your email for confirmation.");
+        setName('');
+        setEmail('');
+        setPuid('');
+        setRole('');
+        setDate('');
+        setTime('');
+      } else {
+        alert(`Error: ${data.error}`);
+      }
+    };
+
   return (
     <>
         <div className="bg-white shadow-2xl h-150 w-100 p-5 mt-10 mb-10 rounded-2xl flex flex-col">
@@ -120,7 +156,12 @@ const Form = ({timeSlots = []}) => {
                 </div>
               </div>
 
-              <button className="mt-auto btn bg-secondary pt-2 pb-2 pr-1 pl-1 rounded-sm w-50 text-white">Confirm Booking</button>
+              <button 
+                onClick={handleSubmit} 
+                className="mt-auto btn bg-secondary pt-2 pb-2 pr-1 pl-1 rounded-sm w-50 text-white">
+                Confirm Booking
+              </button>
+
 
             </div>
         </div>
