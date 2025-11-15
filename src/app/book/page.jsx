@@ -3,10 +3,10 @@ import Navbar from '../../components/book/Navbar.jsx';
 import Form from '../../components/book/Form.jsx';
 import HowItWorks from '../../components/book/HowItWorks.jsx';
 
-import { createClient } from '@/lib/supabase/server';
+import { supabaseService } from '@/lib/supabase/service';
 
 export default async function bookingPage () {
-  const supabase = await createClient();
+  const supabase = supabaseService;
   const now = new Date().toISOString();
 
   //fetch blocked times data from supabase (things like holidays, days off, etc..)

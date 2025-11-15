@@ -27,17 +27,11 @@ export default function SidebarAdmin() {
 	const router = useRouter();
 
 	async function handleLogout() {
-    // CHECKPOINT 1: Does the button click even register?
-		console.log('LOGOUT BUTTON CLICKED'); 
-
 		const { error } = await supabase.auth.signOut();
 
 		if (error) {
-			console.error('Error logging out:', error.message);
+			alert('Logout failed. Please try again.');
 		} else {
-			// CHECKPOINT 2: Did the sign-out succeed?
-			console.log('Sign-out successful, redirecting...'); 
-			
 			router.refresh(); 
 			router.push('/login');
 		}
