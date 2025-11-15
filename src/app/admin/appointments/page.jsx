@@ -2,6 +2,7 @@ import StatCard from "@/components/StatCard.jsx"
 import { Calendar, FileInput, Clock, Sigma } from "lucide-react";
 import { getTodaysAppointments } from "@/lib/data.js";
 import AppointmentsTable from "@/components/admin/AppointmentsTable";
+import { checkInClientServerAction, checkOutClientServerAction } from "./actions";
 
 export default async function AppointmentsPage () {
 
@@ -29,7 +30,10 @@ export default async function AppointmentsPage () {
         </h1>
 
         <div className="px-4">
-          <AppointmentsTable initialAppointments={todaysAppointments} />
+          <AppointmentsTable initialAppointments={todaysAppointments}
+          checkInClient={checkInClientServerAction}
+          checkOutClient={checkOutClientServerAction}
+          />
         </div>
     </main>
   )
