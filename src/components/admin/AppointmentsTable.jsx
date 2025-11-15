@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Search, Pencil, Trash2 } from "lucide-react";
+import Form from "./Form";
 
 // Helper function to format time (e.g., "1:30 PM")
 function formatTime(timestamp) {
@@ -66,6 +67,8 @@ export default function AppointmentsTable({
   return (
     <div className="bg-white shadow-lg rounded-md overflow-hidden">
       {/* Search and filter section */}
+
+      <Form />
 
       <div className="flex flex-col md:flex-row justify-between items-center p-4 bg-white border-t border-b border-slate-200 space-y-3 md:space-y-0">
         {/* Search bar */}

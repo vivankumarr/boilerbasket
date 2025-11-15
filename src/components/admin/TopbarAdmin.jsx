@@ -1,19 +1,18 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
 import { UserRoundPlus, Plus } from "lucide-react";
+import { usePopup } from "./ScheduleAppointmentPopupContext";
 
 const buttonDiv =
   "flex items-center gap-2 bg-purple-700 hover:bg-purple-800 text-white font-medium py-2.5 px-5 rounded-lg shadow-md transition";
 
 const TopbarAdmin = () => {
-  const router = useRouter();
+  // const router = useRouter();
 
   const pathname = usePathname();
   const pathname_admin = "/admin/";
 
-  const handleNewAppointment = () => {
-		router.push("/admin/appointments/schedule");
-  };
+  const { showPopup, setShowPopup } = usePopup();
 
   var titleText = null;
   var subtitleText = null;
@@ -71,7 +70,7 @@ const TopbarAdmin = () => {
       )}
 
       {pathname === pathname_admin.concat("appointments") && (
-        <button onClick={handleNewAppointment} className={buttonDiv}>
+        <button onClick={() => {setShowPopup(true); console.log("clicked");}} className={buttonDiv}>
           <Plus />
           <span>New Appointment</span>
         </button>
