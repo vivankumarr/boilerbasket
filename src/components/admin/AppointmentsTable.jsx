@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Search, Pencil, Trash2 } from "lucide-react";
 import Form from "./Form";
+import { usePopup } from "./ScheduleAppointmentPopupContext";
+import EditForm from "./EditForm";
 
 // Helper function to format time (e.g., "1:30 PM")
 function formatTime(timestamp) {
@@ -46,8 +48,17 @@ export default function AppointmentsTable({
   checkInClient,
   checkOutClient,
 }) {
+  const { showPopup, setShowPopup } = usePopup();
+  const [editPopup, setEditPopup] = useState(false);
+  const [editData, setEditData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+
+  const handleEditPopup = (data) => {
+    setEditData(data); // Pass the appointment data to the EditForm component
+    console.log(data)
+    setEditPopup(true);
+  }
   
   // Filter the appointments based on state
   const filteredAppointments = initialAppointments
@@ -68,7 +79,7 @@ export default function AppointmentsTable({
     <div className="bg-white shadow-lg rounded-md overflow-hidden">
       {/* Search and filter section */}
 
-      <Form />
+      <Form showPopup={showPopup} setShowPopup={setShowPopup} />
 
       <div className="flex flex-col md:flex-row justify-between items-center p-4 bg-white border-t border-b border-slate-200 space-y-3 md:space-y-0">
         {/* Search bar */}
@@ -202,9 +213,7 @@ export default function AppointmentsTable({
                       )}
 
                       <button
-                        onClick={() =>
-                          alert("Edit functionality not yet implemented")
-                        }
+                        onClick={() => handleEditPopup(appt)}
                         className="text-slate-500 hover:text-blue-600 transition"
                         title="Edit Appointment"
                       >
@@ -218,8 +227,10 @@ export default function AppointmentsTable({
                         className="text-slate-500 hover:text-red-600 transition"
                         title="Delete Appointment"
                       >
+
                         <Trash2 className="h-5 w-5" />
                       </button>
+                    {/* <EditForm previousData={appt.clients} showPopup={editPopup} setShowPopup={setEditPopup} /> */}
                     </div>
                   </td>
                 </tr>
@@ -239,6 +250,8 @@ export default function AppointmentsTable({
             )}
           </tbody>
         </table>
+
+        <EditForm previousData={editData?.clients} showPopup={editPopup} setShowPopup={setEditPopup} />
       </div>
     </div>
   );

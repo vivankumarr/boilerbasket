@@ -1,22 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { confirmBooking } from "@/app/book/actions";
 import { useRouter } from "next/navigation";
 import { usePopup } from "./ScheduleAppointmentPopupContext";
 
-const Form = ({showPopup, setShowPopup}) => {
-  // const { showPopup, setShowPopup } = usePopup();
+const EditForm = ({ previousData, showPopup, setShowPopup }) => {
 
-  const [name, setName] = useState("");
-  const [puid, setPuid] = useState("");
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
+  const [name, setName] = useState(previousData?.full_name || "");
+  const [puid, setPuid] = useState(previousData?.puid || "");
+  const [email, setEmail] = useState(previousData?.email || "");
+  const [role, setRole] = useState(previousData?.role || "");
+
+  useEffect(() => {
+    if (previousData) {
+      setName(previousData.full_name || "");
+      setEmail(previousData.email || "");
+      setRole(previousData.role || "");
+      setPuid(previousData.puid || "");
+    }
+  }, [previousData]);
+
 
   // shows error message for booking form
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
-  const [conflict, setConflict] = useState(null); // holds conflict response when server returns conflict
   const [success, setSuccess] = useState(false);
 
   // booking form submission logic
@@ -44,14 +52,6 @@ const Form = ({showPopup, setShowPopup}) => {
 
       const result = await confirmBooking(payload);
 
-      // Conflict: server found differences and returned diffs (ask user to confirm)
-      if (result.conflict) {
-        setConflict(result); // store the server response (client + diffs)
-        setMessage(null);
-        setLoading(false);
-        return;
-      }
-
       // Error
       if (!result.success) {
         setMessage(result.error || "An error occurred. Please try again.");
@@ -64,7 +64,6 @@ const Form = ({showPopup, setShowPopup}) => {
       setMessage(
         "Appointment booked! You should receive a confirmation email shortly."
       );
-      setConflict(null);
       // clear form
       setName("");
       setPuid("");
@@ -84,12 +83,6 @@ const Form = ({showPopup, setShowPopup}) => {
     }
   }
 
-  // When user clicks "Overwrite & Continue" in the conflict UI
-  const handleForceOverwrite = async () => {
-    if (!conflict) return;
-    await submitBooking(true); // will re-send with force_update: true
-  };
-
   return (
     <div>
       {showPopup && (
@@ -108,7 +101,7 @@ const Form = ({showPopup, setShowPopup}) => {
                   </span>
                   <input
                     id="name_input"
-                    placeholder="Enter your full name"
+                    value={name}
                     onChange={(e) => {
                       setName(e.target.value);
                     }}
@@ -141,7 +134,7 @@ const Form = ({showPopup, setShowPopup}) => {
                   </span>
                   <input
                     id="email_input"
-                    placeholder="Enter your email address"
+                    value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);
                     }}
@@ -155,7 +148,7 @@ const Form = ({showPopup, setShowPopup}) => {
                   </span>
                   <input
                     id="puid_input"
-                    placeholder="Enter your full Purdue ID"
+                    value={puid}
                     onChange={(e) => {
                       setPuid(e.target.value);
                     }}
@@ -164,7 +157,7 @@ const Form = ({showPopup, setShowPopup}) => {
                   />
                 </div>
               </div>
-
+                  
               <button
                 disabled={loading}
                 onClick={() => submitBooking(false)}
@@ -180,81 +173,17 @@ const Form = ({showPopup, setShowPopup}) => {
               >
                 {loading ? "Booking..." : "Cancel"}
               </button>
+
               {!success && message && (
                 <p className="mt-3 text-red-600">{message}</p>
               )}
               {success && <p className="mt-3 text-green-700">{message}</p>}
             </div>
           </div>
-
-          {/* Conflict Popup*/}
-          {conflict && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-              <div className="bg-white rounded-lg p-6 w-full max-w-xl shadow-lg">
-                <h3 className="text-lg font-semibold mb-3">
-                  Confirm your info
-                </h3>
-                <p className="mb-4">
-                  We found an existing account with PUID{" "}
-                  <strong>{conflict.client.puid}</strong>. The data you entered
-                  differs from our records. Please confirm whether you want to
-                  overwrite the stored values with your entries.
-                </p>
-
-                <div className="grid grid-cols-3 gap-4 mb-4">
-                  <div>
-                    <div className="font-semibold">Field</div>
-                    <div className="text-sm mt-2">Full name</div>
-                    <div className="text-sm mt-2">Email</div>
-                    <div className="text-sm mt-2">Role</div>
-                  </div>
-
-                  <div>
-                    <div className="font-semibold">Existing</div>
-                    <div className="text-sm mt-2">
-                      {conflict.client.full_name || "—"}
-                    </div>
-                    <div className="text-sm mt-2">
-                      {conflict.client.email || "—"}
-                    </div>
-                    <div className="text-sm mt-2">
-                      {conflict.client.role || "—"}
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="font-semibold">You entered</div>
-                    <div className="text-sm mt-2">{name || "—"}</div>
-                    <div className="text-sm mt-2">{email || "—"}</div>
-                    <div className="text-sm mt-2">{role || "—"}</div>
-                  </div>
-                </div>
-
-                <div className="flex justify-end gap-3">
-                  <button
-                    onClick={() => {
-                      setConflict(null);
-                      setMessage("Cancelled. No changes were made.");
-                    }}
-                    className="px-4 py-2 border rounded"
-                  >
-                    Cancel
-                  </button>
-
-                  <button
-                    onClick={handleForceOverwrite}
-                    className="px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600"
-                  >
-                    Overwrite & Continue
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       )}
     </div>
   );
 };
 
-export default Form;
+export default EditForm;
