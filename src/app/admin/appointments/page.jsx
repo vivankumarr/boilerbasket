@@ -5,10 +5,11 @@ export default async function page () {
 
 //     const supabase = createServerComponent({cookies});
 //     const now = new Date().toISOString();
-
+//
 //     const{data: appointments, errorAppointments} = await supabase
 //         .from{"appointments"}
 //         .select{"*"}
+           .filter('appointment_time', 'eq', new Date().toISOString().split('T')[0]);
 
     return (
        <>
