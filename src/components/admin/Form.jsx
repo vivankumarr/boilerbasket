@@ -75,10 +75,10 @@ const Form = ({}) => {
       name_input.value = "";
       puid_input.value = "";
       email_input.value = "";
+      router.push("/admin/appointments");
     } catch (err) {
       setMessage("Unexpected error: " + (err.message || err));
     } finally {
-      router.push("/admin/appointments");
       setLoading(false);
     }
   }
