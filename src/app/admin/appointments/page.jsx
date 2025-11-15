@@ -11,20 +11,19 @@ export default async function AppointmentsPage () {
   const totalCheckedIn = todaysAppointments.filter(appt => appt.status === 'Checked-In').length;
   const totalUpcoming = todaysAppointments.filter(appt => appt.status === 'Scheduled').length;
 
-    const now = new Date();
-    const dayOfWeek = now.getDay();
-    const monday = new Date(now);
-    monday.setDate(now.getDate() - ((dayOfWeek + 6) % 7));
-    monday.setHours(0, 0, 0, 0);
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((dayOfWeek + 6) % 7));
+  monday.setHours(0, 0, 0, 0);
 
-    const sunday = new Date(monday);
-    sunday.setDate(monday.getDate() + 6);
-    sunday.setHours(23, 59, 59, 999);
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  sunday.setHours(23, 59, 59, 999);
 
-    const totalThisWeek = todaysAppointments.filter(appt => {
-    const apptDate = new Date(appt.appointment_time);
-    return apptDate >= monday && apptDate <= sunday;
-    }).length;
+  const totalThisWeek = todaysAppointments.filter(appt => const apptDate = new Date(appt.appointment_time);
+  return apptDate >= monday && apptDate <= sunday;
+  }).length;
 
 
   return (
