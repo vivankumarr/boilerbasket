@@ -6,7 +6,7 @@ import { supabaseService } from "@/lib/supabase/service";
 export async function confirmBooking(payload) {
     // fields from payload
 
-    const { name: rawName, puid: rawPuid, email: rawEmail, role: rawRole, appointment_timestamp: appointmentTimestampRaw, force_update = false, } = payload || {};
+    const { name: rawName, puid: rawPuid, email: rawEmail, role: rawRole, appointment_timestamp: appointmentTimestampRaw, force_update = false, proceed_without_update = false,} = payload || {};
     const name = rawName?.trim() || null;
     const puid = rawPuid ? String(rawPuid).trim() : null;
     const email = rawEmail ? String(rawEmail).trim().toLowerCase() : null;
@@ -45,18 +45,18 @@ export async function confirmBooking(payload) {
             if (email && email !== (existingClient.email || "").toLowerCase()) diffs.email = { existing: existingClient.email, incoming: email };
             if (role && role !== (existingClient.role || "")) diffs.role = { existing: existingClient.role, incoming: role };
 
-            if (Object.keys(diffs).length > 0 && !force_update) {
+            if (Object.keys(diffs).length > 0 && !force_update && !proceed_without_update) {
                 return {
                     success: false,
                     conflict: true,
-                    message: "Provided info differs from existing client record. Confirm to overwrite.",
+                    message: 'Is this you? We found an existing account for PUID ${puid} under the name "${existingClient.full_name || "Unknown"}".',
                     client: existingClient,
                     diffs,
                 };
             }
 
             // if different input is confirmed, update client
-            if (Object.keys(diffs).length > 0 && force_update) {
+            if (Object.keys(diffs).length > 0 && force_update ) {
                 const updates = {};
                 if (diffs.full_name) updates.full_name = name;
                 if (diffs.email) updates.email = email;
