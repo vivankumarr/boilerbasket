@@ -77,6 +77,7 @@ const Form = ({showPopup, setShowPopup}) => {
       puid_input.value = "";
       email_input.value = "";
       setShowPopup(false);
+      window.location.reload();
     } catch (err) {
       setMessage("Unexpected error: " + (err.message || err));
     } finally {

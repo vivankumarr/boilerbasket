@@ -38,4 +38,22 @@ export const checkOutClientServerAction = async ({ apptId }) => {
   return data;
 };
 
+export const editAppointment = async (apptId, formData) => {
+  const supabase = await createClient();
 
+  // console.log("Formdata", formData);
+
+  const { data, error } = await supabase
+    .from("appointments")
+    .update({ appointment_time: formData.appointment_timestamp })
+    .eq("id", apptId)
+    .select("*")
+    .single();
+
+    if (error) {
+    console.error("Error editing appointment:", error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true, appointment: data };
+};

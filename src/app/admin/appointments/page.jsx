@@ -3,6 +3,7 @@ import { Calendar, FileInput, Clock, Sigma } from "lucide-react";
 import { getTodaysAppointments } from "@/lib/data.js";
 import AppointmentsTable from "@/components/admin/AppointmentsTable";
 import { checkInClientServerAction, checkOutClientServerAction } from "./actions";
+import { calculateEffectiveSlots } from "@/app/book/page";
 
 export default async function AppointmentsPage () {
 
@@ -11,6 +12,8 @@ export default async function AppointmentsPage () {
   const totalToday = todaysAppointments.length;
   const totalCheckedIn = todaysAppointments.filter(appt => appt.status === 'Checked-In').length;
   const totalUpcoming = todaysAppointments.filter(appt => appt.status === 'Scheduled').length;
+
+  const availableSlots = await calculateEffectiveSlots();
   
   return (
     <main className="space-y-6">
@@ -33,6 +36,7 @@ export default async function AppointmentsPage () {
           <AppointmentsTable initialAppointments={todaysAppointments}
           checkInClient={checkInClientServerAction}
           checkOutClient={checkOutClientServerAction}
+          timeSlots={availableSlots}
           />
         </div>
     </main>
