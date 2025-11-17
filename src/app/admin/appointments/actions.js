@@ -41,8 +41,6 @@ export const checkOutClientServerAction = async ({ apptId }) => {
 export const editAppointment = async (apptId, formData) => {
   const supabase = await createClient();
 
-  // console.log("Formdata", formData);
-
   const { data, error } = await supabase
     .from("appointments")
     .update({ appointment_time: formData.appointment_timestamp })
