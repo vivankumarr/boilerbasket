@@ -65,6 +65,8 @@ function makeSlots(blockedTimes, existingAppts) {
     const isolateDate = workingDate.toISOString().split('T')[0];
     const day = workingDate.getDay();
 
+    console.log(d);
+
     //if the day is not a sunday or tuesday, then skip
     if (day != 0 && day != 2) continue;
 
