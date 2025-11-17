@@ -55,3 +55,19 @@ export const editAppointment = async (apptId, formData) => {
 
   return { success: true, appointment: data };
 };
+
+export const deleteAppointment = async (apptId) => {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("appointments")
+    .delete()
+    .eq("id", apptId);
+
+    if (error) {
+    console.error("Error deleting appointment:", error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+};

@@ -96,6 +96,14 @@ const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [
 
       const result = await editAppointment(apptId, payload);
 
+      // Error
+      if (!result.success) {
+        setMessage(result.error || "An error occurred. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+
       // Success
       setSuccess(true);
       setMessage(

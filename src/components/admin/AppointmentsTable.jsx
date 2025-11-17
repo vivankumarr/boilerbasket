@@ -5,6 +5,7 @@ import { Search, Pencil, Trash2 } from "lucide-react";
 import Form from "./Form";
 import { usePopup } from "./ScheduleAppointmentPopupContext";
 import EditForm from "./EditForm";
+import DeleteForm from "./DeleteForm";
 
 // Helper function to format time (e.g., "1:30 PM")
 function formatTime(timestamp) {
@@ -52,6 +53,8 @@ export default function AppointmentsTable({
   const { showPopup, setShowPopup } = usePopup();
   const [editPopup, setEditPopup] = useState(false);
   const [editData, setEditData] = useState(null);
+  const [deletePopup, setDeletePopup] = useState(false);
+  const [deleteData, setDeleteData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
 
@@ -59,8 +62,13 @@ export default function AppointmentsTable({
     setEditData(data); // Pass the appointment data to the EditForm component
     // console.log(data)
     setEditPopup(true);
-  }
-  
+  };
+
+  const handleDeletePopup = (data) => {
+    setDeleteData(data);
+    setDeletePopup(true);
+  };
+
   // Filter the appointments based on state
   const filteredAppointments = initialAppointments
     .filter((appt) => {
@@ -78,7 +86,6 @@ export default function AppointmentsTable({
 
   return (
     <div className="bg-white shadow-lg rounded-md overflow-hidden">
-
       <Form showPopup={showPopup} setShowPopup={setShowPopup} />
 
       {/* Search and filter section */}
@@ -118,8 +125,7 @@ export default function AppointmentsTable({
         </div>
       </div>
 
-      
-      {/* Popup Form */}
+      {/* Popup Forms */}
       <EditForm
         apptId={editData?.id}
         previousData={editData?.clients}
@@ -127,6 +133,12 @@ export default function AppointmentsTable({
         showPopup={editPopup}
         setShowPopup={setEditPopup}
         timeSlots={timeSlots}
+      />
+
+      <DeleteForm 
+        deletePopup={deletePopup}
+        setDeletePopup={setDeletePopup}
+        apptId={deleteData?.id}
       />
 
       {/* Today's appointments table */}
@@ -203,8 +215,8 @@ export default function AppointmentsTable({
                         <button
                           onClick={async () => {
                             await checkInClient({ apptId: appt.id });
-                            window.location.reload(); 
-                            // TODO: we gotta stop passing the appointments 
+                            window.location.reload();
+                            // TODO: we gotta stop passing the appointments
                             // as a prop otherwise we gotta do this(yuck)
                           }}
                           className="px-3 py-1 text-xs font-medium rounded-md text-white bg-purple-700 hover:bg-purple-600 transition"
@@ -234,13 +246,10 @@ export default function AppointmentsTable({
                       </button>
 
                       <button
-                        onClick={() =>
-                          alert("Delete functionality not yet implemented.")
-                        }
+                        onClick={() => handleDeletePopup(appt)}
                         className="text-slate-500 hover:text-red-600 transition"
                         title="Delete Appointment"
                       >
-
                         <Trash2 className="h-5 w-5" />
                       </button>
                     </div>
