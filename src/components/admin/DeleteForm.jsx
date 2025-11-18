@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { deleteAppointment } from "@/app/admin/appointments/actions";
 
-const DeleteForm = ({ deletePopup, setDeletePopup, apptId }) => {
+const DeleteForm = ({ deletePopup, setDeletePopup, apptId, onRefresh }) => {
   // shows error message for booking form
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
@@ -24,7 +24,9 @@ const DeleteForm = ({ deletePopup, setDeletePopup, apptId }) => {
       setSuccess(true);
       setMessage("Appointment deleted successfully.");
       setDeletePopup(false);
-      window.location.reload();
+      if (onRefresh) {
+        await onRefresh();
+      }
     } catch (err) {
       setMessage("Unexpected error: " + (err.message || err));
     } finally {

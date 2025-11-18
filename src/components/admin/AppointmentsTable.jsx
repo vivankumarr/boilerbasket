@@ -48,6 +48,7 @@ export default function AppointmentsTable({
   initialAppointments = [],
   checkInClient,
   checkOutClient,
+  onRefresh,
   timeSlots = [], // optionally pass available slots for EditForm time selection
 }) {
   const { showPopup, setShowPopup } = usePopup();
@@ -133,12 +134,14 @@ export default function AppointmentsTable({
         showPopup={editPopup}
         setShowPopup={setEditPopup}
         timeSlots={timeSlots}
+        onRefresh={onRefresh}
       />
 
       <DeleteForm 
         deletePopup={deletePopup}
         setDeletePopup={setDeletePopup}
         apptId={deleteData?.id}
+        onRefresh={onRefresh}
       />
 
       {/* Today's appointments table */}
@@ -215,9 +218,6 @@ export default function AppointmentsTable({
                         <button
                           onClick={async () => {
                             await checkInClient({ apptId: appt.id });
-                            window.location.reload();
-                            // TODO: we gotta stop passing the appointments
-                            // as a prop otherwise we gotta do this(yuck)
                           }}
                           className="px-3 py-1 text-xs font-medium rounded-md text-white bg-purple-700 hover:bg-purple-600 transition"
                         >
@@ -229,7 +229,6 @@ export default function AppointmentsTable({
                         <button
                           onClick={async () => {
                             await checkOutClient({ apptId: appt.id });
-                            window.location.reload();
                           }}
                           className="px-3 py-1 text-xs font-medium rounded-md text-white bg-purple-700 hover:bg-purple-600 transition"
                         >

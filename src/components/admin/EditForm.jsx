@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { confirmBooking } from "@/app/book/actions";
 import { editAppointment } from "@/app/admin/appointments/actions";
 
-const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [], currentTimestamp }) => {
+const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [], currentTimestamp, onRefresh }) => {
 
   const [name, setName] = useState(previousData?.full_name || "");
   const [puid, setPuid] = useState(previousData?.puid || "");
@@ -107,7 +107,7 @@ const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [
       // Success
       setSuccess(true);
       setMessage(
-        "Appointment booked! You should receive a confirmation email shortly."
+        "Appointment updated successfully!"
       );
       // clear form
       setName("");
@@ -123,7 +123,9 @@ const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [
       setTime("");
       setDate("");
       setShowPopup(false);
-      window.location.reload();
+      if (onRefresh) {
+        await onRefresh();
+      }
     } catch (err) {
       setMessage("Unexpected error: " + (err.message || err));
     } finally {
