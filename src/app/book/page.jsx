@@ -6,31 +6,8 @@ import HowItWorks from '../../components/book/HowItWorks.jsx';
 import { supabaseService } from '@/lib/supabase/service';
 
 export default async function bookingPage () {
-  const supabase = supabaseService;
-  const now = new Date().toISOString();
-
-  //fetch blocked times data from supabase (things like holidays, days off, etc..)
-  const {data: blockedTimes, errorblockedtimes} = await supabase 
-    .from('blocked_periods')
-    .select('*')
-    .order('start_date', {ascending: true});
-
-  //fetch appointments already made from supabase
-  const {data: existingAppts, errorexistingappts } = await supabase
-    .from('appointments')
-    .select('appointment_time')
-    .gte('appointment_time', now)
-
-  //log the errors if applicable
-  if (errorblockedtimes) {
-    console.error('Error fetching from blocked times: ', errorblockedtimes);
-  }
-  if (errorexistingappts) {
-    console.error('Error fetching existing appointments: ', errorexistingappts);
-  }
-
-  //generate avaliable appointment times
-  const avaliableSlots = makeSlots(blockedTimes || [], existingAppts || []);
+  
+  const avaliableSlots = await calculateEffectiveSlots();
 
   return (
     <>
@@ -149,6 +126,36 @@ function makeSlots(blockedTimes, existingAppts) {
     })
   }
   return slots;
+}
+
+// TODO: Whoever wrote this page should refactor this export into the main component
+// We need the data for editing functionality
+export async function calculateEffectiveSlots() {
+  const supabase = supabaseService;
+  const now = new Date().toISOString();
+
+  //fetch blocked times data from supabase (things like holidays, days off, etc..)
+  const {data: blockedTimes, errorblockedtimes} = await supabase 
+    .from('blocked_periods')
+    .select('*')
+    .order('start_date', {ascending: true});
+
+  //fetch appointments already made from supabase
+  const {data: existingAppts, errorexistingappts } = await supabase
+    .from('appointments')
+    .select('appointment_time')
+    .gte('appointment_time', now)
+
+  //log the errors if applicable
+  if (errorblockedtimes) {
+    console.error('Error fetching from blocked times: ', errorblockedtimes);
+  }
+  if (errorexistingappts) {
+    console.error('Error fetching existing appointments: ', errorexistingappts);
+  } 
+
+  //generate avaliable appointment times
+  return makeSlots(blockedTimes || [], existingAppts || []);
 }
 
 export const metadata = {
