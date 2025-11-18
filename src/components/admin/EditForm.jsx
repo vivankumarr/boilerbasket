@@ -207,9 +207,9 @@ const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [
                       >
                         <div className="text-xs font-medium">{dateSlot.day}</div>
                         <div className="text-sm font-semibold mt-0.5">
-                          {dateSlot.date.split("-")[1] +
+                          {dateSlot.date.split("/")[0] +
                             "/" +
-                            dateSlot.date.split("-")[2]}
+                            dateSlot.date.split("/")[1]}
                         </div>
                       </button>
                     ))}
