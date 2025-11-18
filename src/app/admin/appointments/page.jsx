@@ -21,7 +21,7 @@ export default async function AppointmentsPage () {
   sunday.setDate(monday.getDate() + 6);
   sunday.setHours(23, 59, 59, 999);
 
-  const totalThisWeek = todaysAppointments.filter(appt => const apptDate = new Date(appt.appointment_time);
+  const totalThisWeek = todaysAppointments.filter(appt => {const apptDate = new Date(appt.appointment_time);
   return apptDate >= monday && apptDate <= sunday;
   }).length;
 

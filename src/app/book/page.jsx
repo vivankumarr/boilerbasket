@@ -85,18 +85,17 @@ function makeSlots(blockedTimes, existingAppts) {
   //iterate through all dates from today -> next month
   for (let d = new Date(today); d <= nextMonth; d.setDate(d.getDate() + 1)) {
     const workingDate = new Date(d);
-    const isolateDate = workingDate.toISOString().split('T')[0];
+    const isolateDate = workingDate.toLocaleDateString().split('T')[0];
     const day = workingDate.getDay();
 
-    console.log(d);
 
     //if the day is not a sunday or tuesday, then skip
     if (day != 0 && day != 2) continue;
 
     //if at least one blocked date blocks, then skip
     const isBlocked = blockedTimes.some(period => {
-      const start = new Date(period.start_date).toISOString();
-      const end = new Date(period.end_date).toISOString();
+      const start = new Date(period.start_date).toLocaleDateString();
+      const end = new Date(period.end_date).toLocaleDateString();
 
       const startDate = start.split('T')[0];
       const endDate = end.split('T')[0];
@@ -105,6 +104,7 @@ function makeSlots(blockedTimes, existingAppts) {
     });
 
     if (isBlocked) continue;
+    console.log("Got passed blocked");
 
     let timeSlots = (day == 0 ? timeSlotsSunday : timeSlotsTuesday);
 

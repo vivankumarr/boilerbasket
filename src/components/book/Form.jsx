@@ -176,7 +176,7 @@ const Form = ({timeSlots = []}) => {
                       type = "button" 
                       className={`flex flex-col items-center border px-4 py-3 rounded-lg transition-all hover:shadow-md ${date === dateSlot.date ? 'bg-purple-600 text-white border-purple-600' : 'hover:border-purple-400 bg-white'}`}>
                         <div className="text-xs font-medium">{dateSlot.day}</div>
-                        <div className="text-sm font-semibold mt-0.5">{dateSlot.date.split('-')[1] + "/" + dateSlot.date.split('-')[2]}</div>
+                        <div className="text-sm font-semibold mt-0.5">{dateSlot.date.split('/')[0] + "/" + dateSlot.date.split('/')[1]}</div>
                     </button>
                   ))}
                   <button
