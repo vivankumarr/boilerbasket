@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search, Pencil, Trash2 } from "lucide-react";
+import { Search, Pencil, Trash2, CircleX } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { usePopup } from "./ScheduleAppointmentPopupContext";
 import Form from "./Form";
@@ -45,7 +45,7 @@ function StatusBadge({ status }) {
   );
 }
 
-export default function AppointmentsTable({ initialAppointments = [], checkInClient, checkOutClient, timeSlots = []}) {
+export default function AppointmentsTable({ initialAppointments = [], checkInClient, checkOutClient, cancelAppointment, timeSlots = []}) {
   const router = useRouter();
 
   const [appointments, setAppointments] = useState(initialAppointments);
@@ -268,7 +268,7 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
                         </button>
                       )}
 
-                      {appt.status !== "Checked-In" && appt.status !== "Completed" && (
+                      {appt.status !== "Checked-In" && appt.status !== "Completed" && appt.status !== "Canceled" && (
                         <button
                           onClick={() => handleEditPopup(appt)}
                           className="text-slate-500 hover:text-blue-600 transition"
@@ -285,6 +285,18 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
                       >
                         <Trash2 className="h-5 w-5" />
                       </button>
+
+                      {appt.status == "Scheduled" && (
+                        <button 
+                          onClick={async () => {
+                            await cancelAppointment({ apptId: appt.id });
+                          }}
+                          className="text-slate-500 hover:text-orange-400 transition"
+                          title="Cancel Appointment"
+                        >
+                          <CircleX className ="h-5 w-5" />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>

@@ -50,7 +50,7 @@ export const checkInClientServerAction = async ({ apptId }) => {
     .select("*")
     .single();
 
-    if (error) {
+  if (error) {
     console.error("Error checking in client:", error);
     return;
   }
@@ -70,7 +70,7 @@ export const checkOutClientServerAction = async ({ apptId }) => {
     .select("*")
     .single();
 
-    if (error) {
+  if (error) {
     console.error("Error checking in client:", error);
     return;
   }
@@ -89,7 +89,7 @@ export const editAppointment = async (apptId, formData) => {
     .select("*")
     .single();
 
-    if (error) {
+  if (error) {
     console.error("Error editing appointment:", error);
     return { success: false, error: error.message };
   }
@@ -114,3 +114,22 @@ export const deleteAppointment = async (apptId) => {
   revalidatePath('admin/appointments');
   return { success: true };
 };
+
+export const cancelAppointmentServerAction = async ({ apptId }) => {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("appointments")
+    .update({ status: "Canceled" })
+    .eq("id", apptId)
+    .select("*")
+    .single();
+
+    if (error) {
+      console.error("Error canceling appointment:", error);
+      return;
+    }
+    
+    revalidatePath('admin/appointments');
+    return data;
+  }
