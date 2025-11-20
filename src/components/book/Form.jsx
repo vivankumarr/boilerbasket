@@ -102,18 +102,13 @@ const Form = ({timeSlots = []}) => {
       setMessage("Appointment booked! You should receive a confirmation email shortly.");
       setConflict(null);
       // clear form
-      setName(""); setPuid(""); setEmail(""); setRole("");
-      const name_input = document.getElementById('name_input');
-      const puid_input = document.getElementById('puid_input');
-      const email_input = document.getElementById('email_input');
-      name_input.value = "";
-      puid_input.value = "";
-      email_input.value = "";
+      setName("");
+      setPuid("");
+      setEmail("");
+      setRole("");
       setTime('');
       setDate('');
-
-
-
+      setSelectedTimestamp(null);
     } catch (err) {
       setMessage("Unexpected error: " + (err.message || err));
     } finally {
@@ -138,7 +133,7 @@ const Form = ({timeSlots = []}) => {
               <div className="grid grid-cols-2 grid-rows-2 gap-5 mt-4 w-full">
                   <div>
                     <span className="text-base font-medium text-slate-700 block mb-1.5 ">Full Name</span>
-                    <input id= "name_input" placeholder="Enter your full name" onChange={(e) => {setName(e.target.value)}} className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
+                    <input id= "name_input" value={name} placeholder="Enter your full name" onChange={(e) => {setName(e.target.value)}} className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
                   </div>
                   <div>
 
@@ -152,11 +147,11 @@ const Form = ({timeSlots = []}) => {
                   </div>
                   <div>
                     <span className="text-base font-medium text-slate-700 block mb-1.5">Email Address</span>
-                    <input id="email_input"placeholder="Enter your email address"onChange={(e) => {setEmail(e.target.value)}} className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
+                    <input id="email_input" value={email} placeholder="Enter your email address" onChange={(e) => {setEmail(e.target.value)}} className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
                   </div>
                   <div>
                     <span className="text-base font-medium text-slate-700 block mb-1.5">PUID</span>
-                    <input id="puid_input" placeholder="Enter your full Purdue ID"onChange={(e) => {setPuid(e.target.value)}}className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
+                    <input id="puid_input" value={puid} placeholder="Enter your full Purdue ID" onChange={(e) => {setPuid(e.target.value)}}className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
                   </div>
               </div>
 
