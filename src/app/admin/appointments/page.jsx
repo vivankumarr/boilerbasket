@@ -1,11 +1,8 @@
 import StatCard from "@/components/StatCard.jsx";
 import { Calendar, FileInput, Clock, Sigma } from "lucide-react";
-import { getTodaysAppointments } from "@/lib/data.js";
+import { getTodaysAppointments } from "@/app/admin/appointments/actions.js";
 import AppointmentsTable from "@/components/admin/AppointmentsTable";
-import {
-  checkInClientServerAction,
-  checkOutClientServerAction,
-} from "./actions";
+import { checkInClientServerAction, checkOutClientServerAction } from "./actions";
 import { calculateEffectiveSlots } from "@/app/book/page";
 
 export default async function AppointmentsPage() {

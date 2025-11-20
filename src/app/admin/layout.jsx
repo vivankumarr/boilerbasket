@@ -39,8 +39,6 @@ const sideDiv =
 				z-2 shadow-md/20 \
 				fixed top-25 left-0 w-60 h-full";
 
-// TODO: Account for "Add Client" button in Clients page (top navigation bar)
-
 export default function layout({ children }) {
   return (
     <PopupProvider>

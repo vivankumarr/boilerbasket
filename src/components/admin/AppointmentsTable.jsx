@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, Pencil, Trash2 } from "lucide-react";
-import Form from "./Form";
+import { useRouter } from "next/navigation";
 import { usePopup } from "./ScheduleAppointmentPopupContext";
+import Form from "./Form";
 import EditForm from "./EditForm";
 import DeleteForm from "./DeleteForm";
 
@@ -29,7 +30,7 @@ function StatusBadge({ status }) {
     case "Completed":
       colors = "bg-green-100 text-green-800"; // Completed
       break;
-    case "Cancelled":
+    case "Canceled":
       colors = "bg-red-100 text-red-800"; // Canceled
       break;
     default:
@@ -44,12 +45,10 @@ function StatusBadge({ status }) {
   );
 }
 
-export default function AppointmentsTable({
-  initialAppointments = [],
-  checkInClient,
-  checkOutClient,
-  timeSlots = [], // optionally pass available slots for EditForm time selection
-}) {
+export default function AppointmentsTable({ initialAppointments = [], checkInClient, checkOutClient, timeSlots = []}) {
+  const router = useRouter();
+
+  const [appointments, setAppointments] = useState(initialAppointments);
   const { showPopup, setShowPopup } = usePopup();
   const [editPopup, setEditPopup] = useState(false);
   const [editData, setEditData] = useState(null);
@@ -58,9 +57,43 @@ export default function AppointmentsTable({
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
 
+  // Sync state when initialAppointments prop updates (after router.refresh)
+  useEffect(() => {
+    setAppointments(initialAppointments);
+  }, [initialAppointments]);
+
+  // Handler functions for immediate UI updates
+  const handleCheckIn = async (apptId) => {
+    setAppointments((prev) =>
+      prev.map(appointment => appointment.id === apptId ? { ...appointment, status: "Checked-In" } : a)
+    );
+
+    await checkInClient({ apptId });
+    router.refresh();
+  };
+
+  const handleCheckOut = async (apptId) => {
+    setAppointments((prev) =>
+      prev.map(appointment => appointment.id === apptId ? { ...appointment, status: "Completed" } : a)
+    );
+
+    await checkOutClient({ apptId });
+    router.refresh();
+  }
+
+  // Callbacks passed to DeleteForm and EditForm components
+  const onAppointmentDeleted = () => {
+    setDeletePopup(false);
+    router.refresh();
+  }
+
+  const onAppointmentEdited = () => {
+    setEditPopup(false);
+    router.refresh();
+  }
+
   const handleEditPopup = (data) => {
     setEditData(data); // Pass the appointment data to the EditForm component
-    // console.log(data)
     setEditPopup(true);
   };
 
@@ -70,11 +103,11 @@ export default function AppointmentsTable({
   };
 
   // Filter the appointments based on state
-  const filteredAppointments = initialAppointments
+  const filteredAppointments = appointments
     .filter((appt) => {
       // Filter based on status
       if (statusFilter === "All") return true;
-      if (statusFilter === "CheckedIn") return appt.status === "Checked-In";
+      if (statusFilter === "Checked-In") return appt.status === "Checked-In";
       return appt.status === statusFilter;
     })
     .filter((appt) => {
@@ -86,7 +119,7 @@ export default function AppointmentsTable({
 
   return (
     <div className="bg-white shadow-lg rounded-md overflow-hidden">
-      <Form showPopup={showPopup} setShowPopup={setShowPopup} />
+      <Form showPopup={showPopup} setShowPopup={setShowPopup} onSuccess={() => router.refresh()} />
 
       {/* Search and filter section */}
 
@@ -120,7 +153,7 @@ export default function AppointmentsTable({
             <option value="Scheduled">Scheduled</option>
             <option value="Checked-In">Checked-In</option>
             <option value="Completed">Completed</option>
-            <option value="Cancelled">Cancelled</option>
+            <option value="Canceled">Canceled</option>
           </select>
         </div>
       </div>
@@ -133,12 +166,14 @@ export default function AppointmentsTable({
         showPopup={editPopup}
         setShowPopup={setEditPopup}
         timeSlots={timeSlots}
+        onSuccess={onAppointmentEdited}
       />
 
       <DeleteForm 
         deletePopup={deletePopup}
         setDeletePopup={setDeletePopup}
         apptId={deleteData?.id}
+        onSuccess={onAppointmentDeleted}
       />
 
       {/* Today's appointments table */}
@@ -215,11 +250,8 @@ export default function AppointmentsTable({
                         <button
                           onClick={async () => {
                             await checkInClient({ apptId: appt.id });
-                            window.location.reload();
-                            // TODO: we gotta stop passing the appointments
-                            // as a prop otherwise we gotta do this(yuck)
                           }}
-                          className="px-3 py-1 text-xs font-medium rounded-md text-white bg-purple-700 hover:bg-purple-600 transition"
+                          className="px-3 py-1 text-s font-medium rounded-lg text-white bg-purple-700 hover:bg-purple-800 transition"
                         >
                           Check In
                         </button>
@@ -229,21 +261,22 @@ export default function AppointmentsTable({
                         <button
                           onClick={async () => {
                             await checkOutClient({ apptId: appt.id });
-                            window.location.reload();
                           }}
-                          className="px-3 py-1 text-xs font-medium rounded-md text-white bg-purple-700 hover:bg-purple-600 transition"
+                          className="px-3 py-1 text-s font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 transition"
                         >
                           Check Out
                         </button>
                       )}
 
-                      <button
-                        onClick={() => handleEditPopup(appt)}
-                        className="text-slate-500 hover:text-blue-600 transition"
-                        title="Edit Appointment"
-                      >
-                        <Pencil className="h-5 w-5" />
-                      </button>
+                      {appt.status !== "Checked-In" && appt.status !== "Completed" && (
+                        <button
+                          onClick={() => handleEditPopup(appt)}
+                          className="text-slate-500 hover:text-blue-600 transition"
+                          title="Edit Appointment"
+                        >
+                          <Pencil className="h-5 w-5" />
+                        </button>
+                      )}
 
                       <button
                         onClick={() => handleDeletePopup(appt)}

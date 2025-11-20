@@ -81,8 +81,6 @@ function makeSlots(blockedTimes, existingAppts) {
     });
 
     if (isBlocked) continue;
-    console.log("Got passed blocked");
-
     let timeSlots = (day == 0 ? timeSlotsSunday : timeSlotsTuesday);
 
     //for each time slot do the following

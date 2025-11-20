@@ -1,12 +1,22 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { deleteAppointment } from "@/app/admin/appointments/actions";
 
-const DeleteForm = ({ deletePopup, setDeletePopup, apptId }) => {
+const DeleteForm = ({ deletePopup, setDeletePopup, apptId, onSuccess }) => {
   // shows error message for booking form
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [success, setSuccess] = useState(false);
+
+  // Wipe memory each time the popup is opened
+  useEffect(() => {
+    if (deletePopup) {
+      setSuccess(false);
+      setMessage(null);
+      setLoading(false);
+    }
+  }, [deletePopup]);
 
   const handleDelete = async () => {
     setLoading(true);
@@ -23,8 +33,16 @@ const DeleteForm = ({ deletePopup, setDeletePopup, apptId }) => {
       // Success
       setSuccess(true);
       setMessage("Appointment deleted successfully.");
-      setDeletePopup(false);
-      window.location.reload();
+
+      // Give the user a moment to read the success message before close + refresh
+      setTimeout(() => {
+        if (onSuccess) {
+          onSuccess();
+        }
+        setSuccess(false);
+        setMessage(null);
+      }, 1500);
+
     } catch (err) {
       setMessage("Unexpected error: " + (err.message || err));
     } finally {
@@ -46,7 +64,7 @@ const DeleteForm = ({ deletePopup, setDeletePopup, apptId }) => {
                 onClick={() => setDeletePopup(false)}
                 className="px-4 py-2 border rounded"
               >
-                {loading ? "Deleting..." : "Cancel"}
+                Cancel
               </button>
               <button
                 onClick={() => handleDelete()}
