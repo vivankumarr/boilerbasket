@@ -6,7 +6,6 @@ import { PopupProvider } from "@/components/admin/ScheduleAppointmentPopupContex
 // TODO: Responsive design based on device screen size (but probably won't be accessed on mobile)
 // Uniform styling (set custom fonts, not default)
 // Adjust line spacing for text (logo, top)
-// Get better tab logos?
 // Change title in browser tab based on page
 
 // Color Reference: https://find-nearest-tailwind-colour.netlify.app/
@@ -53,7 +52,7 @@ export default function layout({ children }) {
               width={70}
               height={70}
             />
-            <div className="sm:grid hidden">
+		<div className="sm:grid hidden">
               {/* Logo section text is hidden if overflow is possible */}
               <span className="font-bold text-lg">BoilerBasket</span>
               <span className="text-sm">Staff Dashboard</span>

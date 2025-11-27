@@ -17,6 +17,9 @@ const TopbarAdmin = () => {
   var titleText = null;
   var subtitleText = null;
 
+  var webTitle = "BoilerBasket";
+  var webDesc = "ACE Food Pantry's appointment scheduling app";
+
   switch (pathname) {
     case pathname_admin.concat("appointments"):
       titleText = "Appointments";
@@ -80,3 +83,8 @@ const TopbarAdmin = () => {
 };
 
 export default TopbarAdmin;
+
+// export const metadata = {
+// 	title: {webTitle},
+// 	description: 'Manage client information and visit history'
+// }
