@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { confirmBooking } from "@/app/book/actions";
 import { editAppointment } from "@/app/admin/appointments/actions";
 
-const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [], currentTimestamp }) => {
+const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [], currentTimestamp, onSuccess }) => {
 
   const [name, setName] = useState(previousData?.full_name || "");
   const [puid, setPuid] = useState(previousData?.puid || "");
@@ -25,6 +24,15 @@ const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [
       setPuid(previousData.puid || "");
     }
   }, [previousData]);
+
+  // Wipe memory each time the popup is opened
+  useEffect(() => {
+    if (showPopup) {
+      setSuccess(false);
+      setMessage(null);
+      setLoading(false);
+    }
+  }, [showPopup]);
 
   // Map dates to times (same structure as booking Form)
   const dateToTimesMap = timeSlots.reduce((acc, slot) => {
@@ -66,8 +74,8 @@ const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [
   const [message, setMessage] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  // booking form submission logic
-  async function submitBooking(force_update = false) {
+  // booking form (edited) submission logic
+  async function submitEditedBooking(force_update = false) {
     setMessage(null);
     setSuccess(false);
 
@@ -103,27 +111,18 @@ const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [
         return;
       }
 
-
-      // Success
       setSuccess(true);
       setMessage(
-        "Appointment booked! You should receive a confirmation email shortly."
+        "Appointment updated successfully."
       );
-      // clear form
-      setName("");
-      setPuid("");
-      setEmail("");
-      setRole("");
-      const name_input = document.getElementById("name_input");
-      const puid_input = document.getElementById("puid_input");
-      const email_input = document.getElementById("email_input");
-      if (name_input) name_input.value = "";
-      if (puid_input) puid_input.value = "";
-      if (email_input) email_input.value = "";
-      setTime("");
-      setDate("");
-      setShowPopup(false);
-      window.location.reload();
+
+      // Give the user a moment to read the success message before close + refresh
+      setTimeout(() => {
+        setShowPopup(false);
+        if (onSuccess) {
+          onSuccess();
+        }}, 1500);
+
     } catch (err) {
       setMessage("Unexpected error: " + (err.message || err));
     } finally {
@@ -168,7 +167,7 @@ const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [
           <div className="bg-white shadow-xl w-120 p-6 mt-10 mb-10 rounded-xl flex flex-col relative z-50">
             <span className="text-2xl font-bold">Edit Your Appointment</span>
             <span className="text-sm text-slate-500 mb-1 mt-1">
-              Select New Timeslot
+              Select New Time Slot
             </span>
 
             <div className="flex flex-col items-center">
@@ -267,8 +266,8 @@ const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [
               <div className="mt-8 flex gap-3 w-full justify-between">
                 <button
                 disabled={loading}
-                onClick={() => submitBooking(false)}
-                className="bg-purple-600 hover:bg-purple-700 py-3 px-6 rounded-lg flex-1 text-white font-medium shadow-md hover:shadow-lg hover:scale-105 transform transition-transform duration-300"
+                onClick={() => submitEditedBooking(false)}
+                className="bg-purple-600 hover:bg-purple-700 py-3 px-6 rounded-lg flex-1 text-white font-medium shadow-md hover:shadow-lg"
               >
                 {loading ? "Booking..." : "Save"}
                 </button>
@@ -278,7 +277,7 @@ const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [
                 onClick={() => setShowPopup(false)}
                 className="bg-slate-200 hover:bg-slate-300 text-slate-800 py-3 px-6 rounded-lg flex-1 font-medium shadow-sm transition"
               >
-                {loading ? "Booking..." : "Cancel"}
+                  Cancel
                 </button>
               </div>
 

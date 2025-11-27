@@ -54,7 +54,7 @@ const Form = ({timeSlots = []}) => {
     const visibleTimes = date ? dateToTimesMap[date].times : [];
 
     // booking form submission logic
-    async function submitBooking(force_update = false) {
+    async function submitBooking(force_update = false, proceedWithoutUpdate = false) {
     setMessage(null);
     setSuccess(false);
 
@@ -78,6 +78,7 @@ const Form = ({timeSlots = []}) => {
         role: role || null,
         appointment_timestamp: selectedTimestamp, // ISO string expected by server
         force_update,
+        proceed_without_update: proceedWithoutUpdate,
       };
 
       const result = await confirmBooking(payload);
@@ -102,18 +103,13 @@ const Form = ({timeSlots = []}) => {
       setMessage("Appointment booked! You should receive a confirmation email shortly.");
       setConflict(null);
       // clear form
-      setName(""); setPuid(""); setEmail(""); setRole("");
-      const name_input = document.getElementById('name_input');
-      const puid_input = document.getElementById('puid_input');
-      const email_input = document.getElementById('email_input');
-      name_input.value = "";
-      puid_input.value = "";
-      email_input.value = "";
+      setName("");
+      setPuid("");
+      setEmail("");
+      setRole("");
       setTime('');
       setDate('');
-
-
-
+      setSelectedTimestamp(null);
     } catch (err) {
       setMessage("Unexpected error: " + (err.message || err));
     } finally {
@@ -121,7 +117,7 @@ const Form = ({timeSlots = []}) => {
     }
   }
 
-  // When user clicks "Overwrite & Continue" in the conflict UI
+  // When user clicks "Overwrite & Continue" in the conflict UI (delete later)
   const handleForceOverwrite = async () => {
     if (!conflict) return;
     await submitBooking(true); // will re-send with force_update: true
@@ -138,7 +134,7 @@ const Form = ({timeSlots = []}) => {
               <div className="grid grid-cols-2 grid-rows-2 gap-5 mt-4 w-full">
                   <div>
                     <span className="text-base font-medium text-slate-700 block mb-1.5 ">Full Name</span>
-                    <input id= "name_input" placeholder="Enter your full name" onChange={(e) => {setName(e.target.value)}} className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
+                    <input id= "name_input" value={name} placeholder="Enter your full name" onChange={(e) => {setName(e.target.value)}} className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
                   </div>
                   <div>
 
@@ -152,11 +148,11 @@ const Form = ({timeSlots = []}) => {
                   </div>
                   <div>
                     <span className="text-base font-medium text-slate-700 block mb-1.5">Email Address</span>
-                    <input id="email_input"placeholder="Enter your email address"onChange={(e) => {setEmail(e.target.value)}} className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
+                    <input id="email_input" value={email} placeholder="Enter your email address" onChange={(e) => {setEmail(e.target.value)}} className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
                   </div>
                   <div>
                     <span className="text-base font-medium text-slate-700 block mb-1.5">PUID</span>
-                    <input id="puid_input" placeholder="Enter your full Purdue ID"onChange={(e) => {setPuid(e.target.value)}}className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
+                    <input id="puid_input" value={puid} placeholder="Enter your full Purdue ID" onChange={(e) => {setPuid(e.target.value)}}className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
                   </div>
               </div>
 
@@ -206,7 +202,7 @@ const Form = ({timeSlots = []}) => {
 
               <button
                 disabled={loading}
-                onClick={() => submitBooking(false)}
+                onClick={() => submitBooking(false, false)}
                 className="mt-8 bg-purple-600 hover:bg-purple-700 py-3 px-6 rounded-lg w-full text-white font-medium shadow-md hover:shadow-lg hover:scale-105 transform transition-transform duration-300"
               >
                 {loading ? "Booking..." : "Confirm Booking"}
@@ -220,23 +216,19 @@ const Form = ({timeSlots = []}) => {
           <div className="bg-white rounded-lg p-6 w-full max-w-xl shadow-lg">
             <h3 className="text-lg font-semibold mb-3">Confirm your info</h3>
             <p className="mb-4">
-              We found an existing account with PUID <strong>{conflict.client.puid}</strong>. The data you entered differs from our
-              records. Please confirm whether you want to overwrite the stored values with your entries.
+              We found an existing account with PUID <strong>{conflict.client.puid}</strong> registered under the name{" "}
+              <strong>{conflict.client.full_name || "Unknown"}</strong>. The data you entered differs from our
+              records. If that's you, press <strong>Yes — that's me</strong> to continue booking using our records.
+              If not, press <strong>Go back</strong> to correct your information.
             </p>
 
-            <div className="grid grid-cols-3 gap-4 mb-4">
+            {/* FIX FORMATTING LATER */}
+            <div className="grid grid-cols-2 gap-3 mb-4"> 
               <div>
                 <div className="font-semibold">Field</div>
                 <div className="text-sm mt-2">Full name</div>
                 <div className="text-sm mt-2">Email</div>
                 <div className="text-sm mt-2">Role</div>
-              </div>
-
-              <div>
-                <div className="font-semibold">Existing</div>
-                <div className="text-sm mt-2">{conflict.client.full_name || "—"}</div>
-                <div className="text-sm mt-2">{conflict.client.email || "—"}</div>
-                <div className="text-sm mt-2">{conflict.client.role || "—"}</div>
               </div>
 
               <div>
@@ -255,14 +247,14 @@ const Form = ({timeSlots = []}) => {
                 }}
                 className="px-4 py-2 border rounded"
               >
-                Cancel
+                Go Back
               </button>
 
               <button
-                onClick={handleForceOverwrite}
+                onClick={() => submitBooking(false, true)}
                 className="px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600"
               >
-                Overwrite & Continue
+                Yes — That's Me
               </button>
             </div>
           </div>

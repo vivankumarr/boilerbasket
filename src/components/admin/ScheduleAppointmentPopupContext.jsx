@@ -7,9 +7,7 @@ const PopupContext = createContext();
 
 export const PopupProvider = ({ children }) => {
   const [showPopup, setShowPopup] = useState(false);
-
-  console.log("showPopup: ", showPopup);
-
+  
   return (
     <PopupContext.Provider value={{ showPopup, setShowPopup }}>
       {children}

@@ -2,12 +2,8 @@
 
 import { useState } from "react";
 import { confirmBooking } from "@/app/book/actions";
-import { useRouter } from "next/navigation";
-import { usePopup } from "./ScheduleAppointmentPopupContext";
 
-const Form = ({showPopup, setShowPopup}) => {
-  // const { showPopup, setShowPopup } = usePopup();
-
+const Form = ({ showPopup, setShowPopup, onSuccess }) => {
   const [name, setName] = useState("");
   const [puid, setPuid] = useState("");
   const [email, setEmail] = useState("");
@@ -62,7 +58,7 @@ const Form = ({showPopup, setShowPopup}) => {
       // Success
       setSuccess(true);
       setMessage(
-        "Appointment booked! You should receive a confirmation email shortly."
+        "Your walk-in appointment has been booked!"
       );
       setConflict(null);
       // clear form
@@ -70,14 +66,17 @@ const Form = ({showPopup, setShowPopup}) => {
       setPuid("");
       setEmail("");
       setRole("");
-      const name_input = document.getElementById("name_input");
-      const puid_input = document.getElementById("puid_input");
-      const email_input = document.getElementById("email_input");
-      name_input.value = "";
-      puid_input.value = "";
-      email_input.value = "";
-      setShowPopup(false);
-      window.location.reload();
+      
+      // Give the user a moment to read the success message before close + refresh
+      setTimeout(() => {
+        setShowPopup(false);
+        if (onSuccess) {
+          onSuccess();
+        };
+        setSuccess(false);
+        setMessage(null);
+      }, 1500);
+
     } catch (err) {
       setMessage("Unexpected error: " + (err.message || err));
     } finally {
@@ -109,6 +108,7 @@ const Form = ({showPopup, setShowPopup}) => {
                   </span>
                   <input
                     id="name_input"
+                    value={name}
                     placeholder="Enter your full name"
                     onChange={(e) => {
                       setName(e.target.value);
@@ -142,6 +142,7 @@ const Form = ({showPopup, setShowPopup}) => {
                   </span>
                   <input
                     id="email_input"
+                    value={email}
                     placeholder="Enter your email address"
                     onChange={(e) => {
                       setEmail(e.target.value);
@@ -156,6 +157,7 @@ const Form = ({showPopup, setShowPopup}) => {
                   </span>
                   <input
                     id="puid_input"
+                    value={puid}
                     placeholder="Enter your full Purdue ID"
                     onChange={(e) => {
                       setPuid(e.target.value);
@@ -166,21 +168,24 @@ const Form = ({showPopup, setShowPopup}) => {
                 </div>
               </div>
 
-              <button
-                disabled={loading}
-                onClick={() => submitBooking(false)}
-                className="mt-8 bg-purple-600 hover:bg-purple-700 py-3 px-6 rounded-lg w-full text-white font-medium shadow-md hover:shadow-lg hover:scale-105 transform transition-transform duration-300"
-              >
-                {loading ? "Booking..." : "Confirm Booking"}
-              </button>
+              <div className="mt-8 flex gap-3 w-full justify-between">
+                <button
+                  disabled={loading}
+                  onClick={() => submitBooking(false)}
+                  className="bg-purple-600 hover:bg-purple-700 py-3 px-6 rounded-lg flex-1 text-white font-medium shadow-md hover:shadow-lg"
+                >
+                  {loading ? "Booking..." : "Confirm Booking"}
+                </button>
 
-              <button
-                disabled={loading}
-                onClick={() => setShowPopup(false)}
-                className="mt-8 bg-purple-600 hover:bg-purple-700 py-3 px-6 rounded-lg w-full text-white font-medium shadow-md hover:shadow-lg hover:scale-105 transform transition-transform duration-300"
-              >
-                {loading ? "Booking..." : "Cancel"}
-              </button>
+                <button
+                  disabled={loading}
+                  onClick={() => setShowPopup(false)}
+                  className="bg-slate-200 hover:bg-slate-300 text-slate-800 py-3 px-6 rounded-lg flex-1 font-medium shadow-sm transition"
+                >
+                  Cancel
+                </button>
+              </div>
+
               {!success && message && (
                 <p className="mt-3 text-red-600">{message}</p>
               )}
