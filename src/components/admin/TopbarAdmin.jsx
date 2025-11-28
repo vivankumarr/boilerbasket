@@ -1,14 +1,12 @@
 "use client";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { UserRoundPlus, Plus } from "lucide-react";
 import { usePopup } from "./ScheduleAppointmentPopupContext";
 
 const buttonDiv =
-  "flex items-center gap-2 bg-purple-700 hover:bg-purple-800 text-white font-medium py-2.5 px-5 rounded-lg shadow-md transition";
+  "flex items-center gap-2 bg-purple-700 hover:bg-purple-800 text-white font-medium py-2.5 px-5 rounded-lg shadow-md transition cursor-pointer";
 
 const TopbarAdmin = () => {
-  // const router = useRouter();
-
   const pathname = usePathname();
   const pathname_admin = "/admin/";
 

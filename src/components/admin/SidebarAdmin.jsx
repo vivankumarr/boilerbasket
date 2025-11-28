@@ -78,7 +78,7 @@ export default function SidebarAdmin() {
 			</div>
 
 			<div className="flex my-3 mx-4 pl-1 border-2 border-amber-50 rounded-md hover:border-red-400 hover:bg-red-100">
-				<button onClick={handleLogout} className="flex gap-2 py-2 px-2 w-full text-red-600 transition">
+				<button onClick={handleLogout} className="flex gap-2 py-2 px-2 w-full text-red-600 transition cursor-pointer">
 					<LogOutIcon/>
 					<span>Logout</span>
 				</button>

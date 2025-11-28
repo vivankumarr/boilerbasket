@@ -251,7 +251,7 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
                           onClick={async () => {
                             await checkInClient({ apptId: appt.id });
                           }}
-                          className="px-3 py-1 text-s font-medium rounded-lg text-white bg-purple-700 hover:bg-purple-800 transition"
+                          className="px-3 py-1 text-s font-medium rounded-lg text-white bg-purple-700 hover:bg-purple-800 transition cursor-pointer"
                         >
                           Check In
                         </button>
@@ -262,7 +262,7 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
                           onClick={async () => {
                             await checkOutClient({ apptId: appt.id });
                           }}
-                          className="px-3 py-1 text-s font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 transition"
+                          className="px-3 py-1 text-s font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 transition cursor-pointer"
                         >
                           Check Out
                         </button>
@@ -271,7 +271,7 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
                       {appt.status !== "Checked-In" && appt.status !== "Completed" && appt.status !== "Canceled" && (
                         <button
                           onClick={() => handleEditPopup(appt)}
-                          className="text-slate-500 hover:text-blue-600 transition"
+                          className="text-slate-500 hover:text-blue-600 transition cursor-pointer"
                           title="Edit Appointment"
                         >
                           <Pencil className="h-5 w-5" />
@@ -280,7 +280,7 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
 
                       <button
                         onClick={() => handleDeletePopup(appt)}
-                        className="text-slate-500 hover:text-red-600 transition"
+                        className="text-slate-500 hover:text-red-600 transition cursor-pointer"
                         title="Delete Appointment"
                       >
                         <Trash2 className="h-5 w-5" />
@@ -291,7 +291,7 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
                           onClick={async () => {
                             await cancelAppointment({ apptId: appt.id });
                           }}
-                          className="text-slate-500 hover:text-orange-400 transition"
+                          className="text-slate-500 hover:text-orange-400 transition cursor-pointer"
                           title="Cancel Appointment"
                         >
                           <CircleX className ="h-5 w-5" />
