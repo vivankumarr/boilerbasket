@@ -5,7 +5,7 @@ import {CalendarCheck, Users} from "lucide-react";
 import Piechart from "./Piechart.jsx"
 import Linechart from "./Linechart.jsx";
 
-export default function page () {
+export default function InsightsPage () {
 
   return (
     <>

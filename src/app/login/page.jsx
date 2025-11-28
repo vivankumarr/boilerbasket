@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useFormStatus } from "react-dom";
-import { login, signup } from "./actions";
+import { login } from "./actions";
 import Image from "next/image";
 
 function SubmitButton({ children, formAction, setError }) {
