@@ -45,6 +45,13 @@ function StatusBadge({ status }) {
   );
 }
 
+// Helper function to mask the first 5 digits of the PUID
+function maskPUID(puid) {
+  if (!puid) return "";
+  const puidStr = String(puid);
+  return "••••" + puidStr.slice(-4);
+}
+
 export default function AppointmentsTable({ initialAppointments = [], checkInClient, checkOutClient, cancelAppointment, timeSlots = []}) {
   const router = useRouter();
 
@@ -236,7 +243,7 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
                     {formatTime(appt.appointment_time)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">
-                    {appt.clients?.puid}
+                    {maskPUID(appt.clients?.puid)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">
                     {appt.clients?.role}
