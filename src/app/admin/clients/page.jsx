@@ -1,6 +1,17 @@
+"use client";
 import StatCard from "@/components/StatCard";
 import { UsersIcon, UserCheckIcon, UserPlusIcon, RotateCwIcon, EditIcon, Trash2Icon } from "lucide-react";
 // import AppointmentsTable from "@/components/admin/AppointmentsTable";
+
+// importing supabase 
+import { createClient } from '@supabase/supabase-js'
+export const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+)
+
+// importing react hooks (stores/fetch data)
+import { useState, useEffect } from "react";
 
 const contentDiv = 'h-full p-2 overflow-scroll' // grid grid-rows-2'
 // const cardDiv = 'bg-white m-4 p-2 text-center \
@@ -14,12 +25,41 @@ const cardDiv = 'm-0 pt-4 pb-0 \
 // https://preline.co/docs/tables.html
 
 const page = () => {
+	const [clients, setClients] = useState([]); // holds the data from supabase
+	
+	useEffect(() => {
+		const fetchClients = async () => {
+			//fetching data from the clients table
+			const {data, error} = await supabase
+			.from("clients")
+			.select("*");
+			
+			console.log("Supabase clients data:", data, "error:", error);
+			setClients(data || []);
+		};
+
+		fetchClients();
+	}, []);
+
+	// stats from the clients data
+	const totalClients = clients.length; //total rows
+	const active = clients.filter(c => c.total_visits > 0).length; //Fliterting to find active
+	const newClients = clients.filter(c => c.total_visits === 1).length;
+	const returnRate = totalClients > 0 ? Math.round((active / totalClients) * 100) : 0; //active/total to get return rate
+
+	//calculating status
+	const getStatus = (client) => {
+		if (client.total_visits > 1) return 'Active';
+		if (client.total_visits === 1) return 'New';
+		return 'Inactive';
+	}
+
 	return (
 		<div className={`${contentDiv}`}>
 			<div className={cardDiv}>
 				<StatCard 
 					title='Total Clients'
-					value='1,247'
+					value={totalClients}
 					description='Since 2015'
 					descStyle='text-fuchsia-600'
 					icon={<UsersIcon />}
@@ -27,7 +67,7 @@ const page = () => {
 				/>
 				<StatCard 
 					title='Active Clients'
-					value='892'
+					value={active}
 					description='Visited This Month'
 					descStyle='text-green-600'
 					icon={<UserCheckIcon />}
@@ -35,7 +75,7 @@ const page = () => {
 				/>
 				<StatCard 
 					title='New Clients'
-					value='156'
+					value={newClients}
 					description='Onboarded This Month'
 					descStyle='text-indigo-600'
 					icon={<UserPlusIcon />}
@@ -43,7 +83,7 @@ const page = () => {
 				/>
 				<StatCard 
 					title='Return Rate'
-					value='78%'
+					value={returnRate}
 					description='Monthly Client Retention'
 					descStyle='text-amber-600'
 					icon={<RotateCwIcon />}
@@ -79,17 +119,6 @@ const page = () => {
 							</div>
 						</div>
 						<div>
-							<label>Status</label>
-							<div>
-								<select className='border bg-white'>
-									<option>All Statuses</option>
-									<option>New</option>
-									<option>Active</option>
-									<option>Inactive</option>
-								</select>
-							</div>
-						</div>
-						<div>
 							<label>Last Visit</label>
 							<div>
 								<select className='border bg-white'>
@@ -117,47 +146,37 @@ const page = () => {
 									<th>PUID</th>
 									<th>Total Visits</th>
 									<th>Last Visit</th>
-									<th>Status</th>
 									<th>Actions</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr className='border'>
-									<td>First Last</td>
-									<td>Student</td>
-									<td>00****-0123</td>
-									<td>1</td>
-									<td>2025-10-28</td>
-									<td className='text-blue-500 font-bold'>New</td>
-									<td className='flex gap-2 justify-center'>
-										<EditIcon />
-										<Trash2Icon className='text-red-400' />
-									</td>
-								</tr>
-								<tr className='border'>
-									<td>First Last</td>
-									<td>Staff</td>
-									<td>00****-4567</td>
-									<td>5</td>
-									<td>2024-09-23</td>
-									<td className='text-yellow-500 font-bold'>Inactive</td>
-									<td className='flex gap-2 justify-center'>
-										<EditIcon />
-										<Trash2Icon className='text-red-400' />
-									</td>
-								</tr>
-								<tr className='border'>
-									<td>First Last</td>
-									<td>Faculty</td>
-									<td>00****-6789</td>
-									<td>7</td>
-									<td>2025-10-22</td>
-									<td className='text-green-500 font-bold'>Active</td>
-									<td className='flex gap-2 justify-center'>
-										<EditIcon />
-										<Trash2Icon className='text-red-400' />
-									</td>
-								</tr>
+							<tbody> 
+
+								{clients.map((client) => (
+									<tr key={client.id} className='border text-center'>
+										<td>{client.full_name}</td>
+										<td>{client.client_role}</td>
+										<td>{client.puid}</td>
+										<td>{client.total_visits}</td>
+										<td>{client.last_visit}</td>
+
+										<td
+											className={
+												client.total_visits > 1 
+												? 'text-green-500 font-bold'
+												: client.total_visits === 1 
+												? 'text-blue-500 font-bold' 
+												:'text-yellow-500 font-bold'
+											}
+											>
+											{getStatus(client)}
+										</td>
+										<td className="flex gap-2 justify-center">
+											<EditIcon />
+											<Trash2Icon className="text-red-400" />
+										</td>
+									</tr>
+								))}
+
 							</tbody>
 						</table>
 					</div>
