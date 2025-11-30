@@ -65,13 +65,6 @@ const TopbarAdmin = () => {
         <span>{subtitleText}</span>
       </div>
 
-      {pathname === pathname_admin.concat("clients") && (
-        <button className={buttonDiv}>
-          <UserRoundPlus />
-          <span>Add Client</span>
-        </button>
-      )}
-
       {pathname === pathname_admin.concat("appointments") && (
         <button onClick={() => {setShowPopup(true)}} className={buttonDiv}>
           <Plus />

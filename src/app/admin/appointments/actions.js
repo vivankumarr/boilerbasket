@@ -71,7 +71,7 @@ export const checkOutClientServerAction = async ({ apptId }) => {
     .single();
 
   if (error) {
-    console.error("Error checking in client:", error);
+    console.error("Error checking out client:", error);
     return;
   }
 

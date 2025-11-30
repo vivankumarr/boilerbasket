@@ -94,9 +94,9 @@ const page = () => {
 				
 				<div className='bg-yellow-500 text-white border rounded-sm \
 								flex items-center justify-center gap-2 p-1 mt-2 \
-								w-[180px]'>
+								w-[150px]'>
 					<DownloadIcon />
-					<span>Download Excel</span>
+					<span>Export (.xlsx)</span>
 				</div>
 			</div> {/* End Export by Time Period */}
 
@@ -114,9 +114,14 @@ const page = () => {
 					</div>
 				</div> {/* Custom Export Header */}
 
-				<div className='bg-red-100'>
-					<DateRangePicker>
-						<Label className='font-bold'>Date Range</Label>
+				<div className='bg-red-100 grid'>
+					<Label className='font-bold'>Date Range</Label>
+					{/* TODO: Data validation (check that end date >= start date, dates within range exist in table) */}
+					<div className='flex gap-2'>
+						<input type='date' className="w-100 p-2 mb-4 border border-gray-300 rounded bg-white text-white-700"/>
+						<input type='date' className="w-100 p-2 mb-4 border border-gray-300 rounded bg-white text-white-700"/>
+					</div>
+					{/* <DateRangePicker>
 						<Group className='border w-58 flex gap-1 text-gray-600 border-black'>
 							<DateInput slot="start">
 								{(segment) => <DateSegment segment={segment} />}
@@ -147,7 +152,7 @@ const page = () => {
 								</RangeCalendar>
 							</Dialog>
 						</Popover>
-					</DateRangePicker>
+					</DateRangePicker> */}
 				</div> {/* Select Date Range */}
 
 				<div className=''>
@@ -210,10 +215,6 @@ const page = () => {
 						</tr>
 					</tbody>
 				</table>
-
-				<div className='bg-red-100 border-b'>
-					TODO: Select Export Format?
-				</div>
 				
 				<div className='flex items-center relative gap-2 my-1'>
 					<InfoIcon />
