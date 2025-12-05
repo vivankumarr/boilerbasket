@@ -1,33 +1,56 @@
 @import "tailwindcss";
-@tailwind utilities;
 
-@* {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
+@theme {
+  /* Define the colors Shadcn expects, mapped to your specific hex codes */
+  --color-background: #ffffff;
+  --color-foreground: #09090b;
 
-*::-webkit-scrollbar {
-  display: none;
-}
+  --color-primary: #fae28c; /* Your Boiler Gold */
+  --color-primary-foreground: #18181b;
 
-@utility no-scrollbar {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  --color-secondary: #8d44f2;
+  --color-secondary-foreground: #ffffff;
+
+  --color-muted: #f4f4f5;
+  --color-muted-foreground: #71717a;
+
+  --color-accent: #fff9db; /* A very light gold for the range middle */
+  --color-accent-foreground: #18181b;
+
+  --color-popover: #ffffff;
+  --color-popover-foreground: #09090b;
+
+  --color-border: #e4e4e7;
+  --color-input: #e4e4e7;
+  --color-ring: #fae28c;
   
-  &::-webkit-scrollbar {
-    display: none;
+  --radius-sm: 0.3rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.8rem;
+}
+
+/* Base tailwind utilities */
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+    outline-color: var(--color-ring);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
   }
 }
 
-
-@utility btn {
-  cursor: pointer;
-  hover: cursor-pointer;
-}
-
-
-@theme {
-  --color-primary: #fae28c;
-  --color-secondary: #8d44f2;
-  --color-lightprimary: #ffedad;
+/* Your custom scrollbar utilities */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }

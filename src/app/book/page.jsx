@@ -1,11 +1,11 @@
-import React from 'react'
-import Navbar from '../../components/book/Navbar.jsx';
-import Form from '../../components/book/Form.jsx';
-import HowItWorks from '../../components/book/HowItWorks.jsx';
+import React from 'react';
+import Navbar from '@/components/book/Navbar.jsx';
+import Form from '@/components/book/Form.jsx';
+import HowItWorks from '@/components/book/HowItWorks.jsx';
 
 import { supabaseService } from '@/lib/supabase/service';
 
-export default async function bookingPage () {
+export default async function BookingPage () {
   
   const avaliableSlots = await calculateEffectiveSlots();
 
