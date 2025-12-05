@@ -16,8 +16,8 @@ export default function SettingsPage() {
     setIsLoading(true);
 
     const payload = {
-      start_date: selectedRange.startDate.toISOString(),
-      end_date: selectedRange.endDate.toISOString(),
+      start_date: selectedRange.from.toISOString(),
+      end_date: selectedRange.to.toISOString(),
       reason,
     };
 
@@ -45,9 +45,8 @@ export default function SettingsPage() {
               Select Closed Dates
             </label>
             <DateRangePicker
-              className="w-full sm:w-[300px]"
-              resetKey={formResetKey}
-              onUpdate={(val) => setSelectedRange(val)}
+              key={formResetKey}
+              onSelect={(val) => setSelectedRange(val)}
             />
           </div>
 
@@ -76,22 +75,13 @@ export default function SettingsPage() {
           <table className="min-w-full divide-y divide-slate-200">
             <thead className="bg-slate-50">
               <tr>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
-                >
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   Date(s)
                 </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
-                >
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   Reason
                 </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
-                >
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
