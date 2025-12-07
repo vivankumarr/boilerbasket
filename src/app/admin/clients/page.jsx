@@ -3,29 +3,50 @@ import ClientsTable from "@/components/admin/ClientsTable";
 import { fetchClients } from "./actions";
 import { UsersIcon, UserCheckIcon, UserPlusIcon, RotateCwIcon } from "lucide-react";
 
-const contentDiv = 'h-full p-2 overflow-scroll' // grid grid-rows-2'
+const contentDiv = 'h-full p-0 overflow-scroll' // grid grid-rows-2'
 // const cardDiv = 'bg-white m-4 p-2 text-center \
 // 				border rounded-md'
 
 const cardDiv = 'm-0 pt-4 pb-0 \
 				flex flex-wrap \
 				items-center \
-				justify-evenly' // + ' bg-gray-100 border border-gray-400'
+				justify-evenly mb-8' // + ' bg-gray-100 border border-gray-400'
 
 // https://preline.co/docs/tables.html
 
+// TODO: Import option for appointments/clients tables (past data)?
+
 export default async function ClientsPage() {
+	const today = new Date;
+	const todayStr = today.toISOString();
+
 	// Statistics from clients table
 	const clients = await fetchClients();
 	const totalClients = clients.length; // Total number of rows
-	const activeClients = clients.filter(c => c.total_visits > 0).length; // Filtering to find active
-	const newClients = clients.filter(c => c.total_visits === 1).length;
-	const returnRate = totalClients > 0 ? Math.round((activeClients / totalClients) * 100) : 0; // active/total to get return rate
+
+	// Confirmed clients with non-zero completed visits
+	const visitedClients = clients.filter(c => c.total_visits > 0).length;
+
+	// Active: Return visitor, visited within last month (fix later)
+	const activeClients = clients.filter(
+		c => 
+			c.total_visits > 1
+			&& c.last_visit.split("-")[0, 1] == todayStr.split("-")[0, 1]
+	).length;
 	
-	console.log(clients);
-	// TODO: Update total_visits, last_visit in clients (trigger?)
-	// When check_out_time in appointments is set (non-NULL), increment count
-	// When existing appointment associated with client_id deleted, decrement count
+	// New: Confirmed client created this month (because no first visit column)
+	const newClients = clients.filter(
+		c => c.total_visits == 1 // > 0
+		// New this year
+		// && c.created_at.split("-")[0] == todayStr.split("-")[0]
+		// New within a month
+		// && (todayStr.split("-")[1] - c.created_at.split("-")[1]) <= 0 // 1
+	).length;
+
+	const returnRate = totalClients > 0 ? Math.round((activeClients / visitedClients) * 100) : 0;
+	
+	// console.log(clients);
+	// console.log(todayStr);
 
 	return (
 		<div className={`${contentDiv}`}>
@@ -56,7 +77,7 @@ export default async function ClientsPage() {
 				/>
 				<StatCard 
 					title='Return Rate'
-					value={returnRate}
+					value={`${returnRate}` + "%"}
 					description='Monthly Client Retention'
 					descStyle='text-amber-600'
 					icon={<RotateCwIcon />}

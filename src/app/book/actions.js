@@ -18,9 +18,12 @@ export async function confirmBooking(payload) {
 
     // puid and appointment date and time are required fields
 
-    if (!puid) {
-        return { success: false, error: "PUID is required. Please provide your Purdue ID." };
-    }
+	// if (!email) {
+	// 	return { success: false, error: "E-mail is required." }
+	// }
+    // if (!puid) {
+    //     return { success: false, error: "PUID is required." };
+    // }
     if (!appointment_time) {
         return { success: false, error: "Appointment timestamp is required." };
     }
@@ -98,6 +101,7 @@ export async function confirmBooking(payload) {
                 .single();
 
             if (insertErr) {
+				// if (full_name == null || email == null || role == null)
                 return { success: false, error: `Error creating client: ${insertErr.message}` };
             }
             client = newClient;
