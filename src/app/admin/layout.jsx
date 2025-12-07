@@ -30,7 +30,7 @@ const logoDiv =
 				fixed top-0 left-0 h-25 w-60";
 const topDiv =
   "bg-white \
-				z-1 shadow-md/10 \
+				z-11 shadow-md/10 \
 				flex items-center \
 				fixed top-0 left-60 h-25 w-[calc(100%-15rem)]\
 				justify-between";

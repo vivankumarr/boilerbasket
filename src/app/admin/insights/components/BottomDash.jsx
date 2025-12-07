@@ -4,7 +4,7 @@ export default function BottomDash({
 
     return (
         <>
-            <div className="bg-white h-75 w-200 rounded-lg shadow-md p-5">
+            <div className="bg-white h-75 w-[40vw] rounded-lg shadow-md p-5">
                 <h3 className="text-xl font-semibold">{title}</h3>
                 <div className="w-full h-full">
                     <div className="flex justify-between items-center mt-5 bg-purple-200 rounded-md h-25 p-2 space-y-1 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">

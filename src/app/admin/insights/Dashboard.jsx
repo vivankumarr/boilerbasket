@@ -14,7 +14,7 @@ export default function Dashboard ({ length, average, best_hour, ampm, counts, o
   const [expandedOne, setExpandedOne] = useState(false);
   
   return (
-    <div className="w-full px-4 py-6 max-w-7xl mx-auto">
+    <main className="">
       <div className="w-full flex flex-col md:flex-row gap-4 md:gap-12 justify-center mb-8">
         <StatCard 
           title={"Total Appointments"} 
@@ -39,10 +39,10 @@ export default function Dashboard ({ length, average, best_hour, ampm, counts, o
       <div className={`flex justify-center items-start transition-all duration-500 ease-in-out ${!expandedOne ? 'gap-6' : 'gap-0'}`}>
         <div className={`relative bg-white shadow-md rounded-lg transition-all duration-500 ease-in-out flex-shrink-0 ${
           expandedPie 
-            ? 'w-full max-w-5xl h-[600px] p-6' 
+            ? 'w-full md:w-[80vw] max-w-5xl h-[85vh] p-6' 
             : expandedOne 
               ? 'w-0 h-0 opacity-0 scale-95 p-0 overflow-hidden pointer-events-none' 
-              : 'w-full md:w-80 h-[380px] p-6'
+              : 'w-full md:w-[25vw] h-[60vh] p-6'
         }`}>
           {(!expandedOne || expandedPie) && (
             <>
@@ -64,10 +64,10 @@ export default function Dashboard ({ length, average, best_hour, ampm, counts, o
 
         <div className={`relative bg-white shadow-md rounded-lg transition-all duration-500 ease-in-out flex-shrink-0 ${
           expandedBar 
-            ? 'w-full max-w-5xl h-[600px] p-6' 
+            ? 'w-full md:w-[80vw] max-w-5xl h-[85vh] p-6' 
             : expandedOne 
               ? 'w-0 h-0 opacity-0 scale-95 p-0 overflow-hidden pointer-events-none' 
-              : 'w-full md:w-96 h-[380px] p-6'
+              : 'w-full md:w-[25vw] h-[60vh] p-6'
         }`}>
           {(!expandedOne || expandedBar) && (
             <>
@@ -89,10 +89,10 @@ export default function Dashboard ({ length, average, best_hour, ampm, counts, o
 
         <div className={`relative bg-white shadow-md rounded-lg transition-all duration-500 ease-in-out flex-shrink-0 ${
           expandedLine 
-            ? 'w-full max-w-5xl h-[600px] p-6' 
+            ? 'w-full md:w-[80vw] max-w-5xl h-[85vh] p-6' 
             : expandedOne 
               ? 'w-0 h-0 opacity-0 scale-95 p-0 overflow-hidden pointer-events-none' 
-              : 'w-full md:w-80 h-[380px] p-6'
+              : 'w-full md:w-[25vw] h-[60vh] p-6'
         }`}>
           {(!expandedOne || expandedLine) && (
             <>
@@ -104,7 +104,7 @@ export default function Dashboard ({ length, average, best_hour, ampm, counts, o
               </button>
               <div className="flex flex-col justify-center items-center h-full">
                 <span className="text-lg font-semibold mb-4">Monthly Appt Trends</span>
-                <div className={`w-full ${expandedLine ? 'h-full' : 'h-[290px]'} flex items-center justify-center`}>
+                <div className={`w-full ${expandedLine ? 'h-full' : 'h-[350px]'} flex-1 flex items-center justify-center`}>
                   <Linechart ordering={ordered_months} />
                 </div>
               </div>
@@ -113,7 +113,7 @@ export default function Dashboard ({ length, average, best_hour, ampm, counts, o
         </div>
       </div>
 
-      <div className="mt-8 flex flex-col md:flex-row w-full gap-4 md:gap-6 justify-center">
+      <div className="mt-8 flex flex-1 flex-col md:flex-row w-full gap-4 md:gap-6 justify-center">
         <BottomDash 
           title={"Average Performance by Day"} 
           firstheading={"Tuesday"} 
@@ -133,6 +133,6 @@ export default function Dashboard ({ length, average, best_hour, ampm, counts, o
           secondval={"13 - 17"}
         />
       </div>
-    </div>
+    </main>
   );
 }
