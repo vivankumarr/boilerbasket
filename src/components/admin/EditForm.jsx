@@ -101,8 +101,7 @@ const EditForm = ({ apptId, context, previousData, showPopup, setShowPopup, time
       return;
     }
     
-	if (selectedTimestamp == currentTimestamp) {
-    //if (!selectedTimestamp) {
+    if (!selectedTimestamp) {
       setMessage("Please select a date and time for the appointment.");
       return;
     }

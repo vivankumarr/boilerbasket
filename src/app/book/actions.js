@@ -21,9 +21,9 @@ export async function confirmBooking(payload) {
 	// if (!email) {
 	// 	return { success: false, error: "E-mail is required." }
 	// }
-    // if (!puid) {
-    //     return { success: false, error: "PUID is required." };
-    // }
+    if (!puid) {
+        return { success: false, error: "PUID is required." };
+    }
     if (!appointment_time) {
         return { success: false, error: "Appointment timestamp is required." };
     }
