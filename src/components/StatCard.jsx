@@ -1,6 +1,6 @@
 export default function StatCard({ title, value, description, icon, iconBg = "bg-indigo-100" }) {
   return (
-    <div className="bg-white shadow-md rounded-lg w-[270px] h-[125px] p-6 flex flex-col justify-center relative">
+    <div className="cursor-pointer bg-white shadow-md rounded-lg w-[270px] h-[125px] p-6 flex flex-col justify-center relative transition-all duration-200 hover:translate-y-1 hover:shadow-xl">
         {icon && (
         <div className={`absolute bottom-7 right-6 w-[50px] h-[50px] flex items-center justify-center rounded-lg ${iconBg}`}>
           {icon}

@@ -45,7 +45,10 @@ function makeSlots(blockedTimes, existingAppts) {
 
   const today = new Date();
   const nextMonth = new Date();
+
+  const nextWeek = new Date();
   nextMonth.setMonth(today.getMonth() + 1);
+  nextWeek.setDate(nextWeek.getDate() + 7);
 
   //possible time slots, every 30 min
   const timeSlotsTuesday = ['12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30'];
@@ -60,7 +63,7 @@ function makeSlots(blockedTimes, existingAppts) {
   );
 
   //iterate through all dates from today -> next month
-  for (let d = new Date(today); d <= nextMonth; d.setDate(d.getDate() + 1)) {
+  for (let d = new Date(today); d < nextMonth; d.setDate(d.getDate() + 1)) {
     const workingDate = new Date(d);
     const isolateDate = workingDate.toLocaleDateString().split('T')[0];
     const day = workingDate.getDay();

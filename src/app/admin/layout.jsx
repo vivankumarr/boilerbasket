@@ -20,7 +20,7 @@ const parentDiv =
 const contentDiv =
   "bg-stone-100 p-4 \
 					relative top-25 left-60 \
-					w-[calc(100%-15rem)] h-[calc(100%-6.3rem)]";
+					w-[calc(100%-15rem)] h-full overflow-auto";
 
 const logoDiv =
   "bg-yellow-100 \
