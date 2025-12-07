@@ -2,9 +2,21 @@
 
 import { useState, useEffect } from "react";
 import { editAppointment } from "@/app/admin/appointments/actions";
+import { editClient } from "@/app/admin/clients/actions";
 
-const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [], currentTimestamp, onSuccess }) => {
+const EditForm = ({ apptId, context, previousData, showPopup, setShowPopup, timeSlots = [], currentTimestamp, onSuccess }) => {
+  var editFormTitle = 'Edit Your Appointment';
+  var editFormSubtitle = '';
 
+  switch (context) {
+	case "clients":
+		editFormTitle = 'Edit Client';
+		break;
+	default:
+		editFormSubtitle = "Select New Time Slot";
+  }
+
+  // Editable client details
   const [name, setName] = useState(previousData?.full_name || "");
   const [puid, setPuid] = useState(previousData?.puid || "");
   const [email, setEmail] = useState(previousData?.email || "");
@@ -68,7 +80,6 @@ const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [
     });
   };
 
-
   // shows error message for booking form
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
@@ -78,6 +89,11 @@ const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [
   async function submitEditedBooking(force_update = false) {
     setMessage(null);
     setSuccess(false);
+
+	if (role == '') {
+	  setMessage("Role is required.");
+	  return;
+	}
 
     // basic client-side validation
     if (!puid || puid.trim() === "") {
@@ -102,7 +118,18 @@ const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [
         force_update,
       };
 
-      const result = await editAppointment(apptId, payload);
+	  var result;
+	  var successMessage;
+
+	  switch (context) {
+		case "clients":
+			result = await editClient(apptId, payload); // TODO
+			successMessage = "Client updated successfully";
+			break;
+		default:
+			result = await editAppointment(apptId, payload);
+			successMessage = "Appointment updated successfully.";
+	  }
 
       // Error
       if (!result.success) {
@@ -112,9 +139,7 @@ const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [
       }
 
       setSuccess(true);
-      setMessage(
-        "Appointment updated successfully."
-      );
+      setMessage(successMessage);
 
       // Give the user a moment to read the success message before close + refresh
       setTimeout(() => {
@@ -165,11 +190,10 @@ const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [
       {showPopup && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-120 p-6 mt-10 mb-10 rounded-xl flex flex-col relative z-50">
-            <span className="text-2xl font-bold">Edit Your Appointment</span>
+            <span className="text-2xl font-bold">{editFormTitle}</span>
             <span className="text-sm text-slate-500 mb-1 mt-1">
-              Select New Time Slot
-            </span>
-
+              {editFormSubtitle}
+            </span>			
             <div className="flex flex-col items-center">
               {/* Date selector */}
               {timeSlots.length > 0 && (
@@ -262,6 +286,23 @@ const EditForm = ({ apptId, previousData, showPopup, setShowPopup, timeSlots = [
                 </div>
               )}
 
+			  {context === "clients" && (
+			  	<div className='w-full mt-8 h-30'>
+					{/* TODO: Pencil icon, populate with existing data, edit option for one or more fields */}
+					<label className="text-base font-medium text-slate-700 block mb-3">
+						Full Name
+					</label>
+					<label className="text-base font-medium text-slate-700 block mb-3">
+						E-Mail
+					</label>
+					<label className="text-base font-medium text-slate-700 block mb-3">
+						PUID
+					</label>
+					{/* <label className="text-base font-medium text-slate-700 block mb-3">
+						Role
+					</label> */}
+				</div>
+			  )}
 
               <div className="mt-8 flex gap-3 w-full justify-between">
                 <button

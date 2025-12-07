@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { deleteAppointment } from "@/app/admin/appointments/actions";
+import { deleteClient } from "@/app/admin/clients/actions";
 
-const DeleteForm = ({ deletePopup, setDeletePopup, apptId, onSuccess }) => {
+const DeleteForm = ({ deletePopup, setDeletePopup, apptId, onSuccess, context }) => {
   // shows error message for booking form
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
@@ -18,10 +19,23 @@ const DeleteForm = ({ deletePopup, setDeletePopup, apptId, onSuccess }) => {
     }
   }, [deletePopup]);
 
+  const rowType = (context == "clients") ? ("client") : ("appointment");
+
   const handleDelete = async () => {
     setLoading(true);
     try {
-      const result = await deleteAppointment(apptId);
+      var result;
+	  var successMessage;
+
+	  switch (context) {
+		case "clients":
+			result = await deleteClient(apptId); // clientId
+			successMessage = "Client deleted successfully";
+			break;
+		default: // appointments
+      		result = await deleteAppointment(apptId);
+			successMessage = "Appointment deleted successfully.";
+	  }
 
       // Error
       if (!result.success) {
@@ -32,7 +46,7 @@ const DeleteForm = ({ deletePopup, setDeletePopup, apptId, onSuccess }) => {
 
       // Success
       setSuccess(true);
-      setMessage("Appointment deleted successfully.");
+      setMessage(successMessage);
 
       // Give the user a moment to read the success message before close + refresh
       setTimeout(() => {
@@ -57,7 +71,7 @@ const DeleteForm = ({ deletePopup, setDeletePopup, apptId, onSuccess }) => {
           <div className="bg-white rounded-lg p-6 w-full max-w-xl shadow-lg">
             <h3 className="text-lg font-semibold mb-3">Confirm Deletion</h3>
             <p className="mb-4">
-              Are you sure you want to delete this appointment?
+              Are you sure you want to delete this {rowType}?
             </p>
             <div className="flex justify-end gap-3">
               <button

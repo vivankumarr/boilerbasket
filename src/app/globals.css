@@ -19,15 +19,161 @@
   }
 }
 
-
 @utility btn {
   cursor: pointer;
   hover: cursor-pointer;
 }
-
 
 @theme {
   --color-primary: #fae28c;
   --color-secondary: #8d44f2;
   --color-lightprimary: #ffedad;
 }
+
+/* input[type='checkbox'] {
+	Hide default checkbox appearance
+	--webkit-appearance: none;
+	--moz-appearance: none;
+	appearance: none;
+	Customize checkbox appearance
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+
+	background-clip: content-box;
+	border: 1px solid black;
+	border-radius: 1.5px;
+	margin-left: 5px;
+
+	&:checked {
+		content: "";
+		transform: rotate(45deg);
+		border-color: red;
+		border-style: solid;
+		background-color: oklch(49.6% 0.265 301.924);
+	}
+
+	.container .checkmark:after {
+		background: white;
+	}
+} */
+
+.checkbox {
+    display: inline-flex;
+    cursor: pointer;
+    position: relative;
+}
+
+/* .checkbox > span {
+    color: #34495E;
+    padding: 0.5rem 0.25rem;
+} */
+
+.checkbox > input {
+    height: 25px;
+    width: 25px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+
+    border: 1px solid #34495E;
+    border-radius: 4px;
+
+    outline: none;
+    transition-duration: 0.3s;
+    cursor: pointer;
+}
+
+.checkbox > input:checked {
+    border: 1px solid violet;
+    background-color: purple;
+}
+
+/* Display styled checkmark */
+.checkbox > input:checked + span::before {
+    content: '\2713'; /* Symbol */
+    /* display: block; */
+    color: white;
+	position: absolute;
+	left: 6px;
+	/* left: 1px; */
+}
+
+/* .checkbox > input:active {
+    border: 2px solid #34495E;
+} */
+
+/* .react-aria-DateRangePicker {
+  color: var(--text-color);
+
+  .react-aria-Group {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    min-width: 220px;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: auto;
+    position: relative;
+    padding: 4px 4px 4px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--field-background);
+    white-space: nowrap;
+
+    &[data-pressed] {
+      box-shadow: none;
+      background: var(--highlight-background);
+    }
+
+    &[data-focus-within] {
+      outline: 2px solid var(--focus-ring-color);
+      outline-offset: -1px;
+    }
+  }
+
+  [slot=start] + span {
+    padding: 0 4px;
+  }
+
+  [slot=end] {
+    margin-right: 2rem;
+    flex: 1;
+  }
+
+  .react-aria-Button {
+    background: var(--highlight-background);
+    color: var(--highlight-foreground);
+    border: 2px solid var(--field-background);
+    forced-color-adjust: none;
+    border-radius: 4px;
+    border: none;
+    margin-left: auto;
+    width: 1.429rem;
+    height: 1.429rem;
+    padding: 0;
+    font-size: 0.857rem;
+    box-sizing: content-box;
+    flex-shrink: 0;
+    position: sticky;
+    right: 0;
+
+    &[data-focus-visible] {
+      outline: 2px solid var(--focus-ring-color);
+      outline-offset: 2px;
+    }
+  }
+
+  .react-aria-DateInput {
+    width: unset;
+    min-width: unset;
+    padding: unset;
+    border: unset;
+    outline: unset;
+  }
+}
+
+.react-aria-Popover[data-trigger=DateRangePicker] {
+  max-width: unset;
+} */

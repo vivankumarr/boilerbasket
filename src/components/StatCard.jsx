@@ -1,4 +1,6 @@
-export default function StatCard({ title, value, description, icon, iconBg = "bg-indigo-100" }) {
+export default function StatCard({ title, value,
+	description, descStyle = 'text-gray-500',
+	icon, iconBg = "bg-indigo-100" }) {
   return (
     <div className="cursor-pointer bg-white shadow-md rounded-lg w-[270px] h-[125px] p-6 flex flex-col justify-center relative transition-all duration-200 hover:translate-y-1 hover:shadow-xl">
         {icon && (
@@ -9,7 +11,7 @@ export default function StatCard({ title, value, description, icon, iconBg = "bg
 
       <h3 className="text-l font-semibold text-gray-800">{title}</h3>
       <p className="text-3xl font-bold text-black-600 mt-2">{value}</p>
-      <p className="text-sm text-gray-500 mt-1">{description}</p>
+      <p className={`text-sm ${descStyle} mt-1`}>{description}</p>
     </div>
   );
 }

@@ -15,6 +15,9 @@ const TopbarAdmin = () => {
   var titleText = null;
   var subtitleText = null;
 
+  var webTitle = "BoilerBasket";
+  var webDesc = "ACE Food Pantry's appointment scheduling app";
+
   switch (pathname) {
     case pathname_admin.concat("appointments"):
       titleText = "Appointments";
@@ -60,13 +63,6 @@ const TopbarAdmin = () => {
         <span>{subtitleText}</span>
       </div>
 
-      {pathname === pathname_admin.concat("clients") && (
-        <button className={buttonDiv}>
-          <UserRoundPlus />
-          <span>Add Client</span>
-        </button>
-      )}
-
       {pathname === pathname_admin.concat("appointments") && (
         <button onClick={() => {setShowPopup(true)}} className={buttonDiv}>
           <Plus />
@@ -78,3 +74,8 @@ const TopbarAdmin = () => {
 };
 
 export default TopbarAdmin;
+
+// export const metadata = {
+// 	title: {webTitle},
+// 	description: 'Manage client information and visit history'
+// }
