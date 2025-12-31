@@ -39,7 +39,7 @@ export default function Dashboard ({ length, average, best_hour, ampm, counts, o
       <div className={`flex justify-center items-start transition-all duration-500 ease-in-out ${!expandedOne ? 'gap-6' : 'gap-0'}`}>
         <div className={`relative bg-white shadow-md rounded-lg transition-all duration-500 ease-in-out flex-shrink-0 ${
           expandedPie 
-            ? 'w-full md:w-[80vw] max-w-5xl h-[85vh] p-6' 
+            ? 'w-full md:w-[80vw] max-w-5xl h-[80vh] p-6' 
             : expandedOne 
               ? 'w-0 h-0 opacity-0 scale-95 p-0 overflow-hidden pointer-events-none' 
               : 'w-full md:w-[25vw] h-[60vh] p-6'
@@ -64,7 +64,7 @@ export default function Dashboard ({ length, average, best_hour, ampm, counts, o
 
         <div className={`relative bg-white shadow-md rounded-lg transition-all duration-500 ease-in-out flex-shrink-0 ${
           expandedBar 
-            ? 'w-full md:w-[80vw] max-w-5xl h-[85vh] p-6' 
+            ? 'w-full md:w-[80vw] max-w-5xl h-[80vh] p-6' 
             : expandedOne 
               ? 'w-0 h-0 opacity-0 scale-95 p-0 overflow-hidden pointer-events-none' 
               : 'w-full md:w-[25vw] h-[60vh] p-6'
@@ -89,7 +89,7 @@ export default function Dashboard ({ length, average, best_hour, ampm, counts, o
 
         <div className={`relative bg-white shadow-md rounded-lg transition-all duration-500 ease-in-out flex-shrink-0 ${
           expandedLine 
-            ? 'w-full md:w-[80vw] max-w-5xl h-[85vh] p-6' 
+            ? 'w-full md:w-[80vw] max-w-5xl h-[80vh] p-6' 
             : expandedOne 
               ? 'w-0 h-0 opacity-0 scale-95 p-0 overflow-hidden pointer-events-none' 
               : 'w-full md:w-[25vw] h-[60vh] p-6'
