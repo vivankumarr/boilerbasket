@@ -1,12 +1,9 @@
-import UI from "./UI.jsx";
-import { fetchBlockedDates } from "./actions.js"
+import React from 'react'
 
-export default async function Page() {
-  const dates = await fetchBlockedDates();
-  
+const page = () => {
   return (
-    <>
-      <UI dates={dates}/>
-    </>
+    <div>page</div>
   )
 }
+
+export default page

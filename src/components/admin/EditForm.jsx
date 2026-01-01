@@ -305,6 +305,15 @@ const EditForm = ({ apptId, context, previousData, showPopup, setShowPopup, time
 			  )}
 
               <div className="mt-8 flex gap-3 w-full justify-between">
+
+                <button
+                disabled={loading}
+                onClick={() => setShowPopup(false)}
+                className="bg-slate-200 hover:bg-slate-300 text-slate-800 py-3 px-6 rounded-lg flex-1 font-medium shadow-sm transition"
+                  >
+                  Cancel
+                </button>
+
                 <button
                 disabled={loading}
                 onClick={() => submitEditedBooking(false)}
@@ -313,13 +322,7 @@ const EditForm = ({ apptId, context, previousData, showPopup, setShowPopup, time
                 {loading ? "Booking..." : "Save"}
                 </button>
 
-                <button
-                disabled={loading}
-                onClick={() => setShowPopup(false)}
-                className="bg-slate-200 hover:bg-slate-300 text-slate-800 py-3 px-6 rounded-lg flex-1 font-medium shadow-sm transition"
-              >
-                  Cancel
-                </button>
+
               </div>
 
               {!success && message && (

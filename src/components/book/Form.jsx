@@ -30,7 +30,8 @@ const Form = ({timeSlots = []}) => {
             month: 'short',
             day: 'numeric'
           }),
-          times: []
+          times: [],
+          blocked: slot.block
         };
       }
       acc[slot.date].times.push(slot);
@@ -166,15 +167,32 @@ const Form = ({timeSlots = []}) => {
                     ᐸ
                   </button>
                   {visibleDates.map((dateSlot) => (
-                    <button 
+                    <div key={dateSlot.date}>
+                      {dateSlot.blocked && 
+                      <div >
+                        <button className={`flex flex-col items-center border px-4 py-3 rounded-lg transition-all hover:shadow-md bg-gray-200 `}>
+                          <div className="text-xs font-medium">Closure</div>
+                          <div className="text-sm font-semibold mt-0.5">{dateSlot.date.split('/')[0] + "/" + dateSlot.date.split('/')[1]}</div>
+                        </button>
+                      </div>
+                      }
+                      {!dateSlot.blocked && 
+                        <div>
+                          <button 
                       onClick={() => {date !== dateSlot.date ? setTime('') : null, setDate(dateSlot.date)}} 
-                      key = {dateSlot.date}
+                      
                       type = "button" 
                       className={`flex flex-col items-center border px-4 py-3 rounded-lg transition-all hover:shadow-md ${date === dateSlot.date ? 'bg-purple-600 text-white border-purple-600' : 'hover:border-purple-400 bg-white'}`}>
                         <div className="text-xs font-medium">{dateSlot.day}</div>
                         <div className="text-sm font-semibold mt-0.5">{dateSlot.date.split('/')[0] + "/" + dateSlot.date.split('/')[1]}</div>
                     </button>
+                        </div>
+                      }
+                    </div>
+ 
                   ))}
+
+
                   <button
                     onClick={() => moveVisibleDates(1)}
                     className={`hover:bg-slate-100 p-2 rounded-lg text-xl transition-all ${canSee.end === shownDates.length ? ('invisible') : {}}`}
