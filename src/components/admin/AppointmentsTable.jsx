@@ -181,6 +181,7 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
         setDeletePopup={setDeletePopup}
         apptId={deleteData?.id}
         onSuccess={onAppointmentDeleted}
+        context={"appointment"}
       />
 
       {/* Today's appointments table */}

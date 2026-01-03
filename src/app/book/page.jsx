@@ -42,76 +42,75 @@ export default async function bookingPage () {
 
 function makeSlots(blockedTimes, existingAppts) {
   const slots = [];
-
   const today = new Date();
   const nextMonth = new Date();
-
   const nextWeek = new Date();
   nextMonth.setMonth(today.getMonth() + 1);
   nextWeek.setDate(nextWeek.getDate() + 7);
-
+  
   //possible time slots, every 30 min
   const timeSlotsTuesday = ['12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30'];
   const timeSlotsSunday = ['17:00', '17:30', '18:00', '18:30', '19:00', '19:30'];
-
+  
   //max number of people we can have per time slot
   const maxPerTimeSlot = 5;
-
+  
   //lets use iso strings to compare better
   const booked = existingAppts.map(appt => 
     new Date(appt.appointment_time).toISOString()
   );
-
+  
   //iterate through all dates from today -> next month
   for (let d = new Date(today); d < nextMonth; d.setDate(d.getDate() + 1)) {
     const workingDate = new Date(d);
     const isolateDate = workingDate.toLocaleDateString().split('T')[0];
     const day = workingDate.getDay();
-
-
+    let blocked = false;
+    
     //if the day is not a sunday or tuesday, then skip
     if (day != 0 && day != 2) continue;
-
+    
     //if at least one blocked date blocks, then skip
     const isBlocked = blockedTimes.some(period => {
-      const start = new Date(period.start_date).toLocaleDateString();
-      const end = new Date(period.end_date).toLocaleDateString();
-
-      const startDate = start.split('T')[0];
-      const endDate = end.split('T')[0];
-
-      return isolateDate >= startDate && isolateDate <= endDate;
+      // Parse dates and normalize to midnight local time
+      const start = new Date(period.start_date + 'T00:00:00');
+      const end = new Date(period.end_date + 'T23:59:59');
+      
+      // Create a normalized date for comparison (midnight local time)
+      const dateObj = new Date(d);
+      dateObj.setHours(0, 0, 0, 0);
+      
+      return dateObj >= start && dateObj <= end;
     });
-
-    if (isBlocked) continue;
+    
+    if (isBlocked) {
+      blocked = true;
+    }
+    
     let timeSlots = (day == 0 ? timeSlotsSunday : timeSlotsTuesday);
-
+    
     //for each time slot do the following
     timeSlots.forEach(time => {
       const [hours, minutes] = time.split(':').map(Number);
-
       const currSlotDate = new Date(isolateDate);
       currSlotDate.setHours(hours, minutes, 0, 0);
       const slotTime = currSlotDate.toISOString();
-
+      
       //now find the number of appointments that match the configured time slot
       const count = booked.filter(
         timestamp => timestamp == slotTime
       ).length;
-
+      
       if (maxPerTimeSlot - count > 0) {
         const period = hours >= 12 ? 'PM' : 'AM';
-
         //make sure we always have two places for minutes (although this won't be an issue with current time slots)
         const displayMinutes = minutes.toString().padStart(2, '0');
-
         //other formatting formalities
         let displayHours = hours;
         if (displayHours > 12) displayHours -= 12;
         if (displayHours === 0) displayHours = 12;
-
         const display = `${displayHours}:${displayMinutes} ${period}`;
-
+        
         //the resultant array will have the following:
         // date: YYYY-MM-DD
         // time: XX:YY AM/PM
@@ -121,7 +120,8 @@ function makeSlots(blockedTimes, existingAppts) {
           date: isolateDate,
           time: display,
           timestamp: slotTime,
-          day: day === 0 ? 'Sunday' : 'Tuesday'
+          day: day === 0 ? 'Sunday' : 'Tuesday',
+          block: blocked
         })
       }
     })
