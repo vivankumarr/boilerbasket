@@ -12,14 +12,11 @@ import { PopupProvider } from "@/components/admin/ScheduleAppointmentPopupContex
 // https://tailwindcss.com/docs/colors
 
 const parentDiv =
-  "bg-black \
+  "relative bg-black \
 					h-screen w-full";
 
 // Manually (for now) remove excess space
-const contentDiv =
-  "bg-stone-100 p-4 \
-					relative top-25 left-60 \
-					w-[calc(100%-15rem)] h-full overflow-auto";
+const contentDiv = "absolute top-25 left-60 right-0 bottom-0 bg-stone-100";
 
 const logoDiv =
   "bg-yellow-100 \

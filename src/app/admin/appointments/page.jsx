@@ -34,7 +34,7 @@ export default async function AppointmentsPage() {
   }).length;
 
   return (
-    <main className="space-y-6">
+    <main className="space-y-6 p-4">
       <div className="justify-center space-x-13 flex flex-row">
         <StatCard
           title={"Today"}
