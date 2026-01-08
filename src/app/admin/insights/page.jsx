@@ -131,7 +131,10 @@ function getTrends(data) {
     else if (data[i].status == 'Canceled') {
       canceledData[parseInt(month)-1]++;
     }
-    totalData[parseInt(month)-1]++;
+
+    if (data[i].status != 'Scheduled') {
+      totalData[parseInt(month)-1]++;
+    }
   }
   return {canceled: canceledData, completed: completedData, total: totalData};
 }
