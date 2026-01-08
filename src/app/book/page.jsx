@@ -11,7 +11,7 @@ export default async function bookingPage () {
 
   return (
     <>
-      <div className="no-scrollbar min-h-screen flex flex-col items-center bg-gradient-to-br from-amber-100 via-purple-100 to-slate-100">
+      <div className="min-h-screen flex flex-col items-center bg-gradient-to-br from-amber-100 via-purple-100 to-slate-100">
         <Navbar />
         <span className="text-black font-medium text-5xl mt-10 text-center">
           Schedule Your Visit to<br />
