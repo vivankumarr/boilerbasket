@@ -34,7 +34,7 @@ export default async function AppointmentsPage() {
   }).length;
 
   return (
-    <main className="space-y-6 p-4">
+    <main className="space-y-6 p-8">
       <div className="justify-center space-x-13 flex flex-row">
         <StatCard
           title={"Today"}
@@ -66,7 +66,7 @@ export default async function AppointmentsPage() {
         Today's Appointments
       </h1>
 
-      <div className="px-4">
+      <div className="">
         <AppointmentsTable
           initialAppointments={todaysAppointments}
           checkInClient={checkInClientServerAction}

@@ -3,15 +3,14 @@ export default function StatCard({ title, value,
 	icon, iconBg = "bg-indigo-100" }) {
   return (
     <div className="cursor-pointer bg-white shadow-md rounded-lg w-[270px] h-[125px] p-6 flex flex-col justify-center relative transition-all duration-200 hover:translate-y-1 hover:shadow-xl">
-        {icon && (
-        <div className={`absolute bottom-7 right-6 w-[50px] h-[50px] flex items-center justify-center rounded-lg ${iconBg}`}>
-          {icon}
-        </div>
-      )}
 
-      <h3 className="text-l font-semibold text-gray-800">{title}</h3>
-      <p className="text-3xl font-bold text-black-600 mt-2">{value}</p>
-      <p className={`text-sm ${descStyle} mt-1`}>{description}</p>
+      <div className="flex justify-between flex-row items-center">
+        <h3 className="text-l font-semibold text-gray-800">{title}</h3>
+        <div className={`${iconBg} rounded-md p-2`}>{icon}</div>
+      </div>
+
+      <p className="text-3xl font-bold text-black-600">{value}</p>
+      <p className={`text-sm ${descStyle}`}>{description}</p>
     </div>
   );
 }

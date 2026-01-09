@@ -46,11 +46,11 @@ export default function Dashboard ({ days, length, freq, average, best_hour, amp
 
 
       <h3 className="mb-2 text-xl font-bold text-gray-600 tracking-wide truncate ml-1 animate-fade-in-up">Metrics</h3>
-      <div className="w-full h-2/8 flex justify-between mb-7 space-x-5 animate-fade-in-up delay-200">
+      <div className="w-full h-2/8 max-h-40 flex justify-between mb-7 space-x-5 animate-fade-in-up delay-200">
         <Top Title="Total Appts." Value={length} Description={"Cancelled & Completed"} Icon={<SquareSigma/>}/>
         <Top Title = "Appt. Average" Value={`${average}`} Description= {`Per Day, Over ${days} Days`} Icon={<CalendarClock/>}/>
         <Top Title="Peak Hour" Value={best_hour + ampm} Description={`Booked ${freq} Times`} Icon={<Clock/>}/>
-        <Top Title="Average Visit Duration" Value={avg_duration} Description={`Minutes, Over ${visits} Successful Visits`} Icon={<Hourglass/>}/>
+        <Top Title="Average Visit Dur." Value={avg_duration} Description={`Minutes, Over ${visits} Successful Visits`} Icon={<Hourglass/>}/>
       </div>
 
       <div className="w-full h-4/5 flex space-x-5 mb-7 animate-fade-in-up delay-400">
