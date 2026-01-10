@@ -3,14 +3,14 @@ import ClientsTable from "@/components/admin/ClientsTable";
 import { fetchClients } from "./actions";
 import { UsersIcon, UserCheckIcon, UserPlusIcon, RotateCwIcon } from "lucide-react";
 
-const contentDiv = 'h-full p-0 overflow-scroll' // grid grid-rows-2'
+const contentDiv = 'h-full overflow-scroll p-8' // grid grid-rows-2'
 // const cardDiv = 'bg-white m-4 p-2 text-center \
 // 				border rounded-md'
 
-const cardDiv = 'm-0 pt-4 pb-0 \
-				flex flex-wrap \
+const cardDiv = 'm-0 pb-0 \
+				flex \
 				items-center \
-				justify-evenly mb-8' // + ' bg-gray-100 border border-gray-400'
+				justify-center space-x-13 mb-8' // + ' bg-gray-100 border border-gray-400'
 
 // https://preline.co/docs/tables.html
 
@@ -24,26 +24,36 @@ export default async function ClientsPage() {
 	const clients = await fetchClients();
 	const totalClients = clients.length; // Total number of rows
 
+	let minYear = new Date().getFullYear();
+	for (let i = 0; i < clients.length; i++) {
+		const year = clients[i].created_at.split("-")[0];
+		minYear = Math.min(minYear, year);
+	}
+
 	// Confirmed clients with non-zero completed visits
 	const visitedClients = clients.filter(c => c.total_visits > 0).length;
 
+	const returningClientsMonth = clients.filter(
+		(c) => 
+			c.last_visit !== null && c.total_visits > 1
+			&& c.last_visit.split("-")[0, 1] == todayStr.split("-")[0, 1]
+	).length;
+
 	// Active: Return visitor, visited within last month (fix later)
 	const activeClients = clients.filter(
-		c => 
-			c.total_visits > 1
+		(c) => 
+			c.last_visit !== null && c.total_visits >= 1
 			&& c.last_visit.split("-")[0, 1] == todayStr.split("-")[0, 1]
 	).length;
 	
 	// New: Confirmed client created this month (because no first visit column)
-	const newClients = clients.filter(
-		c => c.total_visits == 1 // > 0
+	const newClients = clients.filter((c) => 
 		// New this year
-		// && c.created_at.split("-")[0] == todayStr.split("-")[0]
-		// New within a month
-		// && (todayStr.split("-")[1] - c.created_at.split("-")[1]) <= 0 // 1
+		c.created_at.split("-")[0] == todayStr.split("-")[0] && (todayStr.split("-")[1] == c.created_at.split("-")[1]) // 1
 	).length;
 
-	const returnRate = totalClients > 0 ? Math.round((activeClients / visitedClients) * 100) : 0;
+
+	const returnRate = totalClients > 0 ? Math.round((returningClientsMonth / activeClients) * 100) : 0;
 	
 	// console.log(clients);
 	// console.log(todayStr);
@@ -54,7 +64,7 @@ export default async function ClientsPage() {
 				<StatCard 
 					title='Total Clients'
 					value={totalClients}
-					description='Since 2015'
+					description={`Since ${minYear}`}
 					descStyle='text-fuchsia-600'
 					icon={<UsersIcon />}
 					iconBg={'bg-fuchsia-100'}
@@ -85,7 +95,7 @@ export default async function ClientsPage() {
 				/>
 			</div>
 
-			<div className='px-4'>
+			<div className=''>
 				<ClientsTable initialClients={clients} />
 			</div>
 		</div>

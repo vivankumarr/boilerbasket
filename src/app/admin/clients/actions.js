@@ -17,6 +17,7 @@ export async function fetchClients() {
 		console.error('Error fetching client data:', error)
 		return [];
 	}
+
 	
 	return data;
 }
@@ -42,18 +43,14 @@ export const editClient = async (clientId, formData) => {
 	const supabase = await createClient();
 
 	const { data, error } = await supabase
-		.select("*")
     	.from("clients")
-		.eq("id", clientId)
 		.update({ 
-			// full_name: formData.full_name_new,
-			// email: formData.email_new,
-			// puid: formData.puid_new,
-			// role: formData.puid_role
+			full_name: formData.full_name_new,
+			email: formData.email_new,
+			puid: formData.puid_new,
+			role: formData.role_new
 		})
-
-		// Prepopulate details from table
-    	// .single();
+		.eq("id", clientId)
 
 	if (error) {
 		console.error("Error editing client:", error);
