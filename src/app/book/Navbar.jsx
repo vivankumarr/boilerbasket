@@ -25,8 +25,13 @@ const Navbar = () => {
         <span className="ml-5 mt-2 font-bold text-xl">BoilerBasket</span>
       </div>
       <div className="flex items-center gap-8 mr-5">
-        <span className="text-gray-800 font-bold cursor-pointer text-base hover:text-purple-700 transition duration-200">About</span>
-        <span className="text-gray-800 font-bold cursor-pointer text-base hover:text-purple-700 transition duration-200">Contact</span>
+        <a
+          href="https://acefoodpantry.wixsite.com/website/contact-us"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span className="text-gray-800 font-bold cursor-pointer text-base hover:text-purple-700 transition duration-200">Contact</span>
+        </a>
         <button onClick={() => handleLogin()}className="bg-purple-900 text-white cursor-pointer text-base font-bold px-3 py-1 rounded shadow-md hover:bg-purple-800 hover:scale-105 transition transform duration-200">
           Staff Login
         </button>

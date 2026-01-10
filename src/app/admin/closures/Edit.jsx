@@ -18,12 +18,10 @@ const Edit = ({isOpen, changeOpen, currentStart, currentEnd, currentReason, id})
         try {
             const result = await editBlockedDate(selectedStart, selectedEnd, selectedReason, id);
             if (!result.success) {
-                console.log("An Error occured in Edit Form");
                 return;
             }
         }
         catch {
-            console.log("Some error occured");
             return;
         }
 

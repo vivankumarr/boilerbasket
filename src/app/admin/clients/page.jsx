@@ -1,5 +1,5 @@
-import StatCard from "@/components/StatCard";
-import ClientsTable from "@/components/admin/ClientsTable";
+import StatCard from "@/components/admin/StatCard";
+import ClientsTable from "./ClientsTable";
 import { fetchClients } from "./actions";
 import { UsersIcon, UserCheckIcon, UserPlusIcon, RotateCwIcon } from "lucide-react";
 
