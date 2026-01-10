@@ -49,9 +49,9 @@ const TopbarAdmin = () => {
       titleText = "Settings";
       subtitleText = "Manage your preferences";
       break;
-    case pathname_admin.concat("logistics"):
-      titleText = "Logistics";
-      subtitleText = "Manage closures and more";
+    case pathname_admin.concat("closures"):
+      titleText = "Closures";
+      subtitleText = "Manage pantry closure dates";
       break;
     default:
       titleText = "titleText";

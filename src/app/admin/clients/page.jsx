@@ -1,5 +1,5 @@
-import StatCard from "@/components/StatCard";
-import ClientsTable from "@/components/admin/ClientsTable";
+import StatCard from "@/components/admin/StatCard";
+import ClientsTable from "./ClientsTable";
 import { fetchClients } from "./actions";
 import { UsersIcon, UserCheckIcon, UserPlusIcon, RotateCwIcon } from "lucide-react";
 
@@ -31,6 +31,7 @@ export default async function ClientsPage() {
 	const activeClients = clients.filter(
 		c => 
 			c.total_visits > 1
+			&& c.last_visit
 			&& c.last_visit.split("-")[0, 1] == todayStr.split("-")[0, 1]
 	).length;
 	
@@ -54,7 +55,6 @@ export default async function ClientsPage() {
 				<StatCard 
 					title='Total Clients'
 					value={totalClients}
-					description='Since 2015'
 					descStyle='text-fuchsia-600'
 					icon={<UsersIcon />}
 					iconBg={'bg-fuchsia-100'}

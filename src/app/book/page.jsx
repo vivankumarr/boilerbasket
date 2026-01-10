@@ -1,7 +1,7 @@
 import React from 'react'
-import Navbar from '../../components/book/Navbar.jsx';
-import Form from '../../components/book/Form.jsx';
-import HowItWorks from '../../components/book/HowItWorks.jsx';
+import Navbar from './Navbar.jsx';
+import Form from './Form.jsx';
+import HowItWorks from './HowItWorks.jsx';
 
 import { supabaseService } from '@/lib/supabase/service';
 

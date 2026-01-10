@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { deleteAppointment } from "@/app/admin/appointments/actions";
 import { deleteClient } from "@/app/admin/clients/actions";
-import { deleteBlockedDate } from "@/app/admin/logistics/actions";
+import { deleteBlockedDate } from "@/app/admin/closures/actions";
 
 const DeleteForm = ({ deletePopup, setDeletePopup, apptId, onSuccess, context }) => {
   // shows error message for booking form
@@ -38,11 +38,11 @@ const DeleteForm = ({ deletePopup, setDeletePopup, apptId, onSuccess, context })
 	    switch (context) {
 		    case "clients":
 			    result = await deleteClient(apptId); // clientId
-			    successMessage = "Client deleted successfully";
+			    successMessage = "Client deleted successfully.";
 			    break;
         case "blockedDates":
           result = await deleteBlockedDate(apptId);
-          successMessage = "Closure deleted successfully";
+          successMessage = "Closure deleted successfully.";
           break;
 		    default: // appointments
       	  result = await deleteAppointment(apptId);

@@ -10,7 +10,6 @@ export async function fetchBlockedDates() {
     .select("*")
 
     if (error) {
-        console.log("Error in fetching blocked dates.");
         return;
     }
     return dates;
@@ -27,10 +26,8 @@ export async function addBlockedDate(data) {
 
 
     if (error) {
-        console.log("Error inserting data into blocked dates.")
     }
-    console.log("Inserted blocked dates.")
-    revalidatePath("admin/logistics")
+    revalidatePath("admin/closures")
 }
 
 export async function deleteBlockedDate(id) {
@@ -41,19 +38,15 @@ export async function deleteBlockedDate(id) {
     .from("blocked_periods")
     .delete()
     .eq('id', id)
-    revalidatePath("admin/logistics")
+    revalidatePath("admin/closures")
 
-    
     return {success: true}
 }
 
 export async function editBlockedDate(start, end, reason, id) {
     if (!id || !start || !end) {
-        console.log("Null value in edit blocked dates");
         return;
     }
-
-    console.log(start, end, reason);
 
     const supabase = await createClient();
     const { error } = await supabase
@@ -61,12 +54,10 @@ export async function editBlockedDate(start, end, reason, id) {
     .update({start_date: start, end_date: end, reason: reason})
     .eq('id', id);
 
-
     if (error) {
-        console.log(error);
         return;
     }
 
-    revalidatePath("admin/logistics")
+    revalidatePath("admin/closures")
     return {success: true}
 }

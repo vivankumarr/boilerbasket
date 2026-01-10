@@ -1,7 +1,7 @@
-import StatCard from "@/components/StatCard.jsx";
+import StatCard from "@/components/admin/StatCard.jsx";
 import { Calendar, FileInput, Clock, Sigma } from "lucide-react";
-import { cancelAppointmentServerAction, getTodaysAppointments } from "@/app/admin/appointments/actions.js";
-import AppointmentsTable from "@/components/admin/AppointmentsTable";
+import { cancelAppointmentServerAction, getTodaysAppointments } from "./actions.js";
+import AppointmentsTable from "./AppointmentsTable";
 import { checkInClientServerAction, checkOutClientServerAction } from "./actions";
 import { calculateEffectiveSlots } from "@/app/book/page";
 

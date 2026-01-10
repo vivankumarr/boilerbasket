@@ -1,11 +1,11 @@
 'use client';
 import { useState } from 'react';
-import StatCard from "@/components/StatCard.jsx"
+import StatCard from "@/components/admin/StatCard.jsx"
 import {CalendarCheck, Users, ChevronLeft, ChevronRight, Clock} from "lucide-react";
-import Piechart from "./components/Piechart"
-import Linechart from "./components/Linechart";
-import Barchart from './components/Barchart';
-import BottomDash from './components/BottomDash';
+import Piechart from "@/app/admin/insights/Piechart"
+import Linechart from "@/app/admin/insights/Linechart";
+import Barchart from '@/app/admin/insights/Barchart';
+import BottomDash from '@/app/admin/insights/BottomDash';
 
 export default function Dashboard ({ length, average, best_hour, ampm, counts, ordered_months }){
   const [expandedLine, setExpandedLine] = useState(false);

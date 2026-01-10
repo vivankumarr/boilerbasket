@@ -5,9 +5,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { SearchIcon, PencilIcon, Trash2Icon } from "lucide-react";
 
-import EditForm from "./EditForm";
-import DeleteForm from "./DeleteForm";
-// import StatusBadge from "@/components/admin/AppointmentsTable"
+import EditForm from "@/components/admin/EditForm";
+import DeleteForm from "@/components/admin/DeleteForm";
 
 // Helper component to style the status badge based on status
 function StatusBadge({ status }) {

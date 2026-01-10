@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { Search, Pencil, Trash2, CircleX } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { usePopup } from "./ScheduleAppointmentPopupContext";
+import { usePopup } from "@/components/admin/ScheduleAppointmentPopupContext";
 import Form from "./Form";
-import EditForm from "./EditForm";
-import DeleteForm from "./DeleteForm";
+import EditForm from "@/components/admin/EditForm";
+import DeleteForm from "@/components/admin/DeleteForm";
 
 // Helper function to format time (e.g., "1:30 PM")
 function formatTime(timestamp) {
