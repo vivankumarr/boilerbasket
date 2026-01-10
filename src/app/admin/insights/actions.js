@@ -7,8 +7,7 @@ export async function getAllAppointments() {
     const supabase = await createClient();
     const {data: appointments, error} = await supabase
     .from('appointments')
-    .select()
-    .eq('status', 'Completed');
+    .select('*')
 
     if (error) {
         console.log("ERROR in getAllAppointments: ", error);
@@ -31,7 +30,6 @@ export async function getLastYearAppts() {
     const {data: appointments, error} = await supabase
     .from('appointments')
     .select()
-    .eq('status', 'Completed')
     .gte('appointment_time', year_ago);
 
     if (error) {
@@ -56,4 +54,17 @@ export async function getAllClients() {
     else {
         return clients;
     }
+}
+
+
+export async function getPredictions() {
+    const supabase = await createClient();
+    const {data: predictions, error} = await supabase
+    .from('predictions')
+    .select()
+
+    if (error) {
+        console.log("Error in getPredictions: ", error);
+    }
+    return predictions;
 }

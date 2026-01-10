@@ -1,6 +1,6 @@
 'use client';
 
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from "chart.js";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from "chart.js/auto";
 import { Doughnut } from "react-chartjs-2";
 import { useRef } from "react";
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
@@ -23,22 +23,40 @@ export default function Piechart ({q_data}) {
         datasets: [{
             data: q_data,
             backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(245, 139, 73, 0.2)',
-                'rgba(78, 242, 187, 0.2)'
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(245, 139, 73, 0.5)',
+                'rgba(78, 242, 187, 0.5)'
             ],
             borderColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 132, 0.2)',
-                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(245, 139, 73, 0.8)',
+                'rgba(78, 242, 187, 0.8)',
             ],
-            borderWidth: 1,
+            borderWidth: 2,
         }]
     };
 
     const options = {
         reponsive: true,
         maintainAspectRatio: false,
+        plugins: {
+            title: {
+                display: true,
+                text: "Client Role Distribution",
+                font: {
+                    size: 20,
+                    family: "Inter",
+                },
+                padding: {
+                    left: 100,
+                    bottom: 20,
+                },
+            },
+            legend: {
+                display:true,
+                position: 'bottom',
+            }
+        }
     }
 
     return (

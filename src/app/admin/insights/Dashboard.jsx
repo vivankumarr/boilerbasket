@@ -1,138 +1,113 @@
 'use client';
 import { useState } from 'react';
-import StatCard from "@/components/admin/StatCard.jsx"
-import {CalendarCheck, Users, ChevronLeft, ChevronRight, Clock} from "lucide-react";
-import Piechart from "@/app/admin/insights/Piechart"
-import Linechart from "@/app/admin/insights/Linechart";
-import Barchart from '@/app/admin/insights/Barchart';
-import BottomDash from '@/app/admin/insights/BottomDash';
+import Top from './components/Top';
+import Piechart from "./components/Piechart"
+import Linechart from "./components/Linechart";
+import PredictionLineChart from './components/PredictionLineChart';
 
-export default function Dashboard ({ length, average, best_hour, ampm, counts, ordered_months }){
-  const [expandedLine, setExpandedLine] = useState(false);
-  const [expandedBar, setExpandedBar] = useState(false);
-  const [expandedPie, setExpandedPie] = useState(false);
-  const [expandedOne, setExpandedOne] = useState(false);
+import { SquareSigma, CalendarClock, Clock, Hourglass } from "lucide-react"
+const tableColStyle = "px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider";
+const tableDataStyle = "px-6 py-4 whitespace-nowrap text-sm text-slate-700";
+
+export default function Dashboard ({ days, length, freq, average, best_hour, ampm, counts, ordered_months, avg_duration, visits, pred, arrangePrediction }){
   
   return (
-    <main className="">
-      <div className="w-full flex flex-col md:flex-row gap-4 md:gap-12 justify-center mb-8">
-        <StatCard 
-          title={"Total Appointments"} 
-          value={length} 
-          icon={<CalendarCheck/>} 
-          iconBg={"bg-red-100"}
-        />
-        <StatCard 
-          title={"Average Daily Visits"} 
-          value={average} 
-          icon={<Users/>} 
-          iconBg={"bg-yellow-200"}
-        />
-        <StatCard 
-          title={"Peak Hour"} 
-          value={best_hour + ampm} 
-          icon={<Clock/>} 
-          iconBg={"bg-indigo-200"}
-        />
+    <main className="p-10 pl-10 pr-10 pb-10 h-full mb-4 overflow-auto">
+      {/* This is dumb */}
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .animate-fade-in-up {
+          animation: fadeInUp 0.6s ease-out forwards;
+          opacity: 0;
+        }
+        
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+        .delay-600 { animation-delay: 0.6s; }
+        .delay-700 { animation-delay: 0.7s; }
+      `}</style>
+
+
+
+
+
+
+      <h3 className="mb-2 text-xl font-bold text-gray-600 tracking-wide truncate ml-1 animate-fade-in-up">Metrics</h3>
+      <div className="w-full h-2/8 max-h-40 flex justify-between mb-7 space-x-5 animate-fade-in-up delay-200">
+        <Top Title="Total Appts." Value={length} Description={"Cancelled & Completed"} Icon={<SquareSigma/>}/>
+        <Top Title = "Appt. Average" Value={`${average}`} Description= {`Per Day, Over ${days} Days`} Icon={<CalendarClock/>}/>
+        <Top Title="Peak Hour" Value={best_hour + ampm} Description={`Booked ${freq} Times`} Icon={<Clock/>}/>
+        <Top Title="Average Visit Dur." Value={avg_duration} Description={`Minutes, Over ${visits} Successful Visits`} Icon={<Hourglass/>}/>
       </div>
 
-      <div className={`flex justify-center items-start transition-all duration-500 ease-in-out ${!expandedOne ? 'gap-6' : 'gap-0'}`}>
-        <div className={`relative bg-white shadow-md rounded-lg transition-all duration-500 ease-in-out flex-shrink-0 ${
-          expandedPie 
-            ? 'w-full md:w-[80vw] max-w-5xl h-[80vh] p-6' 
-            : expandedOne 
-              ? 'w-0 h-0 opacity-0 scale-95 p-0 overflow-hidden pointer-events-none' 
-              : 'w-full md:w-[25vw] h-[60vh] p-6'
-        }`}>
-          {(!expandedOne || expandedPie) && (
-            <>
-              <button 
-                onClick={() => {setExpandedPie(!expandedPie); setExpandedOne(!expandedOne)}} 
-                className="absolute top-4 left-4 p-2 rounded-full bg-gray-100 hover:bg-gray-200 cursor-pointer z-10 transition-colors"
-              >
-                {expandedPie ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-              </button>
-              <div className="flex flex-col justify-center items-center h-full">
-                <span className="text-lg font-semibold mb-4">Client Distribution</span>
-                <div className={`w-full ${expandedLine ? 'h-full' : 'h-[290px]'} flex-1 flex items-center justify-center`}>
-                  <Piechart q_data={counts} />
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-
-        <div className={`relative bg-white shadow-md rounded-lg transition-all duration-500 ease-in-out flex-shrink-0 ${
-          expandedBar 
-            ? 'w-full md:w-[80vw] max-w-5xl h-[80vh] p-6' 
-            : expandedOne 
-              ? 'w-0 h-0 opacity-0 scale-95 p-0 overflow-hidden pointer-events-none' 
-              : 'w-full md:w-[25vw] h-[60vh] p-6'
-        }`}>
-          {(!expandedOne || expandedBar) && (
-            <>
-              <button 
-                onClick={() => {setExpandedBar(!expandedBar); setExpandedOne(!expandedOne)}} 
-                className="absolute top-4 left-4 p-2 rounded-full bg-gray-100 hover:bg-gray-200 cursor-pointer z-10 transition-colors"
-              >
-                {expandedBar ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-              </button>
-              <div className="flex flex-col justify-center items-center h-full">
-                <span className="text-lg font-semibold mb-4">Client Visiting Distribution</span>
-                <div className={`w-full ${expandedBar ? 'h-full' : 'h-[290px]'} flex-1 flex items-center justify-center`}>
-                  <Barchart />
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-
-        <div className={`relative bg-white shadow-md rounded-lg transition-all duration-500 ease-in-out flex-shrink-0 ${
-          expandedLine 
-            ? 'w-full md:w-[80vw] max-w-5xl h-[80vh] p-6' 
-            : expandedOne 
-              ? 'w-0 h-0 opacity-0 scale-95 p-0 overflow-hidden pointer-events-none' 
-              : 'w-full md:w-[25vw] h-[60vh] p-6'
-        }`}>
-          {(!expandedOne || expandedLine) && (
-            <>
-              <button 
-                onClick={() => {setExpandedLine(!expandedLine); setExpandedOne(!expandedOne)}} 
-                className="absolute top-4 left-4 p-2 rounded-full bg-gray-100 hover:bg-gray-200 cursor-pointer z-10 transition-color"
-              >
-                {expandedLine ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-              </button>
-              <div className="flex flex-col justify-center items-center h-full">
-                <span className="text-lg font-semibold mb-4">Monthly Appt Trends</span>
-                <div className={`w-full ${expandedLine ? 'h-full' : 'h-[350px]'} flex-1 flex items-center justify-center`}>
-                  <Linechart ordering={ordered_months} />
-                </div>
-              </div>
-            </>
-          )}
+      <div className="w-full h-4/5 flex space-x-5 mb-7 animate-fade-in-up delay-400">
+        <div className="bg-white h-full w-2/3 mr-5 shadow-md hover:shadow-xl p-6 rounded-lg">
+            <Linechart ordering={ordered_months}></Linechart>
+          </div>
+        <div className="bg-white h-full w-1/3 shadow-md hover:shadow-xl rounded-lg p-6">
+          <Piechart q_data={counts} ></Piechart>
         </div>
       </div>
 
-      <div className="mt-8 flex flex-1 flex-col md:flex-row w-full gap-4 md:gap-6 justify-center">
-        <BottomDash 
-          title={"Average Performance by Day"} 
-          firstheading={"Tuesday"} 
-          secondheading={"Sunday"} 
-          firstdesc={"Primary day"} 
-          seconddesc={"Secondary day"} 
-          firstval={"24"} 
-          secondval={"16"}
-        />
-        <BottomDash 
-          title={"Predicted Demand"} 
-          firstheading={"Next Tuesday"} 
-          secondheading={"Next Sunday"} 
-          firstdesc={"High Confidence (92%)"} 
-          seconddesc={"Medium Confidence (65%)"} 
-          firstval={"26 - 30"} 
-          secondval={"13 - 17"}
-        />
+      <h3 className="mb-2 text-xl font-bold text-gray-600 tracking-wide truncate ml-1 animate-fade-in-up delay-400">Predictions</h3>
+
+      <div className="w-full h-3/5 flex space-x-5 animate-fade-in-up delay-400">
+        <div className="bg-white h-full w-1/2 mr-5 shadow-md hover:shadow-xl p-6 rounded-lg">
+
+          <div className="bg-white roundedshadow overflow-x-auto rounded-tl-lg rounded-tr-lg">
+            <table className='min-w-full divide-y divide-slate-200'>
+                <thead className="bg-slate-100">
+                    <tr>
+                    <th scope="col" className={tableColStyle}>
+                        Date
+                    </th>
+                    <th scope="col" className={tableColStyle}>
+                        Day
+                    </th>
+                    <th scope="col" className={tableColStyle}>
+                        Expected Visitors
+                    </th>
+                    <th scope="col" className={tableColStyle}>
+                        Likely Range
+                    </th>
+                    </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-slate-200items-center">
+                    {pred.length > 0 && (
+                        pred.map((prediction) => (
+                            <tr className="border-none" key = {prediction.id}>
+                                <td className={tableDataStyle}>{prediction.prediction_date}</td>
+                                <td className={tableDataStyle}>{prediction.day}</td>
+                                <td className={tableDataStyle}>{prediction.predicted_count}</td>
+                                <td className={tableDataStyle}>{`${prediction.confidence_lower} - ${prediction.confidence_upper}`}</td>
+                            </tr>
+                        ))
+                    )}
+                </tbody>
+                
+            </table>
+          </div>
+
+        </div>
+
+        <div className="bg-white h-full w-1/2 shadow-md hover:shadow-xl p-6 rounded-lg">
+            <PredictionLineChart arrangement={arrangePrediction}/>
+        </div>
       </div>
+
     </main>
   );
 }

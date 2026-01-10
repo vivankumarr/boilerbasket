@@ -5,8 +5,9 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { SearchIcon, PencilIcon, Trash2Icon } from "lucide-react";
 
-import EditForm from "@/components/admin/EditForm";
-import DeleteForm from "@/components/admin/DeleteForm";
+import Edit from "@/app/admin/clients/Edit";
+import DeleteForm from "./DeleteForm";
+// import StatusBadge from "@/components/admin/AppointmentsTable"
 
 // Helper component to style the status badge based on status
 function StatusBadge({ status }) {
@@ -55,9 +56,15 @@ export default function ClientsTable({ initialClients = [] }) {
 	const [visitFilter, setVisitFilter] = useState("All");
 	
 	const [editPopup, setEditPopup] = useState(false);
-	const [editData, setEditData] = useState(null);
   	const [deletePopup, setDeletePopup] = useState(false);
 	const [deleteData, setDeleteData] = useState(null);
+
+	const [selectedData, setSelectedData] = useState(null);
+
+	const handleEdit = (clientData) => {
+		setSelectedData(clientData);
+		setEditPopup(true);
+	}
 
 	useEffect(() => {
 		setClients(initialClients);
@@ -110,21 +117,19 @@ export default function ClientsTable({ initialClients = [] }) {
 				case "Past Week":
 					return (
 						client.last_visit != null
-						&& client.last_visit.split("-")[0] === thisYear
-						&& (thisMonth - client.last_visit.split("-")[1]) < 1
+						&& (new Date() - new Date(client.last_visit)) / (1000 * 60 * 60 * 24) <= 7
 						// && (thisDay - client.last_visit.split("-")[2]) < 7
 					)
 				case "Past Month":
 					return (
 						client.last_visit != null
-						&& client.last_visit.split("-")[0] === thisYear
-						&& (thisMonth - client.last_visit.split("-")[1]) < 1
+						&& (new Date() - new Date(client.last_visit)) / (1000 * 60 * 60 * 24 * 31) <= 1
 						// && (thisDay - client.last_visit.split("-")[2]) < 7
 					)
 				case "Past Year":
 					return (
 						client.last_visit != null
-						&& client.last_visit.split("-")[0] === thisYear
+						&& (new Date() - new Date(client.last_visit)) / (1000 * 60 * 60 * 24 * 365) <= 1
 					)
 				default:
 					return true;
@@ -149,15 +154,8 @@ export default function ClientsTable({ initialClients = [] }) {
 
 	return (
 		<div className='bg-white shadow-lg rounded-md overflow-hidden'>
-			{/* Pop-up forms */}
-			<EditForm
-				apptId={editData?.id}
-				previousData={editData?.clients} // TODO
-				showPopup={editPopup}
-				setShowPopup={setEditPopup}
-				context="clients"
-				onSuccess={onAppointmentEdited}
-			/>
+
+			{editPopup && <Edit isOpen={editPopup} changeOpen={setEditPopup} data={selectedData}/>}
 
 			<DeleteForm 
 				deletePopup={deletePopup}
@@ -270,7 +268,14 @@ export default function ClientsTable({ initialClients = [] }) {
 							filteredClients.map((client) => (
 								<tr key={client.id}>
 									{/* className='border text-center' */}
-									<td className={tableDataStyleMain}>{client.full_name}</td>
+									<td className={tableDataStyleMain}>
+										<div className="text-sm font-medium text-slate-900">
+                      						{client.full_name}
+                    					</div>
+                   						<div className="text-xs text-slate-500">
+                      						{client.email}
+                    					</div>
+									</td>
 									<td className={tableDataStyle}>{client.role}</td>
 									<td className={tableDataStyle}>{client.puid}</td>
 									<td className={tableDataStyle}>{client.total_visits}</td>
@@ -282,12 +287,12 @@ export default function ClientsTable({ initialClients = [] }) {
 										flex gap-2">
 										{/* flex gap-2 justify-center */}
 										<button
-											onClick={() => handleEditPopup(client)}
+											onClick={() => handleEdit(client)}
 											className="text-slate-500 hover:text-blue-600 transition"
 											title="Edit Client"
 										>
 											<PencilIcon
-												className="text-slate-500 hover:text-blue-600 transition"
+												className="text-slate-500 hover:text-blue-600 transition cursor-pointer"
 											/>
 										</button>
 										<button
@@ -296,7 +301,7 @@ export default function ClientsTable({ initialClients = [] }) {
 											title="Delete Client"
 										>
 											<Trash2Icon
-												className="text-slate-500 hover:text-red-600 transition"
+												className="text-slate-500 hover:text-red-600 transition cursor-pointer"
 											/>
 										</button>
 										
