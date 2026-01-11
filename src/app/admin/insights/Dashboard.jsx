@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
-import Top from './components/Top';
-import Piechart from "./components/Piechart"
-import Linechart from "./components/Linechart";
-import PredictionLineChart from './components/PredictionLineChart';
+import Top from './Top';
+import Piechart from "./Piechart"
+import Linechart from "./Linechart";
+import PredictionLineChart from './PredictionLineChart';
 
 import { SquareSigma, CalendarClock, Clock, Hourglass } from "lucide-react"
 const tableColStyle = "px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider";

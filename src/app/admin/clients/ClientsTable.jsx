@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { SearchIcon, PencilIcon, Trash2Icon } from "lucide-react";
 
 import Edit from "@/app/admin/clients/Edit";
-import DeleteForm from "./DeleteForm";
+import DeleteForm from "@/components/admin/DeleteForm";
 // import StatusBadge from "@/components/admin/AppointmentsTable"
 
 // Helper component to style the status badge based on status
