@@ -14,7 +14,7 @@ export default async function ManagePage({ params }) {
     .eq('edit_token', token)
     .single();
 
-  // 2. Security / Error Handling
+  // Error handling
   if (error || !appointment) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-amber-100 via-purple-100 to-slate-100 flex items-center justify-center p-4">

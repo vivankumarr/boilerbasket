@@ -35,8 +35,6 @@ export default function PredictionLineChart ({arrangement}) {
     const upper = arrangement.upper.slice(0, 12);
     const actual = arrangement.actual.slice(0, 12);
 
-    console.log(actual);
-
     const data = {
         labels,
         datasets: [{
@@ -78,7 +76,7 @@ export default function PredictionLineChart ({arrangement}) {
         plugins: {
             title : {
                 display: true,
-                text: 'Predicted Visitors for the Next Twelve Dates',
+                text: 'Predicted # of Visitors for Upcoming Days',
                 font: {
                     size: 20,
                     family: "Inter"

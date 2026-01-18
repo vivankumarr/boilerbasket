@@ -3,14 +3,6 @@ import SidebarAdmin from "@/components/admin/SidebarAdmin";
 import Image from "next/image";
 import { PopupProvider } from "@/components/admin/ScheduleAppointmentPopupContext";
 
-// TODO: Responsive design based on device screen size (but probably won't be accessed on mobile)
-// Uniform styling (set custom fonts, not default)
-// Adjust line spacing for text (logo, top)
-// Change title in browser tab based on page
-
-// Color Reference: https://find-nearest-tailwind-colour.netlify.app/
-// https://tailwindcss.com/docs/colors
-
 const parentDiv =
   "relative bg-black \
 					h-screen w-full";

@@ -78,8 +78,8 @@ export default function UI({dates})  {
   }
 
   return (
-    <div className="flex h-screen">
-      <div className="flex-1 h-screen">
+    <div className="flex h-full overflow-y-auto">
+      <div className="flex-1 min-h-full pb-32">
         <div className="bg-white rounded p-6 m-6 shadow-lg flex flex-col justify-center">
           <div className="h-1/2">
             <h2 className="font-bold text-lg mb-2">Add a Closure</h2>
@@ -104,7 +104,7 @@ export default function UI({dates})  {
                   <div className="flex justify-end mt-2 pt-2 border-t border-gray-100">
                     <button
                       onClick={() => {changeVisible(false)}}
-                      className="text-sm text-purple-600 font-medium hover:text-purple-800"
+                      className="text-sm text-purple-600 font-medium hover:text-purple-800 cursor-pointer"
                     >
                       Done
                     </button>
@@ -162,7 +162,7 @@ export default function UI({dates})  {
         />)}
 
         {/* Box that contains the Blocked Dates */}
-        <div className="bg-white rounded p-4 m-6 shadow overflow-x-auto">
+        <div className="bg-white rounded-lg p-4 m-6 shadow-md border border-slate-200 overflow-hidden">
             <h2 className="font-bold text-lg mb-4">Currently Blocked Dates</h2>
             <table className='min-w-full divide-y divide-slate-200'>
                 <thead className="bg-slate-50">
