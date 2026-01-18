@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import * as XLSX from "xlsx";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, subMonths, startOfYear, isWithinInterval, set } from "date-fns";
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, subMonths, } from "date-fns";
 import { Calendar as CalendarIcon, Download, FileSpreadsheet, Filter, ChevronDown, Info, LoaderCircle } from "lucide-react";
 
 export default function ExportsPage() {

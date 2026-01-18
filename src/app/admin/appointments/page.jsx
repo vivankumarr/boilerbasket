@@ -80,6 +80,5 @@ export default async function AppointmentsPage() {
 }
 
 export const metadata = {
-  title: "BoilerBasket | Appointments",
-  description: "Track and manage client appointments",
+  title: "Appointments | BoilerBasket",
 };

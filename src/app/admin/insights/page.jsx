@@ -221,4 +221,6 @@ function arrangePredictionData(data) {
   return {label: labels, actual: actualArray, lower: lowerArray, upper: upperArray};
 }
 
-
+export const metadata = {
+  title: "Insights | BoilerBasket",
+};

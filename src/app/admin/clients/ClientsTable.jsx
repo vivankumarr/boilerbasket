@@ -3,10 +3,11 @@
 // React hooks (store/fetch data)
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { SearchIcon, PencilIcon, Trash2Icon } from "lucide-react";
+import { SearchIcon, PencilIcon, Trash2Icon, ChevronLeft, ChevronRight } from "lucide-react";
 
 import Edit from "@/app/admin/clients/Edit";
 import DeleteForm	 from "@/components/admin/DeleteForm";
+import { set } from "date-fns";
 // import StatusBadge from "@/components/admin/AppointmentsTable"
 
 // Helper component to style the status badge based on status
@@ -60,6 +61,12 @@ export default function ClientsTable({ initialClients = [] }) {
 	const [deleteData, setDeleteData] = useState(null);
 
 	const [selectedData, setSelectedData] = useState(null);
+	const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10)
+
+	useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery, roleFilter, visitFilter]);
 
 	const handleEdit = (clientData) => {
 		setSelectedData(clientData);
@@ -142,6 +149,24 @@ export default function ClientsTable({ initialClients = [] }) {
 			const clientName = client.full_name || "";
 			return clientName.toLowerCase().includes(searchQuery.toLowerCase());
 		});
+
+	// Pagination logic calculations
+	const totalPages = Math.ceil(filteredClients.length / itemsPerPage);
+	const startIndex = (currentPage - 1) * itemsPerPage;
+	const endIndex = startIndex + itemsPerPage;
+	const paginatedClients = filteredClients.slice(startIndex, endIndex);
+
+	const handlePrevious = () => {
+		if (currentPage > 1) {
+			setCurrentPage(prev => prev - 1);
+		}
+	};
+
+	const handleNext = () => {
+		if (currentPage < totalPages) {
+			setCurrentPage(prev => prev + 1);
+		}
+	};
 
 	// Calculate client status
 	const getStatus = (client) => {
@@ -265,7 +290,7 @@ export default function ClientsTable({ initialClients = [] }) {
 					</thead>
 					<tbody className="bg-white divide-y divide-slate-200">
 						{filteredClients.length > 0 ? (
-							filteredClients.map((client) => (
+							paginatedClients.map((client) => (
 								<tr key={client.id}>
 									{/* className='border text-center' */}
 									<td className={tableDataStyleMain}>
@@ -326,6 +351,44 @@ export default function ClientsTable({ initialClients = [] }) {
 					</tbody>
 				</table>
 			</div>
+
+			{/* Pagination controls */}
+			{filteredClients.length > 0 && (
+            <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200 bg-slate-50">
+                <div className="text-sm text-slate-500">
+                    Showing <span className="font-medium">{startIndex + 1}</span> to{" "}
+                    <span className="font-medium">
+                        {Math.min(endIndex, filteredClients.length)}
+                    </span>{" "}
+                    of <span className="font-medium">{filteredClients.length}</span> results
+                </div>
+                
+                <div className="flex gap-2">
+                    <button
+                        onClick={handlePrevious}
+                        disabled={currentPage === 1}
+                        className={`p-2 rounded-md border ${
+                            currentPage === 1
+                                ? "bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed"
+                                : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50 cursor-pointer"
+                        }`}
+                    >
+                        <ChevronLeft className="h-4 w-4" />
+                    </button>
+                    <button
+                        onClick={handleNext}
+                        disabled={currentPage === totalPages}
+                        className={`p-2 rounded-md border ${
+                            currentPage === totalPages
+                                ? "bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed"
+                                : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50 cursor-pointer"
+                        }`}
+                    >
+                        <ChevronRight className="h-4 w-4" />
+                    </button>
+                </div>
+            </div>
+        )}
 		</div>
 	);
 }

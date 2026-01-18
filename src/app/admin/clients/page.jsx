@@ -102,7 +102,6 @@ export default async function ClientsPage() {
 	)
 };
 
-// export const metadata = {
-// 	title: 'BoilerBasket | Clients',
-// 	description: 'Manage client information and visit history'
-// }
+export const metadata = {
+  title: "Clients | BoilerBasket",
+};
