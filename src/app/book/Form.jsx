@@ -162,7 +162,7 @@ const Form = ({timeSlots = []}) => {
                 <div id="Dates" className="w-full flex flex-row justify-center items-center gap-2">
                   <button
                     onClick={() => moveVisibleDates(-1)}
-                    className={`hover:bg-slate-100 p-2 rounded-lg text-xl transition-all ${canSee.beg === 0 ? 'invisible' : ''}`}
+                    className={`hover:bg-slate-100 p-2 rounded-lg text-xl cursor-pointer transition-all ${canSee.beg === 0 ? 'invisible' : ''}`}
                   >
                     ᐸ
                   </button>
@@ -182,7 +182,7 @@ const Form = ({timeSlots = []}) => {
                       onClick={() => {date !== dateSlot.date ? setTime('') : null, setDate(dateSlot.date)}} 
                       
                       type = "button" 
-                      className={`flex flex-col items-center border px-4 py-3 rounded-lg transition-all hover:shadow-md ${date === dateSlot.date ? 'bg-purple-600 text-white border-purple-600' : 'hover:border-purple-400 bg-white'}`}>
+                      className={`flex flex-col items-center cursor-pointer border px-4 py-3 rounded-lg transition-all hover:shadow-md ${date === dateSlot.date ? 'bg-purple-600 text-white border-purple-600' : 'hover:border-purple-400 bg-white'}`}>
                         <div className="text-xs font-medium">{dateSlot.day}</div>
                         <div className="text-sm font-semibold mt-0.5">{dateSlot.date.split('/')[0] + "/" + dateSlot.date.split('/')[1]}</div>
                     </button>
@@ -195,7 +195,7 @@ const Form = ({timeSlots = []}) => {
 
                   <button
                     onClick={() => moveVisibleDates(1)}
-                    className={`hover:bg-slate-100 p-2 rounded-lg text-xl transition-all ${canSee.end === shownDates.length ? ('invisible') : {}}`}
+                    className={`hover:bg-slate-100 p-2 rounded-lg cursor-pointer text-xl transition-all ${canSee.end === shownDates.length ? ('invisible') : {}}`}
                   >
                   ᐳ
                   </button>
@@ -210,7 +210,7 @@ const Form = ({timeSlots = []}) => {
                         onClick={() => {setTime(time.time), setSelectedTimestamp(time.timestamp)}}
                         key={time.time} 
                         type="button" 
-                        className={`px-5 py-2.5 text-sm font-medium rounded-lg border transition-all hover:shadow-md ${times === time.time ? 'bg-purple-600 text-white border-purple-600' : 'hover:border-purple-400 bg-white'}`}>{time.time}</button>
+                        className={`px-4 py-2.5 text-sm font-medium rounded-lg border transition-all cursor-pointer hover:shadow-md ${times === time.time ? 'bg-purple-600 text-white border-purple-600' : 'hover:border-purple-400 bg-white'}`}>{time.time}</button>
                     ))}
                     {!date && (
                       <div className = "flex items-center justify-center w-full h-14 text-slate-500 text-sm">Choose a date to view avaliable times.</div>
@@ -221,7 +221,7 @@ const Form = ({timeSlots = []}) => {
               <button
                 disabled={loading}
                 onClick={() => submitBooking(false, false)}
-                className="mt-8 bg-purple-600 hover:bg-purple-700 py-3 px-6 rounded-lg w-full text-white font-medium shadow-md hover:shadow-lg hover:scale-105 transform transition-transform duration-300"
+                className="mt-8 bg-purple-600 hover:bg-purple-700 cursor-pointer py-3 px-6 rounded-lg w-full text-white font-medium shadow-md hover:shadow-lg hover:scale-102 transform transition-transform duration-300"
               >
                 {loading ? "Booking..." : "Confirm Booking"}
               </button>
@@ -263,14 +263,14 @@ const Form = ({timeSlots = []}) => {
                   setConflict(null);
                   setMessage("Cancelled. No changes were made.");
                 }}
-                className="px-4 py-2 border rounded"
+                className="px-4 py-2 border rounded cursor-pointer"
               >
                 Go Back
               </button>
 
               <button
                 onClick={() => submitBooking(false, true)}
-                className="px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600"
+                className="px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 cursor-pointer"
               >
                 Yes — That's Me
               </button>

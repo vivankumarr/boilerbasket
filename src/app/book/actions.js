@@ -151,6 +151,9 @@ export async function confirmBooking(payload) {
             return { success: false, error: `Error creating appointment: ${apptErr.message}` };
         }
 
+        // Magic link for appointment management
+        const manageLink = `${process.env.NEXT_PUBLIC_BASE_URL}/manage/${insertedAppt.edit_token}`
+
         // Send confirmation email via Resend
         try {
             const dateObj = new Date(appointment_time);
@@ -302,9 +305,13 @@ export async function confirmBooking(payload) {
                                                     <strong>Reminders:</strong><br>
                                                     • Please bring your PUID.<br>
                                                     • Please arrive during your time slot.<br>
-                                                    • If you need to cancel or reschedule, please reach out to 
-                                                    <a href="mailto:acefood@purdue.edu" style="color: #4C1D95; text-decoration: underline; font-weight: bold;">acefood@purdue.edu</a>.
                                                 </p>
+
+                                                <div style="text-align: center; margin: 30px 0;"> 
+                                                    <p style="margin-bottom: 10px; color: #64748b;">Need to cancel or reschedule?</p> 
+                                                    <a href="${manageLink}" style="background-color: #ffffff; color: #4C1D95; border: 2px solid #4C1D95; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;"> Manage Appointment 
+                                                    </a> 
+                                                </div>
 
                                                 <div style="text-align: center; margin-top: 30px;">
                                                     <a href="https://acefoodpantry.wixsite.com/website" class="btn" style="color: #ffffff;">Visit Website</a>

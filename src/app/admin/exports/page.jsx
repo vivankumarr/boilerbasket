@@ -207,7 +207,7 @@ export default function ExportsPage() {
           <button
             onClick={handleExport}
             disabled={isExporting || estimatedCount === 0}
-            className="cursor-pointer bg-purple-700 hover:bg-purple-800 text-white px-6 py-2.5 rounded-lg font-medium flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="cursor-pointer bg-[#D4AF37] hover:bg-[#c4a130] text-white px-6 py-2.5 rounded-lg font-medium flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isExporting ? (
               <>
@@ -276,7 +276,7 @@ export default function ExportsPage() {
                 <div className="flex justify-end mt-2 pt-2 border-t border-gray-100">
                   <button
                     onClick={() => setIsCalendarOpen(false)}
-                    className="text-sm text-blue-600 font-medium hover:text-blue-800"
+                    className="text-sm text-blue-600 font-medium hover:text-blue-800 cursor-pointer"
                   >
                     Done
                   </button>
@@ -360,7 +360,7 @@ export default function ExportsPage() {
           <button
             onClick={handleExport}
             disabled={isExporting || estimatedCount === 0}
-            className="bg-purple-700 hover:bg-purple-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-sm"
+            className="bg-green-600 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-sm"
           >
             <FileSpreadsheet className="h-5 w-5"/>
             {isExporting ? (

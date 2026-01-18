@@ -49,8 +49,8 @@ function makeSlots(blockedTimes, existingAppts) {
   nextWeek.setDate(nextWeek.getDate() + 7);
   
   //possible time slots, every 30 min
-  const timeSlotsTuesday = ['12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30'];
-  const timeSlotsSunday = ['17:00', '17:30', '18:00', '18:30', '19:00', '19:30'];
+  const timeSlotsTuesday = ['12:00', '12:15', '12:30', '12:45', '13:00', '13:15', '13:30', '13:45', '14:00', '14:15', '14:30', '14:45', '15:00', '15:15', '15:30', '15:45', '16:00', '16:15', '16:30', '16:45', '17:00', '17:15', '17:30', '17:45'];
+  const timeSlotsSunday = ['17:00', '17:15', '17:30', '17:45', '18:00', '18:15', '18:30', '18:45', '19:00', '19:15', '19:30', '19:45'];
   
   //max number of people we can have per time slot
   const maxPerTimeSlot = 5;
