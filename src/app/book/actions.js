@@ -234,7 +234,7 @@ export async function confirmBooking(payload) {
                                                 <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                                     <tr>
                                                         <td align="center">
-                                                            <img src="https://i.ibb.co/k6XL1k0M/boilerbasket-logo.png" alt="ACE Campus Food Pantry Logo" width="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                                                            <img src="https://i.ibb.co/sk7QQD8/boilerbasket-logo.png" alt="ACE Campus Food Pantry Logo" width="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
                                                             <span style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 32px; font-weight: 700; color: #000000; letter-spacing: -0.5px; line-height: 1; vertical-align: middle;">
                                                                 BoilerBasket
                                                             </span>
