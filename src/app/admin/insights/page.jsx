@@ -172,10 +172,6 @@ function averageVisitDuration(data) {
     if (data[i].check_in_time == null || data[i].check_out_time == null) continue;
     const end = new Date(data[i].check_out_time);
     const start = new Date(data[i].check_in_time);
-    console.log(start);
-    console.log(end);
-    console.log(end-start);
-
     totalMinutes += (end-start) / 60000;
     count++;
   }
