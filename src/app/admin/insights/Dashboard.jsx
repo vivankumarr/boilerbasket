@@ -65,11 +65,11 @@ export default function Dashboard ({ days, length, freq, average, best_hour, amp
       <h3 className="mb-2 text-xl font-bold text-gray-600 tracking-wide truncate ml-1 animate-fade-in-up delay-400">Predictions</h3>
 
       <div className="w-full h-3/5 flex space-x-5 animate-fade-in-up delay-400">
-        <div className="bg-white h-full w-1/2 mr-5 shadow-md hover:shadow-xl p-6 rounded-lg">
+        <div className="bg-white h-full w-1/2 mr-5 shadow-md hover:shadow-xl p-6 rounded-lg flex flex-col">
 
-          <div className="bg-white roundedshadow overflow-x-auto rounded-tl-lg rounded-tr-lg">
+          <div className="bg-white overflow-x-auto overflow-y-auto rounded-lg flex-1 min-h-0 border border-slate-200">
             <table className='min-w-full divide-y divide-slate-200'>
-                <thead className="bg-slate-100">
+                <thead className="bg-slate-100 sticky top-0 z-10">
                     <tr>
                     <th scope="col" className={tableColStyle}>
                         Date

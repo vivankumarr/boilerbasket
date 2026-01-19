@@ -76,7 +76,7 @@ export default function PredictionLineChart ({arrangement}) {
         plugins: {
             title : {
                 display: true,
-                text: 'Predicted # of Visitors for Upcoming Days',
+                text: 'Predicted # of Visitors for Next 12 Days',
                 font: {
                     size: 20,
                     family: "Inter"

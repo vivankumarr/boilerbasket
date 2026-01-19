@@ -65,7 +65,7 @@ def get_pantry_holidays():
         'holiday': 'pantry_closed',
         'ds': pd.to_datetime(holiday_dates),
         'lower_window': 0,
-        'upper_window': 1,
+        'upper_window': 0,
     })
 
 # Ingestion Part 1: Load synthetic data from CSV
@@ -81,7 +81,10 @@ response = supabase.table('appointments').select('appointment_time').execute()
 if response.data:
     df_real = pd.DataFrame(response.data)
     df_real['ds'] = pd.to_datetime(df_real['appointment_time'], format='mixed', utc=True).dt.tz_localize(None).dt.normalize()
-    # Count appointments per day
+
+    # Count appointments per day, filter out today and future dates
+    today = pd.Timestamp.now().normalize()
+    df_real = df_real[df_real['ds'] < today]
     df_real_counts = df_real.groupby('ds').size().reset_index(name='y')
 
     # Merge synthetic with real; real data overrides synthetic for matching dates (defensive coding)
@@ -94,35 +97,29 @@ dynamic_holidays = get_pantry_holidays()
 m = Prophet(holidays=dynamic_holidays, weekly_seasonality=True, yearly_seasonality=True)
 m.fit(df_training)
 
-# Make future dataframe for next 2 weeks, then make predictions
-future = m.make_future_dataframe(periods=14)
+# Make future dataframe for next 60 days, then make predictions
+future = m.make_future_dataframe(periods=60)
 forecast = m.predict(future)
 
 today = pd.Timestamp.now().normalize()
 future_days = forecast[forecast['ds'] > today].copy()
 future_days['weekday'] = future_days['ds'].dt.dayofweek
 
-try:
-    next_tue = future_days[future_days['weekday'] == 1].iloc[0]
-    next_sun = future_days[future_days['weekday'] == 6].iloc[0]
-except IndexError:
+future_open_days = future_days[future_days['weekday'].isin([1, 6])].sort_values('ds')
+next_12_open_days = future_open_days.head(12)
+
+if next_12_open_days.empty:
     sys.exit(1)
 
 # Send predictions to Supabase table
-predictions = [
-    {
-        "prediction_date": next_tue['ds'].strftime('%Y-%m-%d'),
-        "predicted_count": int(round(next_tue['yhat'])),
-        "confidence_lower": int(max(0, round(next_tue['yhat_lower']))),
-        "confidence_upper": int(round(next_tue['yhat_upper']))
-    },
-    {
-        "prediction_date": next_sun['ds'].strftime('%Y-%m-%d'),
-        "predicted_count": int(round(next_sun['yhat'])),
-        "confidence_lower": int(max(0, round(next_sun['yhat_lower']))),
-        "confidence_upper": int(round(next_sun['yhat_upper']))
-    }
-]
+predictions = []
+for index, row in next_12_open_days.iterrows():
+    predictions.append({
+        "prediction_date": row['ds'].strftime('%Y-%m-%d'),
+        "predicted_count": int(round(row['yhat'])),
+        "confidence_lower": int(max(0, round(row['yhat_lower']))),
+        "confidence_upper": int(round(row['yhat_upper']))
+    })
 
 # Wipe the old predictions and insert the new ones
 supabase.table('predictions').delete().neq('id', '00000000-0000-0000-0000-000000000000').execute()
