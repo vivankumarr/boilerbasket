@@ -6,6 +6,8 @@ import HowItWorks from './HowItWorks.jsx';
 import { supabaseService } from '@/lib/supabase/service';
 export const dynamic = 'force-dynamic';
 
+//random comment
+
 export default async function bookingPage () {
   
   const avaliableSlots = await calculateEffectiveSlots();
