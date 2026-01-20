@@ -13,7 +13,7 @@ export default async function bookingPage () {
     <>
       <div className="min-h-screen flex flex-col items-center bg-gradient-to-br from-amber-100 via-purple-100 to-slate-100">
         <Navbar />
-        <span className="text-black font-medium text-5xl mt-10 text-center">
+        <span className="text-black font-medium text-3xl md:text-5xl mt-10 text-center">
           Schedule Your Visit to<br />
           <span className="font-bold text-purple-900">ACE Campus Food Pantry</span>
         </span>

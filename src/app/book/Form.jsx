@@ -127,12 +127,12 @@ const Form = ({timeSlots = []}) => {
 
   return (
     <>
-        <div className="bg-white shadow-xl w-120 p-6 mt-10 mb-10 rounded-xl flex flex-col">
+        <div className="bg-white shadow-xl w-full max-w-xl mx-4 p-4 md:p-6 mt-6 mb-10 rounded-xl flex flex-col">
             <span className="text-2xl font-bold">Book Your Appointment</span>
             <span className="text-sm text-slate-500 mb-1 mt-1">Fill in your details below</span>
 
             <div className="flex flex-col items-center">
-              <div className="grid grid-cols-2 grid-rows-2 gap-5 mt-4 w-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 mt-4 w-full">
                   <div>
                     <span className="text-base font-medium text-slate-700 block mb-1.5 ">Full Name</span>
                     <input id= "name_input" value={name} placeholder="Enter your full name" onChange={(e) => {setName(e.target.value)}} className="border border-slate-400 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" type="text" />
@@ -170,7 +170,7 @@ const Form = ({timeSlots = []}) => {
                     <div key={dateSlot.date}>
                       {dateSlot.blocked && 
                       <div >
-                        <button className={`flex flex-col items-center border px-4 py-3 rounded-lg transition-all hover:shadow-md bg-gray-200 `}>
+                        <button className={`w-full flex flex-col items-center border px-2 py-2 md:px-4 md:py-3 rounded-lg transition-all hover:shadow-md bg-gray-200 `}>
                           <div className="text-xs font-medium">Closed</div>
                           <div className="text-sm font-semibold mt-0.5">{dateSlot.date.split('/')[0] + "/" + dateSlot.date.split('/')[1]}</div>
                         </button>
