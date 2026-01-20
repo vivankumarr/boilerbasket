@@ -20,8 +20,13 @@ export default async function page () {
 
 
   let best_time = peakHours(allAppointments);
-  const best_hour = best_time.best.split(' ')[0] + ":00 ";
-  const ampm = best_time.best.split(' ')[1];
+  let best_hour = "N/A";
+  let ampm = "";
+
+  if (best_time.best) {
+    best_hour = best_time.best.split(' ')[0] + ":00 ";
+    ampm = best_time.best.split(' ')[1];
+  }
 
   const counts = getRoleDistribution(allClients);
 
