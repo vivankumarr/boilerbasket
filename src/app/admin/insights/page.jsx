@@ -1,7 +1,10 @@
 import { getAllAppointments, getAllClients, getLastYearAppts, getPredictions } from "./actions.js";
 import Dashboard from "./Dashboard.jsx";
+import { checkAdminAccess } from "@/lib/supabase/checkAdmin.js";
 
 export default async function page () {
+  await checkAdminAccess()
+
   const allAppointments = await getAllAppointments();
   const allClients = await getAllClients();
   const lastYearAppts = await getLastYearAppts();

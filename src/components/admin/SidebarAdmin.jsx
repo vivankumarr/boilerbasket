@@ -3,6 +3,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { Clock9Icon, CalendarDaysIcon, ChartColumn, UsersIcon, DownloadIcon, LogOutIcon, CircleX } from "lucide-react";
 import SidebarTabAdmin from "./SidebarTabAdmin";
+import { getUserRole } from "@/lib/supabase/checkAdmin";
+import { useState, useEffect } from "react";
+import { convertSegmentPathToStaticExportFilename } from "next/dist/shared/lib/segment-cache/segment-value-encoding";
 
 const sidebarDiv = 'font-medium pt-1'
 const tabDiv = 'flex \
@@ -25,6 +28,18 @@ const innerDiv = 'flex gap-2 \
 export default function SidebarAdmin() {
 	const pathname = usePathname();
 	const router = useRouter();
+	const [role, setRole] = useState(null);
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		async function fetchRole() {
+			const role = await getUserRole();
+			setRole(role);
+			setIsLoading(false);
+		}
+		fetchRole();
+	}, [])
+
 
 	async function handleLogout() {
 		const { error } = await supabase.auth.signOut();
@@ -47,6 +62,7 @@ export default function SidebarAdmin() {
 					logo={<CalendarDaysIcon />}
 					label={'Appointments'} 
 				/>
+				{role == 'admin' && <div>
 				<SidebarTabAdmin
 					link={'/admin/insights'}
 					tabDiv={tabVariants[pathname == '/admin/insights']}
@@ -75,6 +91,7 @@ export default function SidebarAdmin() {
 					logo={<CircleX />}
 					label={'Closures'} 
 				/>
+				</div>}
 			</div>
 
 			<div className="flex my-3 mx-4 pl-1 border-2 border-amber-50 rounded-md hover:border-red-400 hover:bg-red-100">

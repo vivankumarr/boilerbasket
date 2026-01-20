@@ -28,8 +28,10 @@ export default function ExportsPage() {
     status: true,
   });
 
+
   const [ estimatedCount, setEstimatedCount ] = useState(0);
   const [ isExporting, setIsExporting ] = useState(false);
+
 
   // Effect to estimate number of records when dates/filters change
   useEffect(() => {

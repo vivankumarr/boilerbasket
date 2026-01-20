@@ -7,6 +7,7 @@ import { usePopup } from "@/components/admin/ScheduleAppointmentPopupContext";
 import Form from "./Form";
 import EditForm from "@/components/admin/EditForm";
 import DeleteForm from "@/components/admin/DeleteForm";
+import { getUserRole } from "@/lib/supabase/checkAdmin";
 
 // Helper function to format time (e.g., "1:30 PM")
 function formatTime(timestamp) {
@@ -63,6 +64,18 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
   const [deleteData, setDeleteData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+
+  const [role, setRole] = useState(null);
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		async function fetchRole() {
+			const role = await getUserRole();
+			setRole(role);
+			setIsLoading(false);
+		}
+		fetchRole();
+	}, [])
 
   // Sync state when initialAppointments prop updates (after router.refresh)
   useEffect(() => {
@@ -286,13 +299,13 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
                         </button>
                       )}
 
-                      <button
+                      {role == 'admin' && <button
                         onClick={() => handleDeletePopup(appt)}
                         className="text-slate-500 hover:text-red-600 transition cursor-pointer"
                         title="Delete Appointment"
                       >
                         <Trash2 className="h-5 w-5" />
-                      </button>
+                      </button>}
 
                       {appt.status == "Scheduled" && (
                         <button 

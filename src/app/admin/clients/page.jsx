@@ -2,6 +2,7 @@ import StatCard from "@/components/admin/StatCard";
 import ClientsTable from "./ClientsTable";
 import { fetchClients } from "./actions";
 import { UsersIcon, UserCheckIcon, UserPlusIcon, RotateCwIcon } from "lucide-react";
+import { checkAdminAccess } from "@/lib/supabase/checkAdmin";
 
 const contentDiv = 'h-full overflow-scroll p-8' // grid grid-rows-2'
 // const cardDiv = 'bg-white m-4 p-2 text-center \
@@ -17,6 +18,10 @@ const cardDiv = 'm-0 pb-0 \
 // TODO: Import option for appointments/clients tables (past data)?
 
 export default async function ClientsPage() {
+	
+	//checks if we're admin or volunteer
+	await checkAdminAccess();
+
 	const today = new Date;
 	const todayStr = today.toISOString();
 
