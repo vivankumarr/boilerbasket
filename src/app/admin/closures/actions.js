@@ -38,7 +38,7 @@ export async function deleteBlockedDate(id) {
     .from("blocked_periods")
     .delete()
     .eq('id', id)
-    revalidatePath("admin/closures")
+    revalidatePath("/admin/closures")
 
     return {success: true}
 }
