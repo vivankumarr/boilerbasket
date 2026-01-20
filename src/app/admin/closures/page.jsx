@@ -1,6 +1,7 @@
 import UI from "./UI.jsx";
 import { fetchBlockedDates } from "./actions.js"
 import { checkAdminAccess } from "@/lib/supabase/checkAdmin.js";
+export const dynamic = 'force-dynamic';
 
 export default async function Page() {
   await checkAdminAccess()
