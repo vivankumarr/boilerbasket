@@ -4,6 +4,7 @@ import Form from './Form.jsx';
 import HowItWorks from './HowItWorks.jsx';
 
 import { supabaseService } from '@/lib/supabase/service';
+export const dynamic = 'force-dynamic';
 
 export default async function bookingPage () {
   
