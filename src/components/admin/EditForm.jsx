@@ -8,8 +8,6 @@ const EditForm = ({ apptId, context, previousData, showPopup, setShowPopup, time
   var editFormTitle = 'Edit Your Appointment';
   var editFormSubtitle = '';
 
-  console.log(timeSlots);
-
   switch (context) {
 	case "clients":
 		editFormTitle = 'Edit Client';

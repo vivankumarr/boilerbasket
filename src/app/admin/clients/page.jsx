@@ -59,9 +59,6 @@ export default async function ClientsPage() {
 
 
 	const returnRate = totalClients > 0 ? Math.round((returningClientsMonth / activeClients) * 100) : 0;
-	
-	// console.log(clients);
-	// console.log(todayStr);
 
 	return (
 		<div className={`${contentDiv}`}>

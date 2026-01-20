@@ -10,7 +10,6 @@ const Edit = ({isOpen, changeOpen, data}) => {
     const [saving, changeSaving] = useState(false);
 
     const Save = async () => {
-        console.log(role);
         changeSaving(true)
         try {
             const result = await editClient(data.id, {full_name_new: fullName, email_new: email, puid_new: PUID, role_new: role});
