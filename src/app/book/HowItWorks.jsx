@@ -12,7 +12,7 @@ const HowItWorks = () => {
         },
         {
             title: "Choose your time slot",
-            desc: "Select a date and a 30-minute time window from the available appointment times.",
+            desc: "Select a date and a 15-minute time window from the available appointment times.",
             num: 2,
         },
         {
