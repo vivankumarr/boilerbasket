@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { confirmBooking } from '@/app/book/actions'
+export const dynamic = 'force-dynamic'
 
 const Form = ({timeSlots = []}) => {
     const [name, setName] = useState('');
