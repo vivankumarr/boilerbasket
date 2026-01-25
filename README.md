@@ -3,7 +3,7 @@
 [![Production](https://img.shields.io/badge/status-production-green)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-A full-stack visitor management and data analytics platform built for the **ACE Campus Food Pantry** at Purdue University. [BoilerBasket](boilerbasket.com) has replaced the pantry's paper-based operations with a centralized platform that handles student/faculty/staff appointments as well as visitor traffic management and insights for staff.
+A full-stack visitor management and data analytics platform built for the **ACE Campus Food Pantry** at Purdue University. [BoilerBasket](https://boilerbasket.com) has replaced the pantry's paper-based operations with a centralized platform that handles student/faculty/staff appointments as well as visitor traffic management and insights for staff.
 
 ## What's included?
 
@@ -133,3 +133,4 @@ This project was built by a team at Purdue Momentum over the Fall 2025 semester.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
