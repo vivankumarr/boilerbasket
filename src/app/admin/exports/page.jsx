@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { formatInTimeZone } from "date-fns-tz"
 import * as XLSX from "xlsx";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -28,10 +29,8 @@ export default function ExportsPage() {
     status: true,
   });
 
-
   const [ estimatedCount, setEstimatedCount ] = useState(0);
   const [ isExporting, setIsExporting ] = useState(false);
-
 
   // Effect to estimate number of records when dates/filters change
   useEffect(() => {
@@ -78,8 +77,10 @@ export default function ExportsPage() {
 
     switch (rangeType) { 
       case "Today":
-        start = now;
-        end = now;
+        start = new Date(); 
+        start.setHours(0, 0, 0, 0);
+        end = new Date();
+        end.setHours(23, 59, 59, 999);
         break;
       case "This Week":
         start = startOfWeek(now, { weekStartsOn: 1 });
@@ -149,14 +150,17 @@ export default function ExportsPage() {
       
       const excelRows = data.map((record) => {
         const row = {};
-        const dateObj = new Date(record.appointment_time);
 
         if (fields.clientName) row["Client Name"] = record.clients.full_name;
         if (fields.email) row["Email"] = record.clients.email;
         if (fields.puid) row["PUID"] = record.clients.puid;
         if (fields.role) row["Role"] = record.clients.role;
-        if (fields.appointmentDate) row["Appointment Date"] = format(dateObj, "yyyy-MM-dd");
-        if (fields.timeSlot) row["Time Slot"] = format(dateObj, "hh:mm a");
+        if (fields.appointmentDate) {
+          row["Appointment Date"] = formatInTimeZone(record.appointment_time, "UTC", "yyyy-MM-dd");
+        }
+        if (fields.timeSlot) {
+          row["Time Slot"] = formatInTimeZone(record.appointment_time, "UTC", "hh:mm a");
+        }
         if (fields.status) row["Status"] = record.status;
 
         return row;

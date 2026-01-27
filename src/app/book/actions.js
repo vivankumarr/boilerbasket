@@ -16,17 +16,22 @@ export async function confirmBooking(payload) {
     const role = rawRole?.trim() || null;
     const appointment_time = appointmentTimestampRaw ? String(appointmentTimestampRaw).trim() : null;
 
-    // puid and appointment date and time are required fields
-
-	// if (!email) {
-	// 	return { success: false, error: "E-mail is required." }
-	// }
+    // Email, PUID appointment date and time are required fields
+	if (!email) {
+	    return { success: false, error: "Email address is required." }
+	}
     if (!puid) {
         return { success: false, error: "PUID is required." };
     }
     if (!appointment_time) {
-        return { success: false, error: "Appointment timestamp is required." };
+        return { success: false, error: "A valid appointment slot is required." };
     }
+
+    // Check if appointment is in the past
+    const appointment = new Date(appointment_time);
+
+    if (appointment < new Date())
+        return { success: false, error: "That appointment slot has already passed."}
 
     const supabase = supabaseService;
 
@@ -157,16 +162,18 @@ export async function confirmBooking(payload) {
         // Send confirmation email via Resend
         try {
             const dateObj = new Date(appointment_time);
-            const dateStr = dateObj.toLocaleDateString("en-US", {
+            const dateStr = new Intl.DateTimeFormat("en-US", {
                 weekday: "long",
                 month: "long",
                 day: "numeric",
-            });
-            const timeStr = dateObj.toLocaleTimeString("en-US", {
+                timeZone: "America/Indiana/Indianapolis",
+            }).format(dateObj);
+            const timeStr = new Intl.DateTimeFormat("en-US", {
                 hour: "numeric",
                 minute: "2-digit",
-                timeZone: "America/Indiana/Indianapolis"
-            });
+                hour12: true,
+                timeZone: "America/Indiana/Indianapolis",
+            }).format(dateObj);
 
             await resend.emails.send({
                             from: "BoilerBasket <appointments@boilerbasket.com>",

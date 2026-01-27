@@ -3,10 +3,11 @@
 // React hooks (store/fetch data)
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { maskPUID } from "@/app/admin/appointments/AppointmentsTable.jsx"
 import { SearchIcon, PencilIcon, Trash2Icon, ChevronLeft, ChevronRight } from "lucide-react";
 
 import Edit from "@/app/admin/clients/Edit";
-import DeleteForm	 from "@/components/admin/DeleteForm";
+import DeleteForm from "@/components/admin/DeleteForm";
 import { set } from "date-fns";
 // import StatusBadge from "@/components/admin/AppointmentsTable"
 
@@ -175,8 +176,6 @@ export default function ClientsTable({ initialClients = [] }) {
 		return 'Inactive';
 	}
 
-	// TODO: Implement pagination for table results (test with placeholder data)
-
 	return (
 		<div className='bg-white shadow-lg rounded-md overflow-hidden'>
 
@@ -192,10 +191,8 @@ export default function ClientsTable({ initialClients = [] }) {
 
 			{/* Table */}
 			<div className='overflow-x-auto'>
-				{/* col-span-full bg-blue-0 m-4 text-center */}
-				{/* h-full */}
+
 				<table className='min-w-full divide-y divide-slate-200'>
-					{/* w-full border rounded-md table-auto resize divide-y */}
 					<thead>
 						<tr>
 							{/* Name */}
@@ -302,7 +299,7 @@ export default function ClientsTable({ initialClients = [] }) {
                     					</div>
 									</td>
 									<td className={tableDataStyle}>{client.role}</td>
-									<td className={tableDataStyle}>{client.puid}</td>
+									<td className={tableDataStyle}>{maskPUID(client.puid)}</td>
 									<td className={tableDataStyle}>{client.total_visits}</td>
 									<td className={tableDataStyle}>{client.last_visit}</td>
 									<td className={tableDataStyle}>

@@ -15,6 +15,7 @@ function formatTime(timestamp) {
   return new Date(timestamp).toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "2-digit",
+    timeZone: "UTC",
   });
 }
 
@@ -47,7 +48,7 @@ function StatusBadge({ status }) {
 }
 
 // Helper function to mask the first 5 digits of the PUID
-function maskPUID(puid) {
+export function maskPUID(puid) {
   if (!puid) return "";
   const puidStr = String(puid);
   return "••••" + puidStr.slice(-4);

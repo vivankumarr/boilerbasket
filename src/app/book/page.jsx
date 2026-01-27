@@ -163,7 +163,6 @@ export async function calculateEffectiveSlots() {
 }
 
 export const metadata = {
-  title: 'BoilerBasket | Book Appointment',
-  description: 'Book an appointment at ACE Food Pantry'
+  title: 'Book Appointment | BoilerBasket'
 }
 

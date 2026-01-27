@@ -75,10 +75,14 @@ function getDays(data) {
 function peakHours(data) {
   const map = new Map();
   for (let i = 0; i < data.length; i++) {
-    const local_time = new Date(data[i].appointment_time).toLocaleString();
-    const hour = local_time.split(' ')[1].split(':')[0];
-    const ampm = local_time.split(' ')[2];
-    const join = hour + ' ' + ampm;
+    const utcTimeStr = new Date(data[i].appointment_time).toLocaleTimeString('en-US', { 
+      timeZone: 'UTC',
+      hour: 'numeric',
+      hour12: true
+    });
+    
+    const join = utcTimeStr; 
+
     if (!map.has(join)) {
       map.set(join, 1);
     }
@@ -132,16 +136,16 @@ function getTrends(data) {
   const totalData = new Array(12).fill(0);
 
   for (let i = 0; i < data.length; i++) {
-    const month = new Date(data[i].appointment_time).toLocaleString().split('/')[0];
+    const monthIndex = new Date(data[i].appointment_time).getUTCMonth(); 
+    
     if (data[i].status == 'Completed') {
-      completedData[parseInt(month)-1]++;
+      completedData[monthIndex]++;
     }
     else if (data[i].status == 'Canceled') {
-      canceledData[parseInt(month)-1]++;
+      canceledData[monthIndex]++;
     }
-
     if (data[i].status != 'Scheduled') {
-      totalData[parseInt(month)-1]++;
+      totalData[monthIndex]++;
     }
   }
   return {canceled: canceledData, completed: completedData, total: totalData};
