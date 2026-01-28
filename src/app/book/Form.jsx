@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { confirmBooking } from '@/app/book/actions'
+import { LoaderCircle } from "lucide-react"
 export const dynamic = 'force-dynamic'
 
 const Form = ({timeSlots = []}) => {
@@ -54,6 +55,17 @@ const Form = ({timeSlots = []}) => {
     const shownDates = Object.values(dateToTimesMap).slice(0,6);
     const visibleDates = shownDates.slice(canSee.beg, canSee.end);
     const visibleTimes = date ? dateToTimesMap[date].times : [];
+
+    // Effect to automatically dismiss success/error message
+    useEffect(() => {
+      if (message) {
+        const timer = setTimeout(() => {
+          setMessage(null);
+        }, 5000);
+
+        return () => clearTimeout(timer); // Cleanup
+      }
+    }, [message]);
 
     // booking form submission logic
     async function submitBooking(force_update = false, proceedWithoutUpdate = false) {
@@ -214,7 +226,7 @@ const Form = ({timeSlots = []}) => {
                         className={`px-4 py-2.5 text-sm font-medium rounded-lg border transition-all cursor-pointer hover:shadow-md ${times === time.time ? 'bg-purple-600 text-white border-purple-600' : 'hover:border-purple-400 bg-white'}`}>{time.time}</button>
                     ))}
                     {!date && (
-                      <div className = "flex items-center justify-center w-full h-14 text-slate-500 text-sm">Choose a date to view avaliable times.</div>
+                      <div className = "flex items-center justify-center w-full h-14 text-slate-500 text-sm">Choose a date to view available times.</div>
                     )}
                 </div>
               </div>
@@ -222,14 +234,46 @@ const Form = ({timeSlots = []}) => {
               <button
                 disabled={loading}
                 onClick={() => submitBooking(false, false)}
-                className="mt-8 bg-purple-600 hover:bg-purple-700 cursor-pointer py-3 px-6 rounded-lg w-full text-white font-medium shadow-md hover:shadow-lg hover:scale-102 transform transition-transform duration-300"
+                className="mt-8 flex justify-center items-center gap-2 bg-purple-600 hover:bg-purple-700 cursor-pointer py-3 px-6 rounded-lg w-full text-white font-medium shadow-md hover:shadow-lg hover:scale-102 transform transition-transform duration-300"
               >
-                {loading ? "Booking..." : "Confirm Booking"}
+                {loading ? (
+                  <>
+                    <LoaderCircle className="animate-spin h-5 w-5 text-white"/>
+                    <span>Booking...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Confirm Booking</span>
+                  </>
+                )}
               </button>
-              {!success && message && <p className="mt-3 text-red-600">{message}</p>}
-              {success && <p className="mt-3 text-green-700">{message}</p>}
             </div>
+
+            {message && (
+              <div className={`fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl transition-all duration-300 animate-in fade-in slide-in-from-bottom-4 ${success ? 'bg-emerald-600 text-white' : 'bg-red-500 text-white'
+            }`}>
+              {/* Icon based on state */}
+              <span className="text-xl">
+                {success ? '✓' : '⚠'}
+              </span>
+                
+              <div className="flex flex-col">
+                <span className="font-semibold text-sm">
+                  {success ? "Success" : "Error"}
+                </span>
+                <span className="text-sm opacity-90">{message}</span>
+              </div>
+
+              <button 
+                onClick={() => setMessage(null)} 
+                className="ml-4 p-1 hover:bg-white/20 rounded-full transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+          )}
         </div>
+
         {conflict && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="bg-white rounded-lg p-6 w-full max-w-xl shadow-lg">
