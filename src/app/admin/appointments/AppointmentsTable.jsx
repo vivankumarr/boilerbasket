@@ -8,15 +8,11 @@ import Form from "./Form";
 import EditForm from "@/components/admin/EditForm";
 import DeleteForm from "@/components/admin/DeleteForm";
 import { getUserRole } from "@/lib/supabase/checkAdmin";
+import { formatInTimeZone } from "date-fns-tz";
 
-// Helper function to format time (e.g., "1:30 PM")
 function formatTime(timestamp) {
   if (!timestamp) return "";
-  return new Date(timestamp).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    timeZone: "UTC",
-  });
+  return formatInTimeZone(timestamp, 'America/Indiana/Indianapolis', 'h:mm a');
 }
 
 // Helper component to style the status badge based on status

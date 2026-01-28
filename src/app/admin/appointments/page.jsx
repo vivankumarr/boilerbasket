@@ -1,12 +1,13 @@
 import StatCard from "@/components/admin/StatCard.jsx";
 import { Calendar, FileInput, Clock, Sigma } from "lucide-react";
-import { cancelAppointmentServerAction, getTodaysAppointments } from "./actions.js";
+import { cancelAppointmentServerAction, getTodaysAppointments, getWeeklyAppointmentCount } from "./actions.js";
 import AppointmentsTable from "./AppointmentsTable";
 import { checkInClientServerAction, checkOutClientServerAction } from "./actions";
 import { calculateEffectiveSlots } from "@/app/book/page";
 
 export default async function AppointmentsPage() {
   const todaysAppointments = await getTodaysAppointments();
+  const totalThisWeek = await getWeeklyAppointmentCount();
 
   const totalToday = todaysAppointments.length;
   const totalCheckedIn = todaysAppointments.filter(
@@ -27,11 +28,6 @@ export default async function AppointmentsPage() {
   const sunday = new Date(monday);
   sunday.setDate(monday.getDate() + 6);
   sunday.setHours(23, 59, 59, 999);
-
-  const totalThisWeek = todaysAppointments.filter((appt) => {
-    const apptDate = new Date(appt.appointment_time);
-    return apptDate >= monday && apptDate <= sunday;
-  }).length;
 
   return (
     <main className="space-y-6 p-8">
