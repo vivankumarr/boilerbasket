@@ -163,7 +163,7 @@ const Form = ({timeSlots = []}) => {
                 <div id="Dates" className="w-full flex flex-row justify-center items-center gap-2">
                   <button
                     onClick={() => moveVisibleDates(-1)}
-                    className={`hover:bg-slate-100 p-2 rounded-lg text-xl cursor-pointer transition-all ${canSee.beg === 0 ? 'invisible' : ''}`}
+                    className={`hover:bg-slate-100 p-2 rounded-lg text-xl cursor-pointer transition-all ${canSee.beg === 0 || timeSlots.length == 0 ? 'invisible' : ''}`}
                   >
                     ᐸ
                   </button>
@@ -196,7 +196,7 @@ const Form = ({timeSlots = []}) => {
 
                   <button
                     onClick={() => moveVisibleDates(1)}
-                    className={`hover:bg-slate-100 p-2 rounded-lg cursor-pointer text-xl transition-all ${canSee.end === shownDates.length ? ('invisible') : {}}`}
+                    className={`hover:bg-slate-100 p-2 rounded-lg cursor-pointer text-xl transition-all ${canSee.end === shownDates.length || timeSlots.length == 0 ? ('invisible') : {}}`}
                   >
                   ᐳ
                   </button>
