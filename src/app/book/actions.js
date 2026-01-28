@@ -17,21 +17,22 @@ export async function confirmBooking(payload) {
     const appointment_time = appointmentTimestampRaw ? String(appointmentTimestampRaw).trim() : null;
 
     // Email, PUID appointment date and time are required fields
-	if (!email) {
-	    return { success: false, error: "Email address is required." }
-	}
+		if (!email) {
+			return { success: false, error: "Email address is required." }
+		}
     if (!puid) {
-        return { success: false, error: "PUID is required." };
+			return { success: false, error: "PUID is required." };
     }
     if (!appointment_time) {
-        return { success: false, error: "A valid appointment slot is required." };
+			return { success: false, error: "A valid appointment slot is required." };
     }
 
-    // Check if appointment is in the past
-    const appointment = new Date(appointment_time);
-
-    if (appointment < new Date())
-        return { success: false, error: "That appointment slot has already passed."}
+    const appointmentDate = new Date(appointment_time);
+    const now = new Date();
+    
+    // Check if selected slot has passed (w/ a 5-min buffer)
+    if (appointmentDate.getTime() < now.getTime() - (5 * 60 * 1000))
+			return { success: false, error: "That appointment slot has already passed."}
 
     const supabase = supabaseService;
 

@@ -171,7 +171,7 @@ const Form = ({timeSlots = []}) => {
                     <div key={dateSlot.date}>
                       {dateSlot.blocked && 
                       <div >
-                        <button className={`w-full flex flex-col items-center border px-2 py-2 md:px-4 md:py-3 rounded-lg transition-all hover:shadow-md bg-gray-200 `}>
+                        <button className={`flex-1 w-full flex flex-col items-center border px-2 py-2 md:px-4 md:py-3 rounded-lg transition-all hover:shadow-md bg-gray-200 `}>
                           <div className="text-xs font-medium">Closed</div>
                           <div className="text-sm font-semibold mt-0.5">{dateSlot.date.split('/')[0] + "/" + dateSlot.date.split('/')[1]}</div>
                         </button>
@@ -183,7 +183,7 @@ const Form = ({timeSlots = []}) => {
                       onClick={() => {date !== dateSlot.date ? setTime('') : null, setDate(dateSlot.date)}} 
                       
                       type = "button" 
-                      className={`flex flex-col items-center cursor-pointer border px-4 py-3 rounded-lg transition-all hover:shadow-md ${date === dateSlot.date ? 'bg-purple-600 text-white border-purple-600' : 'hover:border-purple-400 bg-white'}`}>
+                      className={`flex-1 flex flex-col items-center cursor-pointer border px-4 py-3 rounded-lg transition-all hover:shadow-md ${date === dateSlot.date ? 'bg-purple-600 text-white border-purple-600' : 'hover:border-purple-400 bg-white'}`}>
                         <div className="text-xs font-medium">{dateSlot.day}</div>
                         <div className="text-sm font-semibold mt-0.5">{dateSlot.date.split('/')[0] + "/" + dateSlot.date.split('/')[1]}</div>
                     </button>

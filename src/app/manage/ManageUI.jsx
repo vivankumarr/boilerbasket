@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Calendar, Clock, MapPin, AlertCircle, CheckCircle } from 'lucide-react';
 import { cancelAppointment, rescheduleAppointment } from './actions';
+import { formatInTimeZone } from 'date-fns-tz';
 
 export default function ManageUI({ appointment, availableSlots }) {
   const [isRescheduling, setIsRescheduling] = useState(false);
@@ -40,7 +41,7 @@ export default function ManageUI({ appointment, availableSlots }) {
   };
 
   const isCanceled = appointment.status === 'Canceled';
-  const dateObj = new Date(appointment.appointment_time);
+  const TIME_ZONE = 'America/Indiana/Indianapolis';
 
   return (
     <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
@@ -62,13 +63,13 @@ export default function ManageUI({ appointment, availableSlots }) {
           <div className="flex items-center gap-4 text-gray-700">
             <Calendar className="w-6 h-6 text-purple-600" />
             <span className="text-xl font-medium">
-              {dateObj.toLocaleDateString("en-US", { weekday: 'long', month: 'long', day: 'numeric' })}
+              {formatInTimeZone(appointment.appointment_time, TIME_ZONE, "EEEE, MMMM d")}
             </span>
           </div>
           <div className="flex items-center gap-4 text-gray-700">
             <Clock className="w-6 h-6 text-purple-600" />
             <span className="text-xl font-medium">
-              {dateObj.toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' })}
+              {formatInTimeZone(appointment.appointment_time, TIME_ZONE, "h:mm a")}
             </span>
           </div>
           <div className="flex items-center gap-4 text-gray-700">
