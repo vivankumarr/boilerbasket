@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { deleteAppointment } from "@/app/admin/appointments/actions";
 import { deleteClient } from "@/app/admin/clients/actions";
-import { deleteBlockedDate } from "@/app/admin/closures/actions";
+import { deleteBlockedDate } from "@/app/admin/logistics/actions";
 
 const DeleteForm = ({ deletePopup, setDeletePopup, apptId, onSuccess, context }) => {
   // shows error message for booking form

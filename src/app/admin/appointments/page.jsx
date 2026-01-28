@@ -15,6 +15,7 @@ export default async function AppointmentsPage() {
   const totalUpcoming = todaysAppointments.filter(
     (appt) => appt.status === "Scheduled"
   ).length;
+  console.log(totalUpcoming);
 
   const availableSlots = await calculateEffectiveSlots();
 

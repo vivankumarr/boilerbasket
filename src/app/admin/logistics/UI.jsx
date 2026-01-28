@@ -8,10 +8,12 @@ import { PencilIcon, Trash2Icon, CalendarIcon, LoaderCircle } from "lucide-react
 import DeleteForm from "@/components/admin/DeleteForm";
 import Edit from "./Edit";
 
+import { updateCap, updateVisible } from "./actions";
+
 const tableColStyle = "px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider";
 const tableDataStyle = "px-6 py-4 whitespace-nowrap text-sm text-slate-700";
 
-export default function UI({dates})  {
+export default function UI({dates, cap, visibleDays})  {
   const [selectedDates, changeSelectedDates] = useState(null);
   const [reason, changeReason] = useState("");
   const [calendarVisible, changeVisible] = useState(false);
@@ -26,6 +28,28 @@ export default function UI({dates})  {
   const [successMessage, setSuccessMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const isFormValid = selectedDates && selectedDates.length === 2 && reason.trim() !== "";
+
+
+  //time slots stuff
+  const [defaultCap, setDefaultCap] = useState(cap[0].value)
+  const [visible, setVisible] = useState(visibleDays[0].value)
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [updateMessage, setUpdateMessage] = useState(null);
+
+
+  async function handleSubmitGeneral() {
+    setIsUpdating(true);
+    try {
+      const res = await updateCap(defaultCap);
+      const other_res = await updateVisible(visible);
+      setUpdateMessage("Successfully Updated!");
+      setTimeout(() => setUpdateMessage(null), 3000);
+    }
+    catch (error) {
+      console.log(error);
+    }
+    setIsUpdating(false);
+  }
 
   async function handleSubmit (dates, reason) {
     if (dates == null) return;
@@ -79,8 +103,9 @@ export default function UI({dates})  {
 
   return (
     <div className="flex h-full overflow-y-auto">
-      <div className="flex-1 min-h-full pb-32">
-        <div className="bg-white rounded p-6 m-6 shadow-lg flex flex-col justify-center">
+      <div className="flex-1 min-h-full pb-32 p-6 mb-20">
+        <h3 className=" text-xl font-bold tracking-wide truncate mb-2 text-gray-600">Closure Control</h3>
+        <div className="bg-white rounded p-6 shadow-lg flex flex-col justify-center">
           <div className="h-1/2">
             <h2 className="font-bold text-lg mb-2">Add a Closure</h2>
           </div>
@@ -162,7 +187,7 @@ export default function UI({dates})  {
         />)}
 
         {/* Box that contains the Blocked Dates */}
-        <div className="bg-white rounded-lg p-4 m-6 shadow-md border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-lg p-6 mt-5 shadow-md border border-slate-200 overflow-hidden">
             <h2 className="font-bold text-lg mb-4">Currently Blocked Dates</h2>
             <table className='min-w-full divide-y divide-slate-200'>
                 <thead className="bg-slate-50">
@@ -198,6 +223,35 @@ export default function UI({dates})  {
                 </tbody>
             </table>
         </div>
+
+        <h3 className=" text-xl font-bold tracking-wide mt-8 truncate mb-2 text-gray-600">Time Slot Control</h3>
+        <div className="bg-white rounded-lg p-6 mt-5 shadow-md border border-slate-200 overflow-hidden">
+          <h2 className="font-bold text-lg mb-4">General</h2>
+          <div className="flex flex-row justify-between">
+            <div className="flex flex-row space-x-7">
+                <div className="flex flex-col items-center">
+                  <h1 className="text-slate-700">Capacity</h1>
+                  <input onChange={(e) => {setDefaultCap(e.target.value)}} value={defaultCap} min = "0" type="number" className="border border-slate-400 h-12 rounded p-2"/>
+                </div>
+                <div className="flex flex-col items-center">
+                  <h1 className="text-slate-700">Visible Pantry Days</h1>
+                  <input onChange={(e) => {setVisible(e.target.value)}} value = {visible} min = "0" type="number" className="border border-slate-400 h-12 rounded p-2"/>
+                </div>
+            </div>
+              <div className="flex justify-end items-end">
+                <button onClick={() => {handleSubmitGeneral()}} className="text-white font-medium py-2.5 px-5 rounded-lg shadow-md flex items-center justify-center gap-2 ml-5 h-12 w-48 bg-purple-700 cursor-pointer hover:bg-purple-800">{isUpdating ? "Updating" : "Update"}</button>
+              </div>
+          </div>
+
+          {updateMessage && (
+              <p className="mt-3 text-green-700 font-medium text-sm animate-in fade-in slide-in-from-top-1">{updateMessage}</p>
+            )}
+        </div>
+
+        {/* <div className="bg-white rounded-lg p-6 mt-5 shadow-md border border-slate-200 overflow-hidden">
+          <h2 className="font-bold text-lg mb-4">Individual Timeslots</h2>
+
+        </div> */}
 
       </div>
     </div>

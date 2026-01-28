@@ -70,7 +70,9 @@ function getDays(data) {
 function peakHours(data) {
   const map = new Map();
   for (let i = 0; i < data.length; i++) {
+    console.log(data[i].appointment_time);
     const local_time = new Date(data[i].appointment_time).toLocaleString();
+    console.log(local_time)
     const hour = local_time.split(' ')[1].split(':')[0];
     const ampm = local_time.split(' ')[2];
     const join = hour + ' ' + ampm;

@@ -1,7 +1,7 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { Clock9Icon, CalendarDaysIcon, ChartColumn, UsersIcon, DownloadIcon, LogOutIcon, CircleX } from "lucide-react";
+import { Clock9Icon, CalendarDaysIcon, ChartColumn, UsersIcon, DownloadIcon, LogOutIcon, WarehouseIcon } from "lucide-react";
 import SidebarTabAdmin from "./SidebarTabAdmin";
 import { getUserRole } from "@/lib/supabase/checkAdmin";
 import { useState, useEffect } from "react";
@@ -85,11 +85,11 @@ export default function SidebarAdmin() {
 					label={'Export Data'} 
 				/>
 				<SidebarTabAdmin
-					link={'/admin/closures'}
-					tabDiv={tabVariants[pathname == '/admin/closures']}
+					link={'/admin/logistics'}
+					tabDiv={tabVariants[pathname == '/admin/logistics']}
 					innerDiv={innerDiv} 
-					logo={<CircleX />}
-					label={'Closures'} 
+					logo={<WarehouseIcon />}
+					label={'Logistics'} 
 				/>
 				</div>}
 			</div>
