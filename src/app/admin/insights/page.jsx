@@ -17,7 +17,6 @@ export default async function page () {
   const numberOfDays = getDays(allAppointments);
   const average = (numberOfDays / allAppointments.length).toPrecision(2);
   let average_visit_duration = averageVisitDuration(allAppointments);
-  console.log(average_visit_duration);
 
   let avg_vis_string = "N/A"
 
@@ -84,9 +83,7 @@ function getDays(data) {
 function peakHours(data) {
   const map = new Map();
   for (let i = 0; i < data.length; i++) {
-    console.log(data[i].appointment_time);
     const local_time = new Date(data[i].appointment_time).toLocaleString();
-    console.log(local_time)
     const hour = local_time.split(' ')[1].split(':')[0];
     const ampm = local_time.split(' ')[2];
     const join = hour + ' ' + ampm;

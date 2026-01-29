@@ -21,8 +21,6 @@ function formatTime(timestamp) {
 function makeDate(appt_time) {
 
   const arr = appt_time.split("T")[0].split("-");
-  console.log(arr);
-
   return arr[1] + "-" + arr[2] + " | ";
 }
 

@@ -54,7 +54,7 @@ const DeleteForm = ({ deletePopup, setDeletePopup, apptId, onSuccess, context })
       if (!result.success) {
         setMessage(result.error || "An error occurred. Please try again.");
         setDisplayMessage(true);
-        console.log("error");
+        console.log("Error");
         setLoading(false);
         return;
       }
@@ -67,7 +67,6 @@ const DeleteForm = ({ deletePopup, setDeletePopup, apptId, onSuccess, context })
       // Give the user a moment to read the success message before close + refresh
       setTimeout(() => {
         if (onSuccess) {
-          console.log("no error");
           onSuccess();
         }
         setSuccess(false);

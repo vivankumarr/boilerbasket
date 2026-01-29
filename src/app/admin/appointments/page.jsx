@@ -21,7 +21,6 @@ export default async function AppointmentsPage() {
   const totalUpcoming = todaysAppointments.filter(
     (appt) => appt.status === "Scheduled"
   ).length;
-  console.log(totalUpcoming);
 
   const availableSlots = await calculateEffectiveSlots(cap[0].value, vis[0].value, true);
 
@@ -34,8 +33,7 @@ export default async function AppointmentsPage() {
   const sunday = new Date(monday);
   sunday.setDate(monday.getDate() + 6);
   sunday.setHours(23, 59, 59, 999);
-  console.log(sunday);
-
+  
   const totalThisWeek = allAppts.filter((appt) => {
     return appt.status == "Completed" && appt.appointment_time >= monday.toISOString() && appt.appointment_time <= sunday.toISOString();
   }).length;
@@ -69,7 +67,7 @@ export default async function AppointmentsPage() {
         />
       </div>
 
-      <h1 className="text-2xl font-bold text-slate-900 ml-4 mt-10">
+      <h1 className="text-2xl font-bold text-slate-900 ml-1 mt-10">
         Appointments
       </h1>
 

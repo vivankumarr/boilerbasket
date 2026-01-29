@@ -42,7 +42,7 @@ export default function UI({dates, cap, visibleDays})  {
     try {
       const res = await updateCap(defaultCap);
       const other_res = await updateVisible(visible);
-      setUpdateMessage("Successfully Updated!");
+      setUpdateMessage("Successfully updated!");
       setTimeout(() => setUpdateMessage(null), 3000);
     }
     catch (error) {
@@ -104,7 +104,7 @@ export default function UI({dates, cap, visibleDays})  {
   return (
     <div className="flex h-full overflow-y-auto">
       <div className="flex-1 min-h-full pb-32 p-6 mb-20">
-        <h3 className=" text-xl font-bold tracking-wide truncate mb-2 text-gray-600">Closure Control</h3>
+        <h3 className="text-xl font-bold text-slate-900 ml-1 mt-2 mb-3">Manage Closures</h3>
         <div className="bg-white rounded p-6 shadow-lg flex flex-col justify-center">
           <div className="h-1/2">
             <h2 className="font-bold text-lg mb-2">Add a Closure</h2>
@@ -224,22 +224,38 @@ export default function UI({dates, cap, visibleDays})  {
             </table>
         </div>
 
-        <h3 className=" text-xl font-bold tracking-wide mt-8 truncate mb-2 text-gray-600">Time Slot Control</h3>
-        <div className="bg-white rounded-lg p-6 mt-5 shadow-md border border-slate-200 overflow-hidden">
-          <h2 className="font-bold text-lg mb-4">General</h2>
+        <h3 className="text-xl font-bold text-slate-900 ml-1 mt-12 mb-3">General Preferences</h3>
+        <div className="bg-white rounded-lg p-6 shadow-md border border-slate-200 overflow-hidden">
           <div className="flex flex-row justify-between">
             <div className="flex flex-row space-x-7">
                 <div className="flex flex-col items-center">
-                  <h1 className="text-slate-700">Capacity</h1>
+                  <h1 className="text-slate-700">Booking Capacity Per Time Slot</h1>
                   <input onChange={(e) => {setDefaultCap(e.target.value)}} value={defaultCap} min = "0" type="number" className="rounded-[6px] border-0 bg-slate-50 px-3 py-2 text-slate-900 shadow-inner ring-1 ring-inset ring-slate-200"/>
                 </div>
                 <div className="flex flex-col items-center">
-                  <h1 className="text-slate-700">Visible Pantry Days</h1>
+                  <h1 className="text-slate-700"># of Upcoming Days to Display</h1>
                   <input onChange={(e) => {setVisible(e.target.value)}} value = {visible} max = "8" min = "0" type="number" className="w-60 rounded-[6px] border-0 bg-slate-50 px-3 py-2 text-slate-900 shadow-inner ring-1 ring-inset ring-slate-200"/>
                 </div>
             </div>
               <div className="flex justify-end items-end">
-                <button onClick={() => {handleSubmitGeneral()}} className="text-white font-medium py-2.5 px-5 rounded-lg shadow-md flex items-center justify-center gap-2 ml-5 h-12 w-48 bg-purple-700 cursor-pointer hover:bg-purple-800">{isUpdating ? "Updating" : "Update"}</button>
+                {/* <button onClick={() => {handleSubmitGeneral()}} className="text-white font-medium py-2.5 px-5 rounded-lg shadow-md flex items-center justify-center gap-2 ml-5 h-12 w-48 bg-purple-700 cursor-pointer hover:bg-purple-800">{isUpdating ? "Updating" : "Update"}</button> */}
+
+                <button
+                  onClick={() => {handleSubmitGeneral()}}
+                  disabled={isUpdating}
+                  className={`font-medium py-2.5 px-5 rounded-lg shadow-md flex items-center justify-center gap-2 ml-5 h-12 w-48 transition-all ${isUpdating ? "bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed" : "bg-purple-700 hover:bg-purple-800 text-white cursor-pointer"}`}>
+                  {isUpdating ? (
+                    <>
+                      <LoaderCircle className="animate-spin h-5 w-5"/>
+                      <span className="text-sm font-semibold">Updating...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-3xl mb-1 font-normal">+</span>
+                      <span className="text-sm font-semibold">Update</span>
+                    </>
+                  )}
+                </button>
               </div>
           </div>
 

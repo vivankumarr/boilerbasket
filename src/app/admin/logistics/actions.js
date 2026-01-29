@@ -115,7 +115,6 @@ export async function updateVisible (newVisible) {
 
 //function IF we want specific time slot, not using for now
 export async function validateTimeSlots(timeSlots, defaultCapacity) {
-    console.log(timeSlots)
     const slots = timeSlots.map(s => ({
         slot_day: s.day,
         slot_date: s.date,
@@ -123,8 +122,6 @@ export async function validateTimeSlots(timeSlots, defaultCapacity) {
         capacity: defaultCapacity[0].value,
         visible: true,
     }))
-    console.log(slots);
-
 
     const supabase = await createClient();
     const { error } = await supabase
