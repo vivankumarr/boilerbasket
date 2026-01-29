@@ -3,6 +3,35 @@
 import { createClient } from "@/lib/supabase/server";
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 
+export async function getAllAppointments() {
+  const supabase = await createClient();
+
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((dayOfWeek + 6) % 7));
+  monday.setHours(0, 0, 0, 0);
+  
+
+  const { data, error } = await supabase
+    .from("appointments")
+    .select(`
+      id,
+      appointment_time,
+      status,
+      clients (
+          full_name,
+          puid,
+          email,
+          role
+      )`
+    )
+    .gte("appointment_time", monday.toISOString())
+    .order("appointment_time", { ascending: true });
+    if (error) return [];
+    return data;
+}
+
 // Fetches all appointments for the current day (in EST) and joins them with the info
 // of the corresponding client
 export async function getTodaysAppointments() {
@@ -13,7 +42,7 @@ export async function getTodaysAppointments() {
   // Get the start and end of today in server's timezone (EST in Indiana)
   const today = new Date();
   const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
-  const endOfDay = new Date(today.setHours(23, 59, 59, 999)).toISOString();
+  const endOfDay = new Date(today.setHours(23, 59, 59, 999)).toISOString()
 
   const { data, error } = await supabase
     .from("appointments")

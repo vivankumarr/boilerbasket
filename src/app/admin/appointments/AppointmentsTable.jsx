@@ -18,6 +18,14 @@ function formatTime(timestamp) {
   });
 }
 
+function makeDate(appt_time) {
+
+  const arr = appt_time.split("T")[0].split("-");
+  console.log(arr);
+
+  return arr[1] + "-" + arr[2] + " | ";
+}
+
 // Helper component to style the status badge based on status
 function StatusBadge({ status }) {
   let colors = "";
@@ -64,6 +72,9 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
   const [deleteData, setDeleteData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+
+  const [dateFilter, setDateFilter] = useState("Today");
+  const [customDays, setCustomDays] = useState(null);
 
   const [role, setRole] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
@@ -135,6 +146,32 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
       if (!searchQuery) return true;
       const clientName = appt.clients?.full_name || "";
       return clientName.toLowerCase().includes(searchQuery.toLowerCase());
+    })
+    .filter((appt) => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (dateFilter == 'Today') {
+        const endToday = new Date();
+        endToday.setHours(23, 59, 59, 999);
+        return appt.appointment_time <= endToday.toISOString() && appt.appointment_time >= today.toISOString();
+      }
+      else if (dateFilter == 'Next Week') {
+        const nextWeek = new Date();
+        nextWeek.setDate(nextWeek.getDate() + 7);
+        return appt.appointment_time <= nextWeek.toISOString() && appt.appointment_time >= today.toISOString();
+      }
+      else if (dateFilter == 'Next Month') {
+        const nextMonth = new Date();
+        nextMonth.setMonth(today.getMonth() + 1);
+        return appt.appointment_time <= nextMonth.toISOString() && appt.appointment_time >= today.toISOString();
+      }
+      else if (dateFilter == 'Custom') {
+        if (!customDays) return false;
+        const nextDate = new Date();
+        nextDate.setDate(today.getDate() + Number(customDays));
+
+        return appt.appointment_time <= nextDate.toISOString() && appt.appointment_time >= today.toISOString();
+      }
     });
 
   return (
@@ -161,7 +198,19 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
         </div>
 
         {/* Status filter */}
-        <div className="w-full md:w-auto">
+        <div className="w-full md:w-auto space-x-2">
+          <select onChange={(e) => setDateFilter(e.target.value)} className="w-full md:w-auto rounded-[6px] border-0 bg-slate-50 px-3 py-2 text-slate-900
+                       shadow-inner ring-1 ring-inset ring-slate-200
+                       focus:outline-none focus:ring-2 focus:ring-purple-500 sm:text-sm">
+            <option value="Today">Today</option>
+            <option value="Next Week">Next Week</option>
+            <option value="Next Month">Next Month</option>
+            <option value="Custom">Custom</option>
+          </select>
+          {dateFilter == 'Custom' && (
+            <input min="0" onChange={(e) => setCustomDays(e.target.value)} type="number" className="w-20 rounded-[6px] border-0 bg-slate-50 px-3 py-2 text-slate-900 shadow-inner ring-1 ring-inset ring-slate-200
+                       focus:outline-none focus:ring-2 focus:ring-purple-500 sm:text-sm"/>
+            )}
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -212,7 +261,7 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
               >
-                Time
+                Date & Time
               </th>
               <th
                 scope="col"
@@ -254,7 +303,7 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">
-                    {formatTime(appt.appointment_time)}
+                    {makeDate(appt.appointment_time) + formatTime(appt.appointment_time)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">
                     {maskPUID(appt.clients?.puid)}

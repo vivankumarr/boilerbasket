@@ -231,11 +231,11 @@ export default function UI({dates, cap, visibleDays})  {
             <div className="flex flex-row space-x-7">
                 <div className="flex flex-col items-center">
                   <h1 className="text-slate-700">Capacity</h1>
-                  <input onChange={(e) => {setDefaultCap(e.target.value)}} value={defaultCap} min = "0" type="number" className="border border-slate-400 h-12 rounded p-2 w-60"/>
+                  <input onChange={(e) => {setDefaultCap(e.target.value)}} value={defaultCap} min = "0" type="number" className="rounded-[6px] border-0 bg-slate-50 px-3 py-2 text-slate-900 shadow-inner ring-1 ring-inset ring-slate-200"/>
                 </div>
                 <div className="flex flex-col items-center">
                   <h1 className="text-slate-700">Visible Pantry Days</h1>
-                  <input onChange={(e) => {setVisible(e.target.value)}} value = {visible} max = "8" min = "0" type="number" className="border border-slate-400 h-12 rounded p-2 w-60"/>
+                  <input onChange={(e) => {setVisible(e.target.value)}} value = {visible} max = "8" min = "0" type="number" className="w-60 rounded-[6px] border-0 bg-slate-50 px-3 py-2 text-slate-900 shadow-inner ring-1 ring-inset ring-slate-200"/>
                 </div>
             </div>
               <div className="flex justify-end items-end">

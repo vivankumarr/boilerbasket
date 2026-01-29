@@ -5,10 +5,12 @@ import AppointmentsTable from "./AppointmentsTable";
 import { checkInClientServerAction, checkOutClientServerAction } from "./actions";
 import { calculateEffectiveSlots } from "@/app/book/page";
 import { getCap, getVisible } from "../logistics/actions.js";
+import { getAllAppointments } from "./actions.js";
 
 
 export default async function AppointmentsPage() {
   const todaysAppointments = await getTodaysAppointments();
+  const allAppts = await getAllAppointments();
   const cap = await getCap();
   const vis = await getVisible();
 
@@ -32,10 +34,10 @@ export default async function AppointmentsPage() {
   const sunday = new Date(monday);
   sunday.setDate(monday.getDate() + 6);
   sunday.setHours(23, 59, 59, 999);
+  console.log(sunday);
 
-  const totalThisWeek = todaysAppointments.filter((appt) => {
-    const apptDate = new Date(appt.appointment_time);
-    return apptDate >= monday && apptDate <= sunday;
+  const totalThisWeek = allAppts.filter((appt) => {
+    return appt.status == "Completed" && appt.appointment_time >= monday.toISOString() && appt.appointment_time <= sunday.toISOString();
   }).length;
 
   return (
@@ -48,7 +50,7 @@ export default async function AppointmentsPage() {
           value={totalToday}
         />
         <StatCard
-          title={"Checked In"}
+          title={"Checked In Now"}
           icon={<FileInput />}
           iconBg={"bg-lime-200"}
           value={totalCheckedIn}
@@ -73,7 +75,7 @@ export default async function AppointmentsPage() {
 
       <div className="">
         <AppointmentsTable
-          initialAppointments={todaysAppointments}
+          initialAppointments={allAppts}
           checkInClient={checkInClientServerAction}
           checkOutClient={checkOutClientServerAction}
           cancelAppointment={cancelAppointmentServerAction}
