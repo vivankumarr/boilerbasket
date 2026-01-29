@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { confirmBooking } from '@/app/book/actions'
 export const dynamic = 'force-dynamic'
 
-const Form = ({timeSlots = []}) => {
+const Form = ({timeSlots = [], visible}) => {
     const [name, setName] = useState('');
     const [puid, setPuid] = useState('');
     const [email, setEmail] = useState('');
@@ -51,7 +51,7 @@ const Form = ({timeSlots = []}) => {
       });
     }
 
-    const shownDates = Object.values(dateToTimesMap).slice(0,6);
+    const shownDates = Object.values(dateToTimesMap).slice(0, visible[0].value);
     const visibleDates = shownDates.slice(canSee.beg, canSee.end);
     const visibleTimes = date ? dateToTimesMap[date].times : [];
 
@@ -169,7 +169,7 @@ const Form = ({timeSlots = []}) => {
                   </button>
                   {visibleDates.map((dateSlot) => (
                     <div key={dateSlot.date}>
-                      {dateSlot.blocked && 
+                      {dateSlot.blocked && console.log(dateSlot) && 
                       <div >
                         <button className={`w-full flex flex-col items-center border px-2 py-2 md:px-4 md:py-3 rounded-lg transition-all hover:shadow-md bg-gray-200 `}>
                           <div className="text-xs font-medium">Closed</div>

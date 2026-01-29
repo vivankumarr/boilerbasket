@@ -4,9 +4,13 @@ import { cancelAppointmentServerAction, getTodaysAppointments } from "./actions.
 import AppointmentsTable from "./AppointmentsTable";
 import { checkInClientServerAction, checkOutClientServerAction } from "./actions";
 import { calculateEffectiveSlots } from "@/app/book/page";
+import { getCap, getVisible } from "../logistics/actions.js";
+
 
 export default async function AppointmentsPage() {
   const todaysAppointments = await getTodaysAppointments();
+  const cap = await getCap();
+  const vis = await getVisible();
 
   const totalToday = todaysAppointments.length;
   const totalCheckedIn = todaysAppointments.filter(
@@ -17,7 +21,7 @@ export default async function AppointmentsPage() {
   ).length;
   console.log(totalUpcoming);
 
-  const availableSlots = await calculateEffectiveSlots();
+  const availableSlots = await calculateEffectiveSlots(cap[0].value, vis[0].value, true);
 
   const now = new Date();
   const dayOfWeek = now.getDay();
@@ -64,7 +68,7 @@ export default async function AppointmentsPage() {
       </div>
 
       <h1 className="text-2xl font-bold text-slate-900 ml-4 mt-10">
-        Today's Appointments
+        Appointments
       </h1>
 
       <div className="">

@@ -16,12 +16,26 @@ export default async function page () {
 
   const numberOfDays = getDays(allAppointments);
   const average = (numberOfDays / allAppointments.length).toPrecision(2);
-  const average_visit_duration = averageVisitDuration(allAppointments);
+  let average_visit_duration = averageVisitDuration(allAppointments);
+  console.log(average_visit_duration);
+
+  let avg_vis_string = "N/A"
+
+  if (average_visit_duration.val != undefined) avg_vis_string = average_visit_duration.val;
+  let visits = 0;
+  if (average_visit_duration.total !== undefined) {
+    visits = average_visit_duration.total;
+  }
 
 
   let best_time = peakHours(allAppointments);
-  const best_hour = best_time.best.split(' ')[0] + ":00 ";
-  const ampm = best_time.best.split(' ')[1];
+  let ampm = "";
+  let best_hour = "N/A";
+
+  if (best_time.best != undefined) {
+    best_hour = best_time.best.split(' ')[0] + ":00 ";
+    ampm = best_time.best.split(' ')[1];
+  }
 
   const counts = getRoleDistribution(allClients);
 
@@ -40,8 +54,8 @@ export default async function page () {
       ampm = {ampm}
       counts = {counts}
       ordered_months = {ordered_months}
-      avg_duration = {average_visit_duration.val}
-      visits={average_visit_duration.total}
+      avg_duration = {avg_vis_string}
+      visits={visits}
       pred={prediction_data}
       arrangePrediction = {arrange}
       ></Dashboard>

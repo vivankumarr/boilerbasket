@@ -2,17 +2,21 @@ import React from 'react'
 import Navbar from './Navbar.jsx';
 import Form from './Form.jsx';
 import HowItWorks from './HowItWorks.jsx';
+export const revalidate = 0;
 
 import { supabaseService } from '@/lib/supabase/service';
 export const dynamic = 'force-dynamic';
 import { getCap, getVisible } from '../admin/logistics/actions.js';
 
+import { unstable_noStore as noStore } from 'next/cache';
+
 //random comment
 
 export default async function bookingPage () {
+  noStore();
   const cap = await getCap();
   const visible = await getVisible();
-  const avaliableSlots = await calculateEffectiveSlots(cap[0].value, visible[0].value);
+  const avaliableSlots = await calculateEffectiveSlots(cap[0].value, visible[0].value, false);
 
   return (
     <>
@@ -31,7 +35,7 @@ export default async function bookingPage () {
             Learn More
           </button>
         </a>
-        <Form timeSlots={avaliableSlots} />
+        <Form timeSlots={avaliableSlots} visible={visible} />
         <HowItWorks />
       </div>
     </>
@@ -45,7 +49,7 @@ export default async function bookingPage () {
     client.
 */
 
-function makeSlots(blockedTimes, existingAppts, cap, visible) {
+function makeSlots(blockedTimes, existingAppts, cap, visible, mode) {
   const slots = [];
   const today = new Date();
   const nextMonth = new Date();
@@ -68,7 +72,7 @@ function makeSlots(blockedTimes, existingAppts, cap, visible) {
   
   //iterate through all dates from today -> next month
   for (let d = new Date(today); d < nextMonth; d.setDate(d.getDate() + 1)) {
-    if (made_slots == visible) break;
+    if (made_slots == visible && !mode) break;
     const workingDate = new Date(d);
     const isolateDate = workingDate.toLocaleDateString().split('T')[0];
     const day = workingDate.getDay();
@@ -77,7 +81,6 @@ function makeSlots(blockedTimes, existingAppts, cap, visible) {
     //if the day is not a sunday or tuesday, then skip
     if (day != 0 && day != 2) continue;
     made_slots++;
-    console.log(made_slots);
     
     //if at least one blocked date blocks, then skip
     const isBlocked = blockedTimes.some(period => {
@@ -140,7 +143,7 @@ function makeSlots(blockedTimes, existingAppts, cap, visible) {
 
 // TODO: Whoever wrote this page should refactor this export into the main component
 // We need the data for editing functionality
-export async function calculateEffectiveSlots(cap, visible) {
+export async function calculateEffectiveSlots(cap, visible, mode) {
   const supabase = supabaseService;
   const now = new Date().toISOString();
 
@@ -165,7 +168,7 @@ export async function calculateEffectiveSlots(cap, visible) {
   } 
 
   //generate avaliable appointment times
-  return makeSlots(blockedTimes || [], existingAppts || [], cap, visible);
+  return makeSlots(blockedTimes || [], existingAppts || [], cap, visible, mode);
 }
 
 export const metadata = {
