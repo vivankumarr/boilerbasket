@@ -171,7 +171,7 @@ const Form = ({timeSlots = [], visible}) => {
                   </button>
                   {visibleDates.map((dateSlot) => (
                     <div key={dateSlot.date}>
-                      {dateSlot.blocked && console.log(dateSlot) && 
+                      {dateSlot.blocked && 
                       <div >
                         <button className={`flex-1 w-full flex flex-col items-center border px-2 py-2 md:px-4 md:py-3 rounded-lg transition-all hover:shadow-md bg-gray-200 cursor-not-allowed `}>
                           <div className="text-xs font-medium">Closed</div>

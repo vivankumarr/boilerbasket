@@ -95,6 +95,8 @@ function makeSlots(blockedTimes, existingAppts, cap, visible, mode) {
 
     let timeSlots = (day === 0 ? timeSlotsSunday : timeSlotsTuesday);
     
+    let anyAvailable = false;
+
     timeSlots.forEach(time => {
       const [hours, minutes] = time.split(':').map(Number);
       
@@ -108,7 +110,8 @@ function makeSlots(blockedTimes, existingAppts, cap, visible, mode) {
       // Check capacity
       const count = booked.filter(t => t === slotTimestamp).length;
       
-      if (maxPerTimeSlot - count > 0) {
+      if (maxPerTimeSlot - count > 0 && !isBlocked) {
+        anyAvailable = true;
         const period = hours >= 12 ? 'PM' : 'AM';
         const displayMinutes = minutes.toString().padStart(2, '0');
         let displayHours = hours > 12 ? hours - 12 : (hours === 0 ? 12 : hours);
@@ -123,7 +126,18 @@ function makeSlots(blockedTimes, existingAppts, cap, visible, mode) {
         })
       }
     })
+
+    if (isBlocked || !anyAvailable) {
+      slots.push({
+        date: format(d, 'MM/dd'),
+        time: null,
+        timestamp: null,
+        day: format(d, 'EEEE'),
+        block: true,
+      });
+    }
   }
+
   return slots;
 }
 

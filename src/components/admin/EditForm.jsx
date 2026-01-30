@@ -208,7 +208,7 @@ const EditForm = ({ apptId, context, previousData, showPopup, setShowPopup, time
                   >
                     <button
                       onClick={() => moveVisibleDates(-1)}
-                      className={`hover:bg-slate-100 p-2 rounded-lg text-xl transition-all ${
+                      className={`hover:bg-slate-100 p-2 rounded-lg text-xl transition-all cursor-pointer ${
                         canSee.beg === 0 ? "invisible" : ""
                       }`}
                       type="button"
@@ -219,7 +219,7 @@ const EditForm = ({ apptId, context, previousData, showPopup, setShowPopup, time
                     <div key={dateSlot.date}>
                       {dateSlot.blocked && 
                       <div >
-                        <button className={`flex flex-col items-center border px-4 py-3 rounded-lg transition-all hover:shadow-md bg-gray-200 `}>
+                        <button className={`flex flex-col items-center border px-4 py-3 rounded-lg transition-all hover:shadow-md bg-gray-200 cursor-not-allowed`}>
                           <div className="text-xs font-medium">Closed</div>
                           <div className="text-sm font-semibold mt-0.5">{dateSlot.date.split('/')[0] + "/" + dateSlot.date.split('/')[1]}</div>
                         </button>
@@ -231,7 +231,7 @@ const EditForm = ({ apptId, context, previousData, showPopup, setShowPopup, time
                       onClick={() => {date !== dateSlot.date ? setTime('') : null, setDate(dateSlot.date)}} 
                       
                       type = "button" 
-                      className={`flex flex-col items-center border px-4 py-3 rounded-lg transition-all hover:shadow-md ${date === dateSlot.date ? 'bg-purple-600 text-white border-purple-600' : 'hover:border-purple-400 bg-white'}`}>
+                      className={`flex flex-col items-center border px-4 py-3 rounded-lg transition-all hover:shadow-md cursor-pointer ${date === dateSlot.date ? 'bg-purple-600 text-white border-purple-600' : 'hover:border-purple-400 bg-white'}`}>
                         <div className="text-xs font-medium">{dateSlot.day}</div>
                         <div className="text-sm font-semibold mt-0.5">{dateSlot.date.split('/')[0] + "/" + dateSlot.date.split('/')[1]}</div>
                     </button>
@@ -242,7 +242,7 @@ const EditForm = ({ apptId, context, previousData, showPopup, setShowPopup, time
                   ))}
                     <button
                       onClick={() => moveVisibleDates(1)}
-                      className={`hover:bg-slate-100 p-2 rounded-lg text-xl transition-all ${
+                      className={`hover:bg-slate-100 p-2 rounded-lg text-xl transition-all cursor-pointer ${
                         canSee.end === shownDates.length ? "invisible" : {}
                       }`}
                       type="button"
@@ -272,7 +272,7 @@ const EditForm = ({ apptId, context, previousData, showPopup, setShowPopup, time
                           }}
                           key={time.time}
                           type="button"
-                          className={`px-5 py-2.5 text-sm font-medium rounded-lg border transition-all hover:shadow-md ${
+                          className={`px-5 py-2.5 text-sm font-medium rounded-lg border transition-all hover:shadow-md cursor-pointer ${
                             times === time.time
                               ? "bg-purple-600 text-white border-purple-600"
                               : "hover:border-purple-400 bg-white"
