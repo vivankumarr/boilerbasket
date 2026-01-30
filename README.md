@@ -3,41 +3,38 @@
 [![Production](https://img.shields.io/badge/status-production-green)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-A full-stack visitor management and data analytics platform built for the **ACE Campus Food Pantry** at Purdue University. [BoilerBasket](https://boilerbasket.com) has replaced the pantry's paper-based operations with a centralized platform that handles student/faculty/staff appointments as well as visitor traffic management and insights for staff.
+A full-stack visitor management and analytics platform built for the **ACE Campus Food Pantry** at Purdue University. [BoilerBasket](https://boilerbasket.com) replaces paper-based operations with a centralized system for appointment booking, traffic management, and visit data tracking.
 
 ## What's included?
 
 ### Appointment Bookings
-- The public-facing landing page (`/src/app/book`) allows visitors of the pantry to schedule pantry visits in advance and receive an instant confirmation email via the [Resend API](https://resend.com). 
+- Visitors schedule appointments via a publicly accessible form (`/src/app/book`) that sends instant confirmation emails via [Resend API](https://resend.com) integration. 
 - All time slots are validated in real time to prevent overbooking.
-- Middleware that ensures strict separation between public and staff routes.
+- Middleware ensures strict separation between the public routes and protected admin-only routes.
 
 ### Day-to-Day Admin Operations
 - The admin dashboard (`/admin`) provides pantry staff with control over day-to-day logistics.
   - Secure login handling via [Supabase Auth](https://supabase.com/auth).
-  - Full CRUD capabilities (using Next.js Server Actions) for managing appointments as well as client records and history.
+  - Full CRUD capabilities (using Next.js Server Actions) for appointments and client records + history.
+  - Interface to manage holiday closures and general preferences (e.g., booking capacity per time slot).
   - Automated generation of Excel reports for compliance and  auditing.
-  - Interface to manage holiday closures.
 
-### Intelligence & Analytics
-
-We leverage historical data to inform the pantry's restocking schedules and volunteer allocation.
+### Intelligence and Analytics
+We leverage historical data to help staff optimize restocking schedules and volunteer allocation.
 - **Insights Page**
-  - Interactive charts (`/admin/insights`) visualizing appointment trends and demographic distributions.
+  - Interactive charts (`/admin/insights`) using Chart.js, visualizing appointment trends and demographic distributions.
 - **Visitor Count Predictions**
   - **Model:** Utilizes Meta's [Prophet](https://facebook.github.io/prophet/) model for time-series forecasting, predicting foot traffic for upcoming weeks, tuned with yearly and weekly seasonality.
-  - **Data:** Our pipeline currently merges a synthetic dataset with live appointment data from Supabase, ensuring the model self-corrects as real usage grows. We began with a synthetic dataset due to the lack of long-term data collected by the pantry; this dataset was created using a Python script that took Purdue's academic calendar and the pantry's past visitor trends into account.
-  - The script (`predict.py`) handles the full ETL process: fetching data, retraining, generating 60-day forecasts with confidence intervals, and syncing results back to the production database. It runs weekly via a GitHub Actions workflow.
+  - **Data:** Our pipeline currently merges a synthetic dataset with live appointment data from Supabase, ensuring the model self-corrects as real usage grows. We began with a synthetic dataset due to the lack of historical data collected by the pantry; this dataset was created using a Python script that took Purdue's academic calendar and the pantry's past visitor trends (estimations) into account.
+  - The script (`predict.py`) handles the full ETL process: fetching data, retraining, generating 60-day forecasts with confidence intervals, and syncing results back to the database. It runs weekly via a GitHub Actions workflow.
 
 ## Architecture
-
 * **Frontend:** [Next.js](https://nextjs.org) (App Router), Tailwind CSS
 * **Backend and Authentication:** Supabase
-* **Data Science:** Python (Pandas/Prophet) for forecasting
-* **CI/CD:** GitHub Actions for automated execution of Prophet pipeline
+* **Forecasting Pipeline:** Python (Pandas and Prophet)
+* **CI/CD:** GitHub Actions for automated weekly execution of the forecasting pipeline
 
 ## Installation
-
 To run BoilerBasket locally:
 
 #### 1. Clone the Repository
@@ -49,10 +46,8 @@ cd boilerbasket
 
 #### 2. Install Dependencies
 
-This project requires Node.js for the application and Python for the prediction script.
-
 ```bash
-# Install Node dependencies
+# Install Node.js dependencies
 npm install
 
 # (Optional) Install Python if working with the prediction script
@@ -73,7 +68,7 @@ RESEND_API_KEY=your_resend_key     # If working with Resend emails
 > [!WARNING]
 > **Database Setup Required**
 >
-> You will have to replicate the database schema in Supabase for the app to function as intended.
+> You will have to replicate our database schema in Supabase for the app to function as intended.
 >
 > <details>
 > <summary><strong>Click here for our SQL schema</strong></summary>
@@ -133,4 +128,5 @@ This project was built by a team at Purdue Momentum over the Fall 2025 semester.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 
