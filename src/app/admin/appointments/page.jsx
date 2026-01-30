@@ -39,7 +39,7 @@ export default async function AppointmentsPage() {
   }).length;
 
   return (
-    <main className="space-y-6 p-8">
+    <main className="space-y-6 p-8 h-full overflow-scroll">
       <div className="justify-center space-x-13 flex flex-row">
         <StatCard
           title={"Today"}

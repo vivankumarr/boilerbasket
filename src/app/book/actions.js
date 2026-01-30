@@ -16,11 +16,12 @@ export async function confirmBooking(payload) {
     const role = rawRole?.trim() || null;
     const appointment_time = appointmentTimestampRaw ? String(appointmentTimestampRaw).trim() : null;
 
-    // puid and appointment date and time are required fields
-
-	// if (!email) {
-	// 	return { success: false, error: "E-mail is required." }
-	// }
+    if (!role) {
+        return { success: false, error: "Please select a role." }
+    }
+    if (!email) {
+        return { success: false, error: "Email address is required." }
+    }
     if (!puid) {
         return { success: false, error: "PUID is required." };
     }
