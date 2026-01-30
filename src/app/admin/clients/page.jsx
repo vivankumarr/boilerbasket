@@ -3,62 +3,60 @@ import ClientsTable from "./ClientsTable";
 import { fetchClients } from "./actions";
 import { UsersIcon, UserCheckIcon, UserPlusIcon, RotateCwIcon } from "lucide-react";
 import { checkAdminAccess } from "@/lib/supabase/checkAdmin";
+import { toZonedTime } from 'date-fns-tz';
+import { isSameMonth, parseISO, parse } from 'date-fns';
 
-const contentDiv = 'h-full overflow-scroll p-8' // grid grid-rows-2'
-// const cardDiv = 'bg-white m-4 p-2 text-center \
-// 				border rounded-md'
+const contentDiv = 'h-full overflow-scroll p-8'
 
 const cardDiv = 'm-0 pb-0 \
-				flex \
-				items-center \
-				justify-center space-x-13 mb-8' // + ' bg-gray-100 border border-gray-400'
-
-// https://preline.co/docs/tables.html
+			flex \
+			items-center \
+			justify-center space-x-13 mb-8'
 
 // TODO: Import option for appointments/clients tables (past data)?
 
 export default async function ClientsPage() {
-	
-	//checks if we're admin or volunteer
+	// checks if we're admin or volunteer
 	await checkAdminAccess();
 
-	const today = new Date;
-	const todayStr = today.toISOString();
+	// Get now in Indiana Time so stats don't flip at 7 PM EST
+	const timeZone = 'America/Indiana/Indianapolis';
+	const nowUtc = new Date();
+	const nowInIndiana = toZonedTime(nowUtc, timeZone);
 
-	// Statistics from clients table
+	// Stats from clients table
 	const clients = await fetchClients();
-	const totalClients = clients.length; // Total number of rows
+	const totalClients = clients.length;
 
-	let minYear = new Date().getFullYear();
-	for (let i = 0; i < clients.length; i++) {
-		const year = clients[i].created_at.split("-")[0];
-		minYear = Math.min(minYear, year);
+	let minYear = nowInIndiana.getFullYear();
+	if (clients.length > 0) {
+		const years = clients.map(c => new Date(c.created_at).getFullYear());
+		minYear = Math.min(...years);
 	}
 
-	// Confirmed clients with non-zero completed visits
-	const visitedClients = clients.filter(c => c.total_visits > 0).length;
+	// Active clients: visited within the current month (checking year and month)
+	const activeClients = clients.filter((c) => {
+		if (!c.last_visit) return false;
+		const visitDate = parse(c.last_visit, 'yyyy-MM-dd', new Date());
+		return c.total_visits >= 1 && isSameMonth(visitDate, nowInIndiana);
+	}).length;
 
-	const returningClientsMonth = clients.filter(
-		(c) => 
-			c.last_visit !== null && c.total_visits > 1
-			&& c.last_visit.split("-")[0, 1] == todayStr.split("-")[0, 1]
-	).length;
-
-	// Active: Return visitor, visited within last month (fix later)
-	const activeClients = clients.filter(
-		(c) => 
-			c.last_visit !== null && c.total_visits >= 1
-			&& c.last_visit.split("-")[0, 1] == todayStr.split("-")[0, 1]
-	).length;
+	// Returning clients: active (visited this month) AND have > 1 total visits
+	const returningClientsMonth = clients.filter((c) => {
+			if (!c.last_visit) return false;
+			const visitDate = parse(c.last_visit, 'yyyy-MM-dd', new Date());
+			return c.total_visits > 1 && isSameMonth(visitDate, nowInIndiana);
+	}).length;
 	
-	// New: Confirmed client created this month (because no first visit column)
-	const newClients = clients.filter((c) => 
-		// New this year
-		c.created_at.split("-")[0] == todayStr.split("-")[0] && (todayStr.split("-")[1] == c.created_at.split("-")[1]) // 1
-	).length;
+	// New Clients: Created this month (checking year and month)
+	const newClients = clients.filter((c) => {
+		if (!c.created_at) return false;
+		const createdDateUTC = parseISO(c.created_at);
+		const createdDateIndiana = toZonedTime(createdDateUTC, timeZone);
+		return isSameMonth(createdDateIndiana, nowInIndiana);
+	}).length;
 
-
-	const returnRate = totalClients > 0 ? Math.round((returningClientsMonth / activeClients) * 100) : 0;
+	const returnRate = activeClients > 0 ? Math.round((returningClientsMonth / activeClients) * 100) : 0;
 
 	return (
 		<div className={`${contentDiv}`}>
@@ -98,12 +96,12 @@ export default async function ClientsPage() {
 			</div>
 
 			<div className=''>
-				<ClientsTable initialClients={clients} />
+					<ClientsTable initialClients={clients} />
 			</div>
 		</div>
 	)
 };
 
 export const metadata = {
-  title: "Clients | BoilerBasket",
+	title: "Clients | BoilerBasket",
 };

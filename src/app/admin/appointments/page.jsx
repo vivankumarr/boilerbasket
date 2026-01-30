@@ -1,6 +1,6 @@
 import StatCard from "@/components/admin/StatCard.jsx";
 import { Calendar, FileInput, Clock, Sigma } from "lucide-react";
-import { cancelAppointmentServerAction, getTodaysAppointments } from "./actions.js";
+import { cancelAppointmentServerAction, getTodaysAppointments, getWeeklyAppointmentCount } from "./actions.js";
 import AppointmentsTable from "./AppointmentsTable";
 import { checkInClientServerAction, checkOutClientServerAction } from "./actions";
 import { calculateEffectiveSlots } from "@/app/book/page";
@@ -13,6 +13,7 @@ export default async function AppointmentsPage() {
   const allAppts = await getAllAppointments();
   const cap = await getCap();
   const vis = await getVisible();
+  const totalThisWeek = await getWeeklyAppointmentCount();
 
   const totalToday = todaysAppointments.length;
   const totalCheckedIn = todaysAppointments.filter(
@@ -33,10 +34,6 @@ export default async function AppointmentsPage() {
   const sunday = new Date(monday);
   sunday.setDate(monday.getDate() + 6);
   sunday.setHours(23, 59, 59, 999);
-  
-  const totalThisWeek = allAppts.filter((appt) => {
-    return appt.status == "Completed" && appt.appointment_time >= monday.toISOString() && appt.appointment_time <= sunday.toISOString();
-  }).length;
 
   return (
     <main className="space-y-6 p-8 h-full overflow-scroll">
@@ -54,7 +51,7 @@ export default async function AppointmentsPage() {
           value={totalCheckedIn}
         />
         <StatCard
-          title={"Upcoming"}
+          title={"Upcoming Today"}
           icon={<Clock />}
           iconBg={"bg-orange-200"}
           value={totalUpcoming}

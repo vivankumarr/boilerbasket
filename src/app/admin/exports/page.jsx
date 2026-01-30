@@ -2,18 +2,25 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { formatInTimeZone, toZonedTime } from "date-fns-tz"
 import * as XLSX from "xlsx";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, subMonths, } from "date-fns";
 import { Calendar as CalendarIcon, Download, FileSpreadsheet, Filter, ChevronDown, Info, LoaderCircle } from "lucide-react";
 
+const TIME_ZONE = "America/Indiana/Indianapolis";
+
 export default function ExportsPage() {
   const [ quickRange, setQuickRange ] = useState("This Week");
-  const [ calendarDates, setCalendarDates] = useState([
-    startOfWeek(new Date(), { weekStartsOn: 1 }),
-    endOfWeek(new Date(), { weekStartsOn: 1 })
-  ]);
+  const [ calendarDates, setCalendarDates] = useState(() => {
+    const now = new Date();
+    const zonedNow = toZonedTime(now, TIME_ZONE);
+    return [
+      startOfWeek(zonedNow, { weekStartsOn: 1 }),
+      endOfWeek(zonedNow, { weekStartsOn: 1 })
+    ];
+  });
   const [ isCalendarOpen, setIsCalendarOpen ] = useState(false);
 
   const [ roleFilter, setRoleFilter ] = useState("All Roles");
@@ -28,10 +35,8 @@ export default function ExportsPage() {
     status: true,
   });
 
-
   const [ estimatedCount, setEstimatedCount ] = useState(0);
   const [ isExporting, setIsExporting ] = useState(false);
-
 
   // Effect to estimate number of records when dates/filters change
   useEffect(() => {
@@ -46,17 +51,16 @@ export default function ExportsPage() {
 
       // Apply date range/status/role filter(s)
       const [ startRaw, endRaw ] = calendarDates;
-      const startISO = startRaw.toISOString();
+      const startObj = new Date(startRaw);
+      startObj.setHours(0,0,0,0);
       const endObj = new Date(endRaw);
       endObj.setHours(23, 59, 59, 999);
-      const endISO = endObj.toISOString();
 
-      query = query.gte("appointment_time", startISO).lte("appointment_time", endISO);
+      query = query.gte("appointment_time", startObj.toISOString()).lte("appointment_time", endObj.toISOString());
 
       if (statusFilter !== "All Statuses") {
         query = query.eq("status", statusFilter);
       }
-
       if (roleFilter !== "All Roles") {
         query = query.eq("clients.role", roleFilter);
       }
@@ -73,33 +77,38 @@ export default function ExportsPage() {
   // Handler for selecting quick range
   function handleQuickRangeChange(rangeType) {
     setQuickRange(rangeType);
-    const now = new Date();
+
+    const nowUtc = new Date();
+    const nowInIndiana = toZonedTime(nowUtc, TIME_ZONE);
+    
     let start, end;
 
     switch (rangeType) { 
       case "Today":
-        start = now;
-        end = now;
+        start = new Date(nowInIndiana); 
+        start.setHours(0, 0, 0, 0);
+        end = new Date(nowInIndiana);
+        end.setHours(23, 59, 59, 999);
         break;
       case "This Week":
-        start = startOfWeek(now, { weekStartsOn: 1 });
-        end = endOfWeek(now, { weekStartsOn: 1 });
+        start = startOfWeek(nowInIndiana, { weekStartsOn: 1 });
+        end = endOfWeek(nowInIndiana, { weekStartsOn: 1 });
         break;
       case "This Month":
-        start = startOfMonth(now);
-        end = endOfMonth(now);
+        start = startOfMonth(nowInIndiana);
+        end = endOfMonth(nowInIndiana);
         break;
       case "Past 6 Months":
-        start = subMonths(now, 6);
-        end = now;
+        start = subMonths(nowInIndiana, 6);
+        end = nowInIndiana;
         break;
       case "This Year":
-        start = subMonths(now, 12);
-        end = now;
+        start = subMonths(nowInIndiana, 12);
+        end = nowInIndiana;
         break;
       default:
         start = new Date(0);
-        end = now;
+        end = nowInIndiana;
     }
 
     setCalendarDates([start, end]);
@@ -127,12 +136,14 @@ export default function ExportsPage() {
         `);
       
       const [ startRaw, endRaw ] = calendarDates;
-      const startISO = startRaw.toISOString();
+      
+      // Ensure specific start/end times cover the full selected days
+      const startObj = new Date(startRaw);
+      startObj.setHours(0,0,0,0);
       const endObj = new Date(endRaw);
       endObj.setHours(23, 59, 59, 999);
-      const endISO = endObj.toISOString();
 
-      query = query.gte("appointment_time", startISO).lte("appointment_time", endISO);
+      query = query.gte("appointment_time", startObj.toISOString()).lte("appointment_time", endObj.toISOString());
 
       if (statusFilter !== "All Statuses") {
         query = query.eq("status", statusFilter);
@@ -145,20 +156,25 @@ export default function ExportsPage() {
       const { data, error } = await query;
       if (error) {
         console.error("Error fetching data for export:", error);
+        throw error;
       }
       
       const excelRows = data.map((record) => {
         const row = {};
-        const dateObj = new Date(record.appointment_time);
 
         if (fields.clientName) row["Client Name"] = record.clients.full_name;
         if (fields.email) row["Email"] = record.clients.email;
         if (fields.puid) row["PUID"] = record.clients.puid;
         if (fields.role) row["Role"] = record.clients.role;
-        if (fields.appointmentDate) row["Appointment Date"] = format(dateObj, "yyyy-MM-dd");
-        if (fields.timeSlot) row["Time Slot"] = format(dateObj, "hh:mm a");
-        if (fields.status) row["Status"] = record.status;
-
+        if (fields.appointmentDate) {
+          row["Appointment Date"] = formatInTimeZone(record.appointment_time, TIME_ZONE, "yyyy-MM-dd");
+        }
+        if (fields.timeSlot) {
+          row["Time Slot"] = formatInTimeZone(record.appointment_time, TIME_ZONE, "hh:mm a");
+        }
+        if (fields.status) {
+          row["Status"] = record.status;
+        }
         return row;
       });
 

@@ -16,18 +16,29 @@ export async function confirmBooking(payload) {
     const role = rawRole?.trim() || null;
     const appointment_time = appointmentTimestampRaw ? String(appointmentTimestampRaw).trim() : null;
 
+    // All fields are required to book successfully
+    if (!name) {
+      return { success: false, error: "Please enter your full name." }
+    }
     if (!role) {
-        return { success: false, error: "Please select a role." }
+      return { success: false, error: "Please select a role." }
     }
     if (!email) {
-        return { success: false, error: "Email address is required." }
+      return { success: false, error: "Please enter your email address." }
     }
     if (!puid) {
-        return { success: false, error: "PUID is required." };
+			return { success: false, error: "Please enter your PUID." };
     }
     if (!appointment_time) {
-        return { success: false, error: "Appointment timestamp is required." };
+      return { success: false, error: "Please select a date and time for your appointment." };
     }
+
+    const appointmentDate = new Date(appointment_time);
+    const now = new Date();
+    
+    // Check if selected slot has passed (w/ a 5-min buffer)
+    if (appointmentDate.getTime() < now.getTime() - (5 * 60 * 1000))
+			return { success: false, error: "That appointment slot has already passed."}
 
     const supabase = supabaseService;
 
@@ -158,16 +169,18 @@ export async function confirmBooking(payload) {
         // Send confirmation email via Resend
         try {
             const dateObj = new Date(appointment_time);
-            const dateStr = dateObj.toLocaleDateString("en-US", {
+            const dateStr = new Intl.DateTimeFormat("en-US", {
                 weekday: "long",
                 month: "long",
                 day: "numeric",
-            });
-            const timeStr = dateObj.toLocaleTimeString("en-US", {
+                timeZone: "America/Indiana/Indianapolis",
+            }).format(dateObj);
+            const timeStr = new Intl.DateTimeFormat("en-US", {
                 hour: "numeric",
                 minute: "2-digit",
-                timeZone: "America/Indiana/Indianapolis"
-            });
+                hour12: true,
+                timeZone: "America/Indiana/Indianapolis",
+            }).format(dateObj);
 
             await resend.emails.send({
                             from: "BoilerBasket <appointments@boilerbasket.com>",
@@ -235,7 +248,7 @@ export async function confirmBooking(payload) {
                                                 <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                                     <tr>
                                                         <td align="center">
-                                                            <img src="https://i.ibb.co/sk7QQD8/boilerbasket-logo.png" alt="ACE Campus Food Pantry Logo" width="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+                                                            <img src="https://www.boilerbasket.com/boilerbasket-logo.png" alt="ACE Campus Food Pantry Logo" width="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
                                                             <span style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 32px; font-weight: 700; color: #000000; letter-spacing: -0.5px; line-height: 1; vertical-align: middle;">
                                                                 BoilerBasket
                                                             </span>

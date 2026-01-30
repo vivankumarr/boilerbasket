@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Calendar, Clock, MapPin, AlertCircle, CheckCircle } from 'lucide-react';
 import { cancelAppointment, rescheduleAppointment } from './actions';
+import { formatInTimeZone } from 'date-fns-tz';
 
 export default function ManageUI({ appointment, availableSlots }) {
   const [isRescheduling, setIsRescheduling] = useState(false);
@@ -40,7 +41,7 @@ export default function ManageUI({ appointment, availableSlots }) {
   };
 
   const isCanceled = appointment.status === 'Canceled';
-  const dateObj = new Date(appointment.appointment_time);
+  const TIME_ZONE = 'America/Indiana/Indianapolis';
 
   return (
     <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
@@ -62,13 +63,13 @@ export default function ManageUI({ appointment, availableSlots }) {
           <div className="flex items-center gap-4 text-gray-700">
             <Calendar className="w-6 h-6 text-purple-600" />
             <span className="text-xl font-medium">
-              {dateObj.toLocaleDateString("en-US", { weekday: 'long', month: 'long', day: 'numeric' })}
+              {formatInTimeZone(appointment.appointment_time, TIME_ZONE, "EEEE, MMMM d")}
             </span>
           </div>
           <div className="flex items-center gap-4 text-gray-700">
             <Clock className="w-6 h-6 text-purple-600" />
             <span className="text-xl font-medium">
-              {dateObj.toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' })}
+              {formatInTimeZone(appointment.appointment_time, TIME_ZONE, "h:mm a")}
             </span>
           </div>
           <div className="flex items-center gap-4 text-gray-700">
@@ -101,17 +102,38 @@ export default function ManageUI({ appointment, availableSlots }) {
           <div className="mt-6 border-t pt-6">
             <h3 className="font-bold text-lg mb-4">Select New Time</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-60 overflow-y-auto p-1">
-              {availableSlots.slice(0,72).map((slot) => (
-                <button
-                  key={slot.timestamp}
-                  onClick={() => handleReschedule(slot.timestamp)}
-                  disabled={loading}
-                  className="px-4 py-3 text-sm font-medium rounded-lg border border-slate-400 bg-white text-slate-700 transition-all cursor-pointer hover:shadow-md hover:border-purple-400 focus:ring-2 focus:ring-purple-500 focus:outline-none"
-                >
-                  <div className="font-bold">{slot.time}</div>
-                  <div className="text-xs text-gray-500">{slot.day}, {new Date(slot.date).toLocaleDateString(undefined, {month:'short', day:'numeric'})}</div>
-                </button>
-              ))}
+              {availableSlots.slice(0,36).map((slot) => {
+                // Blocked slot
+                if (slot.block) {
+                  return (
+                    <button
+                      key={slot.timestamp}
+                      disabled={true}
+                      className="px-4 py-3 text-sm font-medium rounded-lg border border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed flex flex-col items-center justify-center"
+                    >
+                      <div className="font-bold">Closed</div>
+                        <div className="text-xs">
+                          {slot.day}, {new Date(slot.timestamp).toLocaleDateString("en-US", {month:'short', day:'numeric'})}
+                        </div>
+                    </button>
+                    )
+                }
+
+                // Available slot
+                return (
+                  <button
+                    key={slot.timestamp}
+                    onClick={() => handleReschedule(slot.timestamp)}
+                    disabled={loading}
+                    className="px-4 py-3 text-sm font-medium rounded-lg border border-slate-400 bg-white text-slate-700 transition-all cursor-pointer hover:shadow-md hover:border-purple-400 focus:ring-2 focus:ring-purple-500 focus:outline-none flex flex-col items-center justify-center"
+                  >
+                    <div className="font-bold">{slot.time}</div>
+                      <div className="text-xs text-gray-500">
+                        {slot.day}, {new Date(slot.timestamp).toLocaleDateString("en-US", {month:'short', day:'numeric'})}
+                      </div>
+                  </button>
+                )
+              })}
             </div>
             <button 
               onClick={() => setIsRescheduling(false)}

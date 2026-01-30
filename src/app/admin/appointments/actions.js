@@ -2,17 +2,12 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
+import { fromZonedTime, toZonedTime } from "date-fns-tz";
+import { startOfWeek, endOfWeek } from "date-fns"
 
 export async function getAllAppointments() {
   const supabase = await createClient();
-
-  const now = new Date();
-  const dayOfWeek = now.getDay();
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - ((dayOfWeek + 6) % 7));
-  monday.setHours(0, 0, 0, 0);
   
-
   const { data, error } = await supabase
     .from("appointments")
     .select(`
@@ -26,7 +21,6 @@ export async function getAllAppointments() {
           role
       )`
     )
-    .gte("appointment_time", monday.toISOString())
     .order("appointment_time", { ascending: true });
     if (error) return [];
     return data;
@@ -36,13 +30,18 @@ export async function getAllAppointments() {
 // of the corresponding client
 export async function getTodaysAppointments() {
   noStore();
-
   const supabase = await createClient();
+  const timeZone = 'America/Indiana/Indianapolis';
 
-  // Get the start and end of today in server's timezone (EST in Indiana)
-  const today = new Date();
-  const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
-  const endOfDay = new Date(today.setHours(23, 59, 59, 999)).toISOString()
+  // Get "now" in UTC, get Indiana date string to get start/end of day, then convert to UTC
+  const now = new Date();
+  const indianaDateString = now.toLocaleDateString('en-US', { timeZone });
+  const startIndiana = new Date(`${indianaDateString} 00:00:00`);
+  const endIndiana = new Date(`${indianaDateString} 23:59:59`);
+
+  // Convert Indiana times to UTC for DB query
+  const startUtc = fromZonedTime(startIndiana, timeZone).toISOString();
+  const endUtc = fromZonedTime(endIndiana, timeZone).toISOString();
 
   const { data, error } = await supabase
     .from("appointments")
@@ -57,8 +56,8 @@ export async function getTodaysAppointments() {
           role
       )`
     )
-    .gte("appointment_time", startOfDay)
-    .lte("appointment_time", endOfDay)
+    .gte("appointment_time", startUtc)
+    .lte("appointment_time", endUtc)
     .order("appointment_time", { ascending: true });
 
   if (error) {
@@ -67,6 +66,34 @@ export async function getTodaysAppointments() {
   }
 
   return data;
+}
+
+export async function getWeeklyAppointmentCount() {
+  noStore();
+  const supabase = await createClient();
+  const timeZone = 'America/Indiana/Indianapolis';
+
+  const now = new Date();
+  const zonedNow = toZonedTime(now, timeZone);
+    const startOfWeekIndiana = startOfWeek(zonedNow, { weekStartsOn: 1 });
+  const endOfWeekIndiana = endOfWeek(zonedNow, { weekStartsOn: 1 });
+
+  // Convert Indiana to UTC for DB
+  const startUtc = fromZonedTime(startOfWeekIndiana, timeZone).toISOString();
+  const endUtc = fromZonedTime(endOfWeekIndiana, timeZone).toISOString();
+
+  const { count, error } = await supabase
+    .from("appointments")
+    .select("*", { count: 'exact', head: true })
+    .gte("appointment_time", startUtc)
+    .lte("appointment_time", endUtc);
+
+  if (error) {
+    console.error("Error fetching weekly count:", error);
+    return 0;
+  }
+
+  return count || 0;
 }
 
 export const checkInClientServerAction = async ({ apptId }) => {
@@ -83,7 +110,7 @@ export const checkInClientServerAction = async ({ apptId }) => {
     console.error("Error checking in client:", error);
     return;
   }
-  
+
   // Refresh the cache to display updated data without reloading page
   revalidatePath('admin/appointments');
   return data;
@@ -158,7 +185,7 @@ export const cancelAppointmentServerAction = async ({ apptId }) => {
       console.error("Error canceling appointment:", error);
       return;
     }
-    
+
     revalidatePath('admin/appointments');
     return data;
   }

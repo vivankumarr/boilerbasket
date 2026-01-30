@@ -8,14 +8,11 @@ import Form from "./Form";
 import EditForm from "@/components/admin/EditForm";
 import DeleteForm from "@/components/admin/DeleteForm";
 import { getUserRole } from "@/lib/supabase/checkAdmin";
+import { formatInTimeZone } from "date-fns-tz";
 
-// Helper function to format time (e.g., "1:30 PM")
 function formatTime(timestamp) {
   if (!timestamp) return "";
-  return new Date(timestamp).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-  });
+  return formatInTimeZone(timestamp, 'America/Indiana/Indianapolis', 'h:mm a');
 }
 
 function makeDate(appt_time) {
@@ -53,7 +50,7 @@ function StatusBadge({ status }) {
 }
 
 // Helper function to mask the first 5 digits of the PUID
-function maskPUID(puid) {
+export function maskPUID(puid) {
   if (!puid) return "";
   const puidStr = String(puid);
   return "••••" + puidStr.slice(-4);
@@ -90,25 +87,6 @@ export default function AppointmentsTable({ initialAppointments = [], checkInCli
   useEffect(() => {
     setAppointments(initialAppointments);
   }, [initialAppointments]);
-
-  // Handler functions for immediate UI updates
-  const handleCheckIn = async (apptId) => {
-    setAppointments((prev) =>
-      prev.map(appointment => appointment.id === apptId ? { ...appointment, status: "Checked-In" } : a)
-    );
-
-    await checkInClient({ apptId });
-    router.refresh();
-  };
-
-  const handleCheckOut = async (apptId) => {
-    setAppointments((prev) =>
-      prev.map(appointment => appointment.id === apptId ? { ...appointment, status: "Completed" } : a)
-    );
-
-    await checkOutClient({ apptId });
-    router.refresh();
-  }
 
   // Callbacks passed to DeleteForm and EditForm components
   const onAppointmentDeleted = () => {

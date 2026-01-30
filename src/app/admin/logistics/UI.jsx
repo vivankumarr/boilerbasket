@@ -5,6 +5,7 @@ import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 import { addBlockedDate } from "./actions";
 import { PencilIcon, Trash2Icon, CalendarIcon, LoaderCircle } from "lucide-react";
+import { format, parseISO } from "date-fns";
 import DeleteForm from "@/components/admin/DeleteForm";
 import Edit from "./Edit";
 
@@ -57,7 +58,12 @@ export default function UI({dates, cap, visibleDays})  {
     setSuccessMessage(null);
 
     try {
-      await addBlockedDate({start: dates[0], end: dates[1], reason: reason});
+      // Format to YYYY-MM-DD strings immediately to lock in the date
+      await addBlockedDate({
+        start: format(dates[0], 'yyyy-MM-dd'), 
+        end: format(dates[1], 'yyyy-MM-dd'), 
+        reason: reason
+      });
 
       setLoading(false);
       setSuccessMessage("Closure added successfully!");
@@ -93,12 +99,8 @@ export default function UI({dates, cap, visibleDays})  {
 
   function formatDateForDisplay(dateString) {
     if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-us", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
+    // Parse the YYYY-MM-DD string directly
+    return format(parseISO(dateString), "MMMM d, yyyy");
   }
 
   return (

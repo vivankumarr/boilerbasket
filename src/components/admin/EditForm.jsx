@@ -220,7 +220,7 @@ const EditForm = ({ apptId, context, previousData, showPopup, setShowPopup, time
                       {dateSlot.blocked && 
                       <div >
                         <button className={`flex flex-col items-center border px-4 py-3 rounded-lg transition-all hover:shadow-md bg-gray-200 `}>
-                          <div className="text-xs font-medium">Closure</div>
+                          <div className="text-xs font-medium">Closed</div>
                           <div className="text-sm font-semibold mt-0.5">{dateSlot.date.split('/')[0] + "/" + dateSlot.date.split('/')[1]}</div>
                         </button>
                       </div>

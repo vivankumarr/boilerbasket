@@ -1,6 +1,10 @@
 import { getAllAppointments, getAllClients, getLastYearAppts, getPredictions } from "./actions.js";
 import Dashboard from "./Dashboard.jsx";
 import { checkAdminAccess } from "@/lib/supabase/checkAdmin.js";
+import { toZonedTime } from 'date-fns-tz';
+import { format, isAfter } from 'date-fns';
+
+const TIME_ZONE = 'America/Indiana/Indianapolis';
 
 export default async function page () {
   await checkAdminAccess()
@@ -13,27 +17,21 @@ export default async function page () {
   const prediction_data = makePredData(predictions);
   const arrange = arrangePredictionData(predictions);
 
-
   const numberOfDays = getDays(allAppointments);
-  const average = (numberOfDays / allAppointments.length).toPrecision(2);
-  let average_visit_duration = averageVisitDuration(allAppointments);
-
-  let avg_vis_string = "N/A"
-
-  if (average_visit_duration.val != undefined) avg_vis_string = average_visit_duration.val;
-  let visits = 0;
-  if (average_visit_duration.total !== undefined) {
-    visits = average_visit_duration.total;
-  }
-
+  const average = numberOfDays > 0 
+    ? (allAppointments.length / numberOfDays).toPrecision(3) 
+    : 0;
+  const average_visit_duration = averageVisitDuration(allAppointments);
 
   let best_time = peakHours(allAppointments);
-  let ampm = "";
   let best_hour = "N/A";
+  let ampm = "";
 
-  if (best_time.best != undefined) {
-    best_hour = best_time.best.split(' ')[0] + ":00 ";
-    ampm = best_time.best.split(' ')[1];
+  if (best_time.best) {
+    // Expected format from peakHours is "5:00 PM"
+    const parts = best_time.best.split(' ');
+    best_hour = parts[0] + " ";
+    ampm = parts[1];
   }
 
   const counts = getRoleDistribution(allClients);
@@ -53,8 +51,8 @@ export default async function page () {
       ampm = {ampm}
       counts = {counts}
       ordered_months = {ordered_months}
-      avg_duration = {avg_vis_string}
-      visits={visits}
+      avg_duration = {average_visit_duration.val}
+      visits={average_visit_duration.total}
       pred={prediction_data}
       arrangePrediction = {arrange}
       ></Dashboard>
@@ -63,16 +61,17 @@ export default async function page () {
 }
 
 // function to find the number of different days we have recorded
-// TODO: This only takes into account days we have data on, will change this later
-// to take into days where no one shows up, taking into account holidays / blocked dates.
-
 function getDays(data) {
   const map = new Map();
   let num_days = 0;
+  
   for (let i = 0; i < data.length; i++) {
-    const date = data[i].appointment_time.split('T')[0];
-    if (!map.has(date)) {
-      map.set(date, true);
+    // Convert UTC timestamp to Indiana Date Object
+    const zonedDate = toZonedTime(data[i].appointment_time, TIME_ZONE);
+    const dateStr = format(zonedDate, 'yyyy-MM-dd');
+    
+    if (!map.has(dateStr)) {
+      map.set(dateStr, true);
       num_days++;
     }
   }
@@ -80,23 +79,25 @@ function getDays(data) {
 }
 
 // function that returns the most frequently booked hour (truncating the minutes)
+// converted to Indiana timezone before extracting the hour (prevents it from displaying as UTC)
+// This Indiana <-> UTC thing is implemented across project now so I'll stop commenting on it
 function peakHours(data) {
   const map = new Map();
+  
   for (let i = 0; i < data.length; i++) {
-    const local_time = new Date(data[i].appointment_time).toLocaleString();
-    const hour = local_time.split(' ')[1].split(':')[0];
-    const ampm = local_time.split(' ')[2];
-    const join = hour + ' ' + ampm;
-    if (!map.has(join)) {
-      map.set(join, 1);
+    const zonedDate = toZonedTime(data[i].appointment_time, TIME_ZONE);
+    const hourStr = format(zonedDate, 'h:00 a');
+
+    if (!map.has(hourStr)) {
+      map.set(hourStr, 1);
     }
     else {
-      map.set(join, map.get(join) + 1);
+      map.set(hourStr, map.get(hourStr) + 1);
     }
   }
 
   let max = 0;
-  let best_hour;
+  let best_hour = null;
 
   for (const [key, value] of map) {
     if (value > max) {
@@ -114,6 +115,10 @@ function getRoleDistribution(data) {
   let faculty = 0;
   for (let i = 0; i < data.length; i++) {
     let role = data[i].role;
+    if (!role) {
+      continue;
+    }
+
     switch(role) {
       case('Student'):
         student++;
@@ -132,24 +137,30 @@ function getRoleDistribution(data) {
 }
 
 
-// This function parses the Data from the Appointments for the Line Graph,
-//
+// This function parses the Data from the Appointments for the Line Graph
 function getTrends(data) {
   const canceledData = new Array(12).fill(0);
   const completedData = new Array(12).fill(0);
   const totalData = new Array(12).fill(0);
 
-  for (let i = 0; i < data.length; i++) {
-    const month = new Date(data[i].appointment_time).toLocaleString().split('/')[0];
-    if (data[i].status == 'Completed') {
-      completedData[parseInt(month)-1]++;
-    }
-    else if (data[i].status == 'Canceled') {
-      canceledData[parseInt(month)-1]++;
-    }
+  const nowUTC = new Date();
+  const nowIndiana = toZonedTime(nowUTC, TIME_ZONE);
 
-    if (data[i].status != 'Scheduled') {
-      totalData[parseInt(month)-1]++;
+  for (let i = 0; i < data.length; i++) {
+    const zonedDate = toZonedTime(data[i].appointment_time, TIME_ZONE);
+    if (isAfter(zonedDate, nowIndiana)) {
+      continue;
+    }
+    const monthIndex = zonedDate.getMonth();
+    
+    if (data[i].status === 'Completed') {
+      completedData[monthIndex]++;
+    }
+    else if (data[i].status === 'Canceled') {
+      canceledData[monthIndex]++;
+    }
+    if (data[i].status !== 'Scheduled') {
+      totalData[monthIndex]++;
     }
   }
   return {canceled: canceledData, completed: completedData, total: totalData};
@@ -158,15 +169,16 @@ function getTrends(data) {
 // This function orders the last 12 months (including the current month), in descending order
 // Used to put the data in a useful format for ChartJS LineGraph
 function orderMonths(months, month_data) {
-  const now = new Date().getMonth();
-  let index = (now + 1) % 12;
+  const nowUtc = new Date();
+  const nowIndiana = toZonedTime(nowUtc, TIME_ZONE);
+  const currentMonthIndex = nowIndiana.getMonth();
+  
+  let index = (currentMonthIndex + 1) % 12;
+  
   const retmonths = new Array(12);
-  const retdata = new Array(12);
-
   const orderedCanceled = new Array(12);
   const orderedCompleted = new Array(12);
   const orderedTotal = new Array(12);
-
 
   for (let i = 0; i < 12; i++) {
     retmonths[i] = months[index];
@@ -191,8 +203,8 @@ function averageVisitDuration(data) {
     totalMinutes += (end-start) / 60000;
     count++;
   }
-  if (count == 0) return 0;
-  return {val: (totalMinutes / count).toPrecision(3), total: count};
+  if (count == 0) return { val: 0, total: 0 };
+  return { val: (totalMinutes / count).toPrecision(3), total: count };
 }
 
 function makePredData(predictions) {

@@ -78,7 +78,7 @@ export default function Linechart({ordering}) {
         plugins: {
             title : {
                 display: true,
-                text: 'Appointment Trends for the Last 12 Months',
+                text: 'Appointment Trends by Month',
                 font: {
                     size: 20,
                     family: "Inter"
