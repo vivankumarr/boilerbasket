@@ -5,7 +5,7 @@ import { confirmBooking } from '@/app/book/actions'
 import { LoaderCircle } from "lucide-react"
 export const dynamic = 'force-dynamic'
 
-const Form = ({timeSlots = []}) => {
+const Form = ({timeSlots = [], visible}) => {
     const [name, setName] = useState('');
     const [puid, setPuid] = useState('');
     const [email, setEmail] = useState('');
@@ -52,7 +52,7 @@ const Form = ({timeSlots = []}) => {
       });
     }
 
-    const shownDates = Object.values(dateToTimesMap).slice(0,6);
+    const shownDates = Object.values(dateToTimesMap).slice(0, visible[0].value);
     const visibleDates = shownDates.slice(canSee.beg, canSee.end);
     const visibleTimes = date ? dateToTimesMap[date].times : [];
 
@@ -71,16 +71,6 @@ const Form = ({timeSlots = []}) => {
     async function submitBooking(force_update = false, proceedWithoutUpdate = false) {
     setMessage(null);
     setSuccess(false);
-
-    // basic client-side validation
-    if (!puid || puid.trim() === "") {
-      setMessage("PUID is required.");
-      return;
-    }
-    if (!selectedTimestamp) {
-      setMessage("Please select a date and time for your appointment.");
-      return;
-    }
 
     setLoading(true);
 
@@ -175,13 +165,13 @@ const Form = ({timeSlots = []}) => {
                 <div id="Dates" className="w-full flex flex-row justify-center items-center gap-2">
                   <button
                     onClick={() => moveVisibleDates(-1)}
-                    className={`hover:bg-slate-100 p-2 rounded-lg text-xl cursor-pointer transition-all ${canSee.beg === 0 ? 'invisible' : ''}`}
+                    className={`hover:bg-slate-100 p-2 rounded-lg text-xl cursor-pointer transition-all ${canSee.beg === 0 || timeSlots.length == 0 ? 'invisible' : ''}`}
                   >
                     ᐸ
                   </button>
                   {visibleDates.map((dateSlot) => (
                     <div key={dateSlot.date}>
-                      {dateSlot.blocked && 
+                      {dateSlot.blocked && console.log(dateSlot) && 
                       <div >
                         <button className={`flex-1 w-full flex flex-col items-center border px-2 py-2 md:px-4 md:py-3 rounded-lg transition-all hover:shadow-md bg-gray-200 cursor-not-allowed `}>
                           <div className="text-xs font-medium">Closed</div>
@@ -208,7 +198,7 @@ const Form = ({timeSlots = []}) => {
 
                   <button
                     onClick={() => moveVisibleDates(1)}
-                    className={`hover:bg-slate-100 p-2 rounded-lg cursor-pointer text-xl transition-all ${canSee.end === shownDates.length ? ('invisible') : {}}`}
+                    className={`hover:bg-slate-100 p-2 rounded-lg cursor-pointer text-xl transition-all ${canSee.end === shownDates.length || timeSlots.length == 0 ? ('invisible') : {}}`}
                   >
                   ᐳ
                   </button>

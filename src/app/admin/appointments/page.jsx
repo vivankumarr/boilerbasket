@@ -4,9 +4,15 @@ import { cancelAppointmentServerAction, getTodaysAppointments, getWeeklyAppointm
 import AppointmentsTable from "./AppointmentsTable";
 import { checkInClientServerAction, checkOutClientServerAction } from "./actions";
 import { calculateEffectiveSlots } from "@/app/book/page";
+import { getCap, getVisible } from "../logistics/actions.js";
+import { getAllAppointments } from "./actions.js";
+
 
 export default async function AppointmentsPage() {
   const todaysAppointments = await getTodaysAppointments();
+  const allAppts = await getAllAppointments();
+  const cap = await getCap();
+  const vis = await getVisible();
   const totalThisWeek = await getWeeklyAppointmentCount();
 
   const totalToday = todaysAppointments.length;
@@ -17,7 +23,7 @@ export default async function AppointmentsPage() {
     (appt) => appt.status === "Scheduled"
   ).length;
 
-  const availableSlots = await calculateEffectiveSlots();
+  const availableSlots = await calculateEffectiveSlots(cap[0].value, vis[0].value, true);
 
   const now = new Date();
   const dayOfWeek = now.getDay();
@@ -30,7 +36,7 @@ export default async function AppointmentsPage() {
   sunday.setHours(23, 59, 59, 999);
 
   return (
-    <main className="space-y-6 p-8">
+    <main className="space-y-6 p-8 h-full overflow-scroll">
       <div className="justify-center space-x-13 flex flex-row">
         <StatCard
           title={"Today"}
@@ -39,13 +45,13 @@ export default async function AppointmentsPage() {
           value={totalToday}
         />
         <StatCard
-          title={"Checked In"}
+          title={"Checked In Now"}
           icon={<FileInput />}
           iconBg={"bg-lime-200"}
           value={totalCheckedIn}
         />
         <StatCard
-          title={"Upcoming"}
+          title={"Upcoming Today"}
           icon={<Clock />}
           iconBg={"bg-orange-200"}
           value={totalUpcoming}
@@ -58,13 +64,13 @@ export default async function AppointmentsPage() {
         />
       </div>
 
-      <h1 className="text-2xl font-bold text-slate-900 ml-4 mt-10">
-        Today's Appointments
+      <h1 className="text-2xl font-bold text-slate-900 ml-1 mt-10">
+        Appointments
       </h1>
 
       <div className="">
         <AppointmentsTable
-          initialAppointments={todaysAppointments}
+          initialAppointments={allAppts}
           checkInClient={checkInClientServerAction}
           checkOutClient={checkOutClientServerAction}
           cancelAppointment={cancelAppointmentServerAction}

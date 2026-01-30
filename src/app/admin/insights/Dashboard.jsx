@@ -42,9 +42,6 @@ export default function Dashboard ({ days, length, freq, average, best_hour, amp
 
 
 
-
-
-
       <h3 className="mb-2 text-xl font-bold text-gray-600 tracking-wide truncate ml-1 animate-fade-in-up">Metrics</h3>
       <div className="w-full h-1/4 max-h-40 flex justify-between mb-7 space-x-5 animate-fade-in-up delay-200">
         <Top Title="Total Appts." Value={length} Description={"Cancelled & Completed"} Icon={<SquareSigma/>}/>

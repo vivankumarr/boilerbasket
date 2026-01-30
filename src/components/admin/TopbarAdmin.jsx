@@ -45,14 +45,11 @@ const TopbarAdmin = () => {
       subtitleText = "Download pantry data from any time period for analysis";
       break;
 
-    case pathname_admin.concat("settings"):
-      titleText = "Settings";
-      subtitleText = "Manage your preferences";
+    case pathname_admin.concat("logistics"):
+      titleText = "Logistics";
+      subtitleText = "Manage closure dates and preferences";
       break;
-    case pathname_admin.concat("closures"):
-      titleText = "Closures";
-      subtitleText = "Manage pantry closure dates";
-      break;
+
     default:
       titleText = "titleText";
       subtitleText = "subtitleText";

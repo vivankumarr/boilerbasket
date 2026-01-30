@@ -14,7 +14,7 @@ const Edit = ({isOpen, changeOpen, data}) => {
         try {
             const result = await editClient(data.id, {full_name_new: fullName, email_new: email, puid_new: PUID, role_new: role});
             if (!result.success) {
-                console.log("uh oh...");
+                console.log("Uh oh...");
             }
         }
         catch {

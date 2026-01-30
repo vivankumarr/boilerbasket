@@ -2,7 +2,7 @@ import { getAllAppointments, getAllClients, getLastYearAppts, getPredictions } f
 import Dashboard from "./Dashboard.jsx";
 import { checkAdminAccess } from "@/lib/supabase/checkAdmin.js";
 import { toZonedTime } from 'date-fns-tz';
-import { format } from 'date-fns';
+import { format, isAfter } from 'date-fns';
 
 const TIME_ZONE = 'America/Indiana/Indianapolis';
 
@@ -143,8 +143,14 @@ function getTrends(data) {
   const completedData = new Array(12).fill(0);
   const totalData = new Array(12).fill(0);
 
+  const nowUTC = new Date();
+  const nowIndiana = toZonedTime(nowUTC, TIME_ZONE);
+
   for (let i = 0; i < data.length; i++) {
     const zonedDate = toZonedTime(data[i].appointment_time, TIME_ZONE);
+    if (isAfter(zonedDate, nowIndiana)) {
+      continue;
+    }
     const monthIndex = zonedDate.getMonth();
     
     if (data[i].status === 'Completed') {
@@ -197,8 +203,8 @@ function averageVisitDuration(data) {
     totalMinutes += (end-start) / 60000;
     count++;
   }
-  if (count == 0) return 0;
-  return {val: (totalMinutes / count).toPrecision(3), total: count};
+  if (count == 0) return { val: 0, total: 0 };
+  return { val: (totalMinutes / count).toPrecision(3), total: count };
 }
 
 function makePredData(predictions) {

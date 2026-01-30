@@ -7,10 +7,11 @@ export async function getAllAppointments() {
     const {data: appointments, error} = await supabase
     .from('appointments')
     .select('*')
+    .neq('status', 'Scheduled')
 
     if (error) {
         console.log("ERROR in getAllAppointments: ", error);
-        return;
+        return [];
     }
     else {
         return appointments;

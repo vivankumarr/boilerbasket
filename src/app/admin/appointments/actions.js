@@ -5,7 +5,28 @@ import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { fromZonedTime, toZonedTime } from "date-fns-tz";
 import { startOfWeek, endOfWeek } from "date-fns"
 
-// Fetches all appointments for the current day and joins them with the info
+export async function getAllAppointments() {
+  const supabase = await createClient();
+  
+  const { data, error } = await supabase
+    .from("appointments")
+    .select(`
+      id,
+      appointment_time,
+      status,
+      clients (
+          full_name,
+          puid,
+          email,
+          role
+      )`
+    )
+    .order("appointment_time", { ascending: true });
+    if (error) return [];
+    return data;
+}
+
+// Fetches all appointments for the current day (in EST) and joins them with the info
 // of the corresponding client
 export async function getTodaysAppointments() {
   noStore();

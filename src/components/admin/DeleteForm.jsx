@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { deleteAppointment } from "@/app/admin/appointments/actions";
 import { deleteClient } from "@/app/admin/clients/actions";
-import { deleteBlockedDate } from "@/app/admin/closures/actions";
+import { deleteBlockedDate } from "@/app/admin/logistics/actions";
 
 const DeleteForm = ({ deletePopup, setDeletePopup, apptId, onSuccess, context }) => {
   // shows error message for booking form
@@ -54,7 +54,7 @@ const DeleteForm = ({ deletePopup, setDeletePopup, apptId, onSuccess, context })
       if (!result.success) {
         setMessage(result.error || "An error occurred. Please try again.");
         setDisplayMessage(true);
-        console.log("error");
+        console.log("Error");
         setLoading(false);
         return;
       }
@@ -67,7 +67,6 @@ const DeleteForm = ({ deletePopup, setDeletePopup, apptId, onSuccess, context })
       // Give the user a moment to read the success message before close + refresh
       setTimeout(() => {
         if (onSuccess) {
-          console.log("no error");
           onSuccess();
         }
         setSuccess(false);

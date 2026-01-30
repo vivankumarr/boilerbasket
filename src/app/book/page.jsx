@@ -2,15 +2,23 @@ import React from 'react'
 import Navbar from './Navbar.jsx';
 import Form from './Form.jsx';
 import HowItWorks from './HowItWorks.jsx';
+export const revalidate = 0;
 import { addMonths, eachDayOfInterval, isSameDay, set, isBefore, addDays } from 'date-fns';
 import { fromZonedTime, toZonedTime, format } from 'date-fns-tz';
 
 import { supabaseService } from '@/lib/supabase/service';
 export const dynamic = 'force-dynamic';
+import { getCap, getVisible } from '../admin/logistics/actions.js';
+
+import { unstable_noStore as noStore } from 'next/cache';
+
+//random comment
 
 export default async function bookingPage () {
-  
-  const avaliableSlots = await calculateEffectiveSlots();
+  noStore();
+  const cap = await getCap();
+  const visible = await getVisible();
+  const avaliableSlots = await calculateEffectiveSlots(cap[0].value, visible[0].value, false);
 
   return (
     <>
@@ -29,7 +37,7 @@ export default async function bookingPage () {
             Learn More
           </button>
         </a>
-        <Form timeSlots={avaliableSlots} />
+        <Form timeSlots={avaliableSlots} visible={visible} />
         <HowItWorks />
       </div>
     </>
@@ -42,7 +50,8 @@ export default async function bookingPage () {
     then returns a list of objects that contain valid time slots for
     client. Define slot in Indiana time, then convert to UTC for storage.
 */
-function makeSlots(blockedTimes, existingAppts) {
+
+function makeSlots(blockedTimes, existingAppts, cap, visible, mode) {
   const slots = [];
   const timeZone = 'America/Indiana/Indianapolis';
   
@@ -55,7 +64,9 @@ function makeSlots(blockedTimes, existingAppts) {
   const timeSlotsTuesday = ['12:00', '12:15', '12:30', '12:45', '13:00', '13:15', '13:30', '13:45', '14:00', '14:15', '14:30', '14:45', '15:00', '15:15', '15:30', '15:45', '16:00', '16:15', '16:30', '16:45', '17:00', '17:15', '17:30', '17:45'];
   const timeSlotsSunday = ['17:00', '17:15', '17:30', '17:45', '18:00', '18:15', '18:30', '18:45', '19:00', '19:15', '19:30', '19:45'];
   
-  const maxPerTimeSlot = 5;
+  //max number of people we can have per time slot
+  const maxPerTimeSlot = cap;
+  let made_slots = 0;
   
   // Normalize existing appointments to ISO strings
   const booked = existingAppts.map(appt => 
@@ -64,8 +75,14 @@ function makeSlots(blockedTimes, existingAppts) {
   
   // Iterate days
   for (let d = nowInIndiana; isBefore(d, nextMonth); d = addDays(d, 1)) {
+    // If enough slots are shown, break
+    if (made_slots == visible && !mode) {
+      break;
+    }
     const day = d.getDay(); // 0 = Sunday, 2 = Tuesday
     if (day !== 0 && day !== 2) continue;
+
+    made_slots++;
 
     const dateString = format(d, 'yyyy-MM-dd');
     
@@ -73,9 +90,7 @@ function makeSlots(blockedTimes, existingAppts) {
     const isBlocked = blockedTimes.some(period => 
       dateString >= period.start_date && dateString <= period.end_date
     );
-    
-    if (isBlocked && isBlocked === true) { 
-    }
+
     const finalBlockedStatus = isBlocked;
 
     let timeSlots = (day === 0 ? timeSlotsSunday : timeSlotsTuesday);
@@ -112,7 +127,9 @@ function makeSlots(blockedTimes, existingAppts) {
   return slots;
 }
 
-export async function calculateEffectiveSlots() {
+// TODO: Whoever wrote this page should refactor this export into the main component
+// We need the data for editing functionality
+export async function calculateEffectiveSlots(cap, visible, mode) {
   const supabase = supabaseService;
   const now = new Date().toISOString();
 
@@ -136,7 +153,8 @@ export async function calculateEffectiveSlots() {
     console.error('Error fetching existing appointments: ', errorexistingappts); 
   }
 
-  return makeSlots(blockedTimes || [], existingAppts || []);
+  //generate avaliable appointment times
+  return makeSlots(blockedTimes || [], existingAppts || [], cap, visible, mode);
 }
 
 export const metadata = {
