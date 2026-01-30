@@ -2,6 +2,7 @@ import { supabaseService } from "@/lib/supabase/service";
 import ManageUI from "../ManageUI";
 import Navbar from "@/app/book/Navbar"; // Adjust path to your Navbar
 import { calculateEffectiveSlots } from "@/app/book/page";
+import { getCap, getVisible } from "@/app/admin/logistics/actions";
 
 export default async function ManagePage({ params }) {
   const { token } = await params;
@@ -26,7 +27,11 @@ export default async function ManagePage({ params }) {
     );
   }
 
-  const availableSlots = await calculateEffectiveSlots();
+  const capData = await getCap();
+  const visibleData = await getVisible();
+  const capVal = capData?.[0]?.value || 6;
+  const visVal = visibleData?.[0]?.value || 4;
+  const availableSlots = await calculateEffectiveSlots(capVal, visVal, false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-100 via-purple-100 to-slate-100">
