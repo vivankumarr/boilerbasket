@@ -123,10 +123,25 @@ python3 scripts/predict.py
 
 ## Contributing
 
-This project was built by a team at Purdue Momentum over the Fall 2025 semester. While it is not currently open for public contribution, we welcome feedback and suggestions via the Issues tab.
+This project was built over the Fall 2025 semester by a team at Purdue Momentum.
+
+**Technical Leads**
+- Vivan Kumar
+- Benjamin den Besten
+
+- **Team Members**
+- Yejin Oh  
+- Jia Varshney  
+- Julius Zhou  
+- Shrreya Sethuramalingam  
+- Hannah Ju  
+- Aziz Sahibnazarov  
+- Bhavya Gupta  
+- Michael Gao  
+- Devi Sajeev Nair
+
+While it is not currently open for public contribution, we welcome feedback and suggestions via the Issues tab.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-
