@@ -129,7 +129,7 @@ This project was built over the Fall 2025 semester by a team at Purdue Momentum.
 - Vivan Kumar
 - Benjamin den Besten
 
-- **Team Members**
+**Team Members**
 - Yejin Oh  
 - Jia Varshney  
 - Julius Zhou  
